@@ -4,6 +4,9 @@ import { LogoButton } from "../../components/LogoButton";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../components/login_fuc";
+import  MapComponent  from '../../components/MapComponents';
+import { Container as MapDiv, NaverMap, Marker } from 'react-naver-maps'
+
 
 const style = {
     position: 'absolute',
@@ -16,6 +19,17 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+
+const App = () => {
+    return (
+      <div className="App">
+        <h1>네이버 지도 테스트</h1>
+        <MapComponent />
+      </div>
+    );
+  }; // 네이버 맵컴포넌트 연결
+  
+  export default App;
 
 export function RegisterPage() {
 
@@ -48,7 +62,7 @@ export function RegisterPage() {
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 10,
+                        marginTop: 12,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -71,6 +85,7 @@ export function RegisterPage() {
                             autoFocus
                             onChange={(e) => { setName(e.target.value); }}
                         />
+                        
                         <TextField
                             margin="normal"
                             required // 이걸 지우면 *표시가 사라짐
@@ -97,6 +112,32 @@ export function RegisterPage() {
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
                         /> */}
+                        <div className="App">
+                            <h1>네이버 지도 테스트</h1>
+                            <MapComponent />
+                        </div>
+                        <Button 
+                            color="primary"
+                            //href="/"  본인인증을 위한 페이지로 이동
+                            variant="contained"
+                            component="a"
+                            size="small"
+                            sx={{
+                                width: '13vh',
+                                height: '4vh',
+                                backgroundColor: '#65558f',
+                                borderRadius: '15px',
+                                fontSize: '1.5vh',
+                                color: 'white',
+                                transition: 'transform 0.3s ease-in-out', // 애니메이션 추가
+                                '&:hover': {
+                                    transform: 'translateY(-3px)', // 호버 시 위로 살짝 띄우기
+                                    backgroundColor: '#65558f' // 배경색 변경 방지
+                                }
+                            }}
+                         >
+                본인인증하기
+            </Button>
                         <Button
                             //type="submit" // submit 버튼은 페이지를 새로고침해버린다
                             type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
@@ -112,6 +153,7 @@ export function RegisterPage() {
                         >
                             Sign In
                         </Button>
+                        
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
