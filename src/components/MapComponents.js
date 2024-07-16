@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { TextField, Button } from '@mui/material';
+
 
 const MapComponent = () => {
   useEffect(() => {
@@ -170,25 +172,62 @@ const MapComponent = () => {
 
       const searchAddress = (e) => {
         e.preventDefault();
-        searchAddressToCoordinate(document.getElementById('address').value);
+        const address = document.getElementById('address').value.trim(); // trim 처리
+        if (address) {
+          searchAddressToCoordinate(address);
+        } else {
+          alert('주소를 입력하세요.');
+        }
       };
 
       const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-          searchAddress(e);
+          e.preventDefault();
+          const address = document.getElementById('address').value.trim(); // trim 처리
+          if (address) {
+            searchAddressToCoordinate(address);
+          } else {
+            alert('주소를 입력하세요.');
+          }
         }
       };
 
       const handleSubmit = (e) => {
         e.preventDefault();
-        searchAddressToCoordinate(document.getElementById('address').value);
+        const address = document.getElementById('address').value.trim(); // trim 처리
+        if (address) {
+          searchAddressToCoordinate(address);
+        } else {
+          alert('주소를 입력하세요.');
+        }
       };
 
-      // HTML에 입력 필드와 버튼 추가
+      // MUI로 구현한 주소 검색창
       const addressInput = (
-        <div style={{ marginTop: '10px' }}>
-          <input id="address" type="text" style={inputStyle} onKeyDown={handleKeyDown} placeholder="주소를 입력하세요" />
-          <button id="submit" style={buttonStyle} onClick={handleSubmit}>주소 검색</button>
+        <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center' }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="address"
+            label="주소"
+            name="address"
+            autoComplete="address"
+            placeholder="주소를 입력해 주세요."
+            onKeyDown={handleKeyDown}
+            InputProps={{
+              style: { borderRadius: '20px' },
+            }}
+          />
+          <Button 
+            id="submit" 
+            variant="contained" 
+            color="primary" 
+            style={{ marginLeft: '10px', borderRadius: '5px', backgroundColor: '#999191', height: '40px', minWidth: '100px' }} 
+            onClick={handleSubmit}
+          >
+            주소 찾기
+          </Button>
         </div>
       );
 

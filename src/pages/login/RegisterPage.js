@@ -69,7 +69,7 @@ export function RegisterPage() {
                     }}
                 >
 
-                    <Box component="form" noValidate sx={{ mt: 1,}}>
+                    <Box component="form" noValidate sx={{ mt: 1, maxWidth: '400px', margin: '0 auto'}}>
                         <TextField
                             margin="normal"
                             required // 이걸 지우면 *표시가 사라짐
@@ -78,10 +78,14 @@ export function RegisterPage() {
                             label="이름"
                             name="name"
                             autoComplete="name"
+                            placeholder="이름을 입력해 주세요."
                             autoFocus
                             onChange={(e) => { setName(e.target.value); }}
                             InputProps={{ 
-                                style: {borderRadius: '20px'} ,
+                                style: {borderRadius: '20px',} ,
+                            }}
+                            sx={{
+                                mb: 0,
                             }}
                         />
                         
@@ -93,10 +97,14 @@ export function RegisterPage() {
                             label="이메일주소"
                             name="email"
                             autoComplete="email"
+                            placeholder="이메일 아이디를 입력해 주세요."
                             autoFocus
                             onChange={(e) => { setEmail(e.target.value); }}
                             InputProps={{ 
                                 style: {borderRadius: '20px'} ,
+                            }}
+                            sx={{
+                                mb: 0,
                             }}                           
                         />
                         <TextField
@@ -107,6 +115,7 @@ export function RegisterPage() {
                             label="Password"
                             type="password"
                             id="password"
+                            placeholder="비밀번호를 입력해 주세요."
                             autoComplete="current-password"
                             onChange={(e) => { setPassword(e.target.value) }}
                             InputProps={{ 
@@ -130,14 +139,14 @@ export function RegisterPage() {
                             sx={{
                                 width: '13vh',
                                 height: '4vh',
-                                backgroundColor: '#65558f',
+                                backgroundColor: '#999191',
                                 borderRadius: '15px',
                                 fontSize: '1.5vh',
                                 color: 'white',
                                 transition: 'transform 0.3s ease-in-out', // 애니메이션 추가
                                 '&:hover': {
                                     transform: 'translateY(-3px)', // 호버 시 위로 살짝 띄우기
-                                    backgroundColor: '#65558f' // 배경색 변경 방지
+                                    backgroundColor: '#999191' // 배경색 변경 방지
                                 }
                             }}
                          >
@@ -149,29 +158,15 @@ export function RegisterPage() {
                             fullWidth
                             variant="contained"
                             //value="submit"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2, borderRadius: '5px', backgroundColor: '#999191'}}
                             onClick={async () => {
                                 //logIn(userEmail, password)
                                 setUserData(await register(userEmail, password, userName))
                                 handleOpen();
                             }}
                         >
-                            Sign In
+                            회원 가입
                         </Button>
-                        
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="#" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
-
 
 
                     </Box>
