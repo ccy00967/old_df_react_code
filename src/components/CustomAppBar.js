@@ -26,7 +26,7 @@ export function CustomAppBar() {
                 <Toolbar
                  variant="regular"
                  sx={(theme) => ({
-                    bgcolor : 'snow',
+                    bgcolor : '#F6F6F6',
                     width: '100vh', height: '8vh',
                    display: 'flex',
                    alignItems: 'center',

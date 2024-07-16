@@ -68,12 +68,8 @@ export function RegisterPage() {
                         alignItems: 'center',
                     }}
                 >
-                    <LogoButton />
 
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
-                    <Box component="form" noValidate sx={{ mt: 1 }}>
+                    <Box component="form" noValidate sx={{ mt: 1,}}>
                         <TextField
                             margin="normal"
                             required // 이걸 지우면 *표시가 사라짐
@@ -84,6 +80,9 @@ export function RegisterPage() {
                             autoComplete="name"
                             autoFocus
                             onChange={(e) => { setName(e.target.value); }}
+                            InputProps={{ 
+                                style: {borderRadius: '20px'} ,
+                            }}
                         />
                         
                         <TextField
@@ -96,6 +95,9 @@ export function RegisterPage() {
                             autoComplete="email"
                             autoFocus
                             onChange={(e) => { setEmail(e.target.value); }}
+                            InputProps={{ 
+                                style: {borderRadius: '20px'} ,
+                            }}                           
                         />
                         <TextField
                             margin="normal"
@@ -107,6 +109,9 @@ export function RegisterPage() {
                             id="password"
                             autoComplete="current-password"
                             onChange={(e) => { setPassword(e.target.value) }}
+                            InputProps={{ 
+                                style: {borderRadius: '20px'} ,
+                            }}
                         />
                         {/* <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
