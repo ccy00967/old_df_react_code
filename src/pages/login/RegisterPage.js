@@ -4,9 +4,9 @@ import { LogoButton } from "../../components/LogoButton";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../components/login_fuc";
-import  MapComponent  from '../../components/MapComponents';
 import { Container as MapDiv, NaverMap, Marker } from 'react-naver-maps'
-
+import  RadioPositionEnd  from '../../components/RadioPositionEnd';
+import  MapComponent  from '../../components/MapComponents';
 
 const style = {
     position: 'absolute',
@@ -112,7 +112,7 @@ export function RegisterPage() {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="비밀번호"
                             type="password"
                             id="password"
                             placeholder="비밀번호를 입력해 주세요."
@@ -122,10 +122,9 @@ export function RegisterPage() {
                                 style: {borderRadius: '20px'} ,
                             }}
                         />
-                        {/* <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        /> */}
+                        
+                        <RadioPositionEnd />
+
                         <div className="App">
                             <h1>네이버 지도 테스트</h1>
                             <MapComponent />

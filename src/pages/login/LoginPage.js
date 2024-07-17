@@ -54,6 +54,9 @@ export function LoginPage() {
                             autoComplete="email"
                             autoFocus
                             onChange={(e) => { setEmail(e.target.value); }}
+                            InputProps={{ 
+                                style: {borderRadius: '20px',} ,
+                            }}
                         />
                         <TextField
                             margin="normal"
@@ -65,6 +68,9 @@ export function LoginPage() {
                             id="password"
                             autoComplete="current-password"
                             onChange={(e) => { setPassword(e.target.value) }}
+                            InputProps={{ 
+                                style: {borderRadius: '20px',} ,
+                            }}
                         />
                         {/* <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}

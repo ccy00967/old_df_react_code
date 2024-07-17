@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { TextField, Button } from '@mui/material';
 
-
 const MapComponent = () => {
+  const [addressInfo, setAddressInfo] = useState(null);
+  const [jibunAddress, setJibunAddress] = useState('');
+
   useEffect(() => {
     const initMap = async () => {
       const { naver } = window; // 네이버 지도 객체
@@ -77,6 +79,14 @@ const MapComponent = () => {
 
           var item = response.v2.addresses[0],
               point = new naver.maps.Point(item.x, item.y);
+
+          setAddressInfo({
+                address: address,
+                roadAddress: item.roadAddress,
+                jibunAddress: item.jibunAddress,
+                englishAddress: item.englishAddress,
+                point: point
+              });     // 주소 정보 저장
 
           infoWindow.setContent([
             '<div style="padding:10px;min-width:200px;line-height:150%;">',
@@ -254,12 +264,29 @@ const MapComponent = () => {
     };
   }, []); // [] 안에 있는 변수가 변할 때마다 useEffect가 호출됨
 
+  useEffect(() => {
+    if (addressInfo && addressInfo.jibunAddress) {
+      setJibunAddress(addressInfo.jibunAddress);
+    }
+  }, [addressInfo]);
+
   return (
     <div>
       <div id="map" style={{ width: '100%', height: '400px' }}></div>
       <div id="search"></div>
-    </div>
+      <TextField
+        disabled
+        margin="normal"
+        fullWidth
+        id="jibunAddress"
+        label="지번 주소"
+        value={jibunAddress}
+        InputProps={{
+          style: { borderRadius: '20px' },
+        }}
+      />
+    </div> 
   );
-};
+}; // 검색한 주소 지번주소로 자동 입력
 
 export default MapComponent;

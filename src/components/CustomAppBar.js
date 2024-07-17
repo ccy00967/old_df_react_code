@@ -54,7 +54,7 @@ export function CustomAppBar() {
                             <LogoButton />
 
                         </Box>
-                        <Button href="/a" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>소개 페이지</Button>
+                        <Button href="/introduction" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>소개 페이지</Button>
                         <Button href="/a" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>연결 업체</Button>
                         <Button href="/a" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>고객센터</Button>
                         {/* <Button href="/service" variant="text" xs={4}>서비스 신청하기</Button> */}
