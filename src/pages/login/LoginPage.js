@@ -50,23 +50,30 @@ export function LoginPage() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundPosition: 'center center',
-                        
+                        backdropFilter: 'blur(4px)',
+                        backgroundColor: '#ffffffbd',
+                        borderRadius: '20px', 
+                        height: '50vh',  
                     }}
                 >
+                    <Box mt={4}>
                         <LogoButton />
-                        
+                    </Box>
                         <TextField
                             margin="normal"
                             required // 이걸 지우면 *표시가 사라짐
                             fullWidth
                             id="email"
-                            label="이메일주소"
+                            //label="이메일주소"
+                            placeholder="이메일을 입력해주세요."
+                            sx={{ margin: 'auto', width: '75%', marginBottom: '8px' }}
                             name="email"
                             autoComplete="email"
                             autoFocus
                             onChange={(e) => { setEmail(e.target.value); }}
                             InputProps={{ 
-                                style: {borderRadius: '20px', width: '100%', backgroundColor: '#ffffff'} ,
+                                style: {borderRadius: '30px', backgroundColor: '#ffffff', height: '4vh'},
+                            
                             }}
                         />
                         <TextField
@@ -74,13 +81,15 @@ export function LoginPage() {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            sx={{ margin: 'auto', width: '75%', }}
+                            //label="Password"
+                            placeholder="비밀번호를 입력해주세요."
                             type="password"
                             id="password"
                             autoComplete="current-password"
                             onChange={(e) => { setPassword(e.target.value) }}
                             InputProps={{ 
-                                style: {borderRadius: '20px', width: '75%', backgroundColor: '#ffffff'} ,
+                                style: {borderRadius: '30px', backgroundColor: '#ffffff', height: '4vh'},
                             }}
                         />
                         {/* <FormControlLabel
@@ -117,7 +126,7 @@ export function LoginPage() {
                                 </Button>
                                 <Grid container>
                             <Grid item xs>
-                                <Link href="#" variant="body2">
+                                <Link href="#" variant="body2" sx={{ color: '#65558f'}}>
                                     비밀번호 찾기
                                 </Link>
                             </Grid>
