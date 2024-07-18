@@ -149,15 +149,21 @@ export function RegisterPage() {
                                 }
                             }}
                          >
-                본인인증하기
-            </Button>
+                            본인인증하기
+                        </Button>
                         <Button
                             //type="submit" // submit 버튼은 페이지를 새로고침해버린다
                             type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
                             fullWidth
                             variant="contained"
                             //value="submit"
-                            sx={{ mt: 3, mb: 2, borderRadius: '5px', backgroundColor: '#999191'}}
+                            sx={{ mt: 3, mb: 2, borderRadius: '5px', backgroundColor: '#999191',
+                                transition: 'transform 0.3s ease-in-out', // 애니메이션 추가,
+                                '&:hover': {
+                                    transform: 'translateY(-3px)', // 호버 시 위로 살짝 띄우기
+                                    backgroundColor: '#999191' // 배경색 변경 방지
+                                }
+                            }}
                             onClick={async () => {
                                 //logIn(userEmail, password)
                                 setUserData(await register(userEmail, password, userName))

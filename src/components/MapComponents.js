@@ -52,6 +52,11 @@ const MapComponent = () => {
             addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
 
             htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
+            
+            // 지번 주소인 경우 상태 업데이트
+            if (addrType === '[지번 주소]') {
+              setJibunAddress(address);
+            }
           }
 
           infoWindow.setContent([
@@ -104,7 +109,7 @@ const MapComponent = () => {
 
       function makeAddress(item) {
         if (!item) {
-          return;
+          return '';
         }
 
         var name = item.name,
