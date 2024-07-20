@@ -280,12 +280,24 @@ const MapComponent = () => {
       <div id="map" style={{ width: '100%', height: '400px' }}></div>
       <div id="search"></div>
       <TextField
+        sx={{ mt: 1 }}
         disabled
         margin="normal"
         fullWidth
         id="jibunAddress"
         label="지번 주소"
         value={jibunAddress}
+        InputProps={{
+          style: { borderRadius: '20px' },
+        }}
+      />
+      <TextField
+        sx={{ mt: 1 }}
+        margin="normal"
+        fullWidth
+        id="DetailAddress"
+        label="상세 주소"
+        placeholder='상세 주소를 입력해주세요.'
         InputProps={{
           style: { borderRadius: '20px' },
         }}

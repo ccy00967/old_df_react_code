@@ -6,8 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import store from './state/store'
-import persistStore from 'redux-persist/es/persistStore';
 import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from "redux-persist";
 
 export const persistor = persistStore(store); // 유지하고싶은 것을 넣는다 ex) store
 

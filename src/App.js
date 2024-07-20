@@ -7,6 +7,7 @@ import { RegisterPage } from './pages/login/RegisterPage';
 import { CustomAppBar } from './components/CustomAppBar';
 import { ServiceRequestPage } from './pages/mainservice/ServiceRequestPage';
 import { IntroductionPage } from './pages/home/IntroductionPage';
+import { ContactPage } from './pages/mainservice/Contact';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route path="/service" element={<ServicePage />}></Route>
       <Route path="/requestform" element={<ServiceRequestPage />}></Route>
       <Route path="/introduction" element={<IntroductionPage />}></Route>
+      {/* <Route path="/contact" element={<ContactPage />}></Route> */}
     </Routes>
   </div>
   );
