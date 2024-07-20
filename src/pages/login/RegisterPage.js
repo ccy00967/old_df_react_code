@@ -57,6 +57,8 @@ export function RegisterPage() {
         }
     };
 
+    
+
     // useEffect(() => {
     //     // if (userInfo.success === true) {
     //     //     navigate("/");
@@ -115,7 +117,7 @@ export function RegisterPage() {
                                 value={userEmail}
                                 onChange={handleEmailChange}
                                 error={!!emailError}
-                                helperText={emailError}
+                                // helperText={emailError}
                                 InputProps={{ 
                                     style: { borderRadius: '20px' },
                                 }}
@@ -153,7 +155,7 @@ export function RegisterPage() {
                         </Box>
                         
                         <TextField
-                            sx={{ mt: 5 }}
+                            sx={{ mt: 2 }}
                             margin="normal"
                             required
                             fullWidth
