@@ -8,6 +8,7 @@ import { Container as MapDiv, NaverMap, Marker } from 'react-naver-maps'
 import  RadioPositionEnd  from '../../components/RadioPositionEnd';
 import  MapComponent  from '../../components/MapComponents';
 import { setEmail, setPassword, setName, handleOpen, handleClose } from '../../state/UserSlice';
+import { Key } from "@mui/icons-material";
 
 const style = {
     position: 'absolute',
@@ -43,10 +44,13 @@ export function RegisterPage() {
     const userName = useSelector((state) => state.user.userName);
 
     const [emailError, setEmailError] = useState('');
+    const [showVerification, setShowVerification] = useState(false);
+    const [verificationCode, setVerificationCode] = useState('');
 
     const handleEmailChange = (e) => {
         const value = e.target.value;
         dispatch(setEmail(value));
+
 
         // 이메일 형식 검증
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -54,6 +58,59 @@ export function RegisterPage() {
         setEmailError('이메일 형식이 올바르지 않습니다.');
         } else {
         setEmailError('');
+        }
+    };
+
+
+
+    const handleEmailVerification = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/emailsend', {
+                method: 'POST',
+
+                headers: [["Content-Type", 'application/x-www-form-urlencoded'],
+                // ["Access-Control-Allow-Origin", "*"],
+                ["Access-Control-Allow-Credentials", 'true'],
+            ],
+                credentials: "include",
+                body: new URLSearchParams({ email: userEmail}),
+            })
+            ;
+
+
+            if (response.ok) {
+                setShowVerification(true);
+            } else {
+                console.error('Error sending email verification:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error sending email verification:', error);
+        }
+    };
+
+    const handleVerificationCodeChange = (e) => {
+        setVerificationCode(e.target.value);
+    };
+
+    const handleVerificationCodeSubmit = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/validatekeycheck', {
+                method: 'POST',
+                mode: 'cors',
+                headers: [["Content-Type", 'application/x-www-form-urlencoded',]],
+                body: new URLSearchParams({ validatekey: verificationCode }),
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                alert('이메일 인증에 성공했습니다.');
+            } else {
+                console.error('Error verifying email:', response.statusText);
+                alert('인증번호가 일치하지 않습니다.');
+            }
+        } catch (error) {
+            console.error('Error verifying email:', error);
+            alert('인증번호가 일치하지 않습니다.');
         }
     };
 
@@ -127,6 +184,7 @@ export function RegisterPage() {
                                 }}                           
                             />
                             <Button 
+                                type="button"
                                 color="primary"
                                 variant="contained"
                                 size="small"
@@ -149,10 +207,65 @@ export function RegisterPage() {
                                     opacity: 0.5,
                                 }}}
                                 disabled={!!emailError || !userEmail}
+                                onClick={handleEmailVerification}
                             >
                             이메일 인증
                             </Button>
                         </Box>
+                        
+                        {showVerification && (
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Box sx={{ flexGrow: 1 }}>
+                                <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="verificationCode"
+                                label="인증번호"
+                                name="verificationCode"
+                                autoComplete="off"
+                                placeholder="인증번호를 입력해 주세요."
+                                autoFocus
+                                value={verificationCode}
+                                onChange={handleVerificationCodeChange}
+                                InputProps={{ 
+                                    style: { borderRadius: '20px' },
+                                }}
+                                sx={{
+                                    mb: 0,
+                                }}
+                                />
+                            </Box>
+                            <Button 
+                                type="button"
+                                color="primary"
+                                variant="contained"
+                                size="small"
+                                sx={{
+                                height: '50px',
+                                width: '15vh',
+                                ml: 1,
+                                mt: 1.5,
+                                backgroundColor: '#999191',
+                                borderRadius: '15px',
+                                fontSize: '1.5vh',
+                                color: 'white',
+                                transition: 'transform 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'translateY(-3px)',
+                                    backgroundColor: '#999191'
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#999191',
+                                    opacity: 0.5,
+                                }
+                                }}
+                                onClick={handleVerificationCodeSubmit}
+                            >
+                                인증번호 확인
+                            </Button>
+                            </Box>
+                        )}
                         
                         <TextField
                             sx={{ mt: 2 }}
@@ -187,7 +300,7 @@ export function RegisterPage() {
                             }}
                         />
                         
-                        <RadioPositionEnd />
+                        {/* <RadioPositionEnd /> */}
 
                         <div className="App">
                             <h1></h1>
