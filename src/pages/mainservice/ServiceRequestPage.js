@@ -95,7 +95,7 @@ export function ServiceRequestPage() {
                             name="address"
                             autoComplete="address"
                             autoFocus
-                            onChange={(e) => { setAddress(e.target.value);
+                            onChange={(e) => { setAddress(e.target.value);}}
                         />
 
                         <Button variant="contained" onClick={handleClick} > 주소찾기 </Button>
