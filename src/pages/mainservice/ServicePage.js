@@ -9,6 +9,9 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { server } from '../../components/login_fuc';
+import { dark } from '@mui/material/styles/createPalette';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Stack } from '@mui/system';
 
 const getCustomerRequests = async function (userInfo, getRequests) {
     let length = 0;
@@ -61,26 +64,46 @@ export function ServicePage() {
     //console.log(customerRequests.length)
 
     return (
+    
         <div>
+
+            <Box sx={{height:130}}></Box>
+
+           <Grid container spacing={2}>
+
+            <Grid item xs={3} > 
+            <Stack sx={{alignItems:'center'}}>
+            <AccountCircleIcon sx={{ fontSize: 100, color: dark.contrastText }} />
+            <text>{userInfo.authenticatedUser.email}</text>
             <Button
                 //type="submit" // submit 버튼은 페이지를 새로고침해버린다
                 type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
 
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2 ,height: 30}}
                 href='/requestform'
+
             >
                 서비스 신청 작성
             </Button>
-            <Box height={100}>컴포넌트 사이에 넣을 패딩역할</Box>
+        
+            <Box height={40}>신청서 현황</Box>
+            <Box height={40}>확인 대기목록</Box>
+            <Box height={40}>완료 내역</Box>
+            
 
+            </Stack>
+            </Grid>
+            
 
-            <Grid sx={{ flexGrow: 1 }} container spacing={2}>
+            <Grid item xs={9}>
+            <Grid sx={{ flexGrow: 1, }} container spacing={2}>
                 <Grid item xs={12}>
-                    <Grid container justifyContent="center" spacing={2}>
+                    <Grid container justifyContent="center" spacing={10}>
                         {customerRequests.map((value) => (
                             <Grid key={value.id} item>
-                                <Card sx={{ minWidth: 275 }}>
+                                <Card sx={{ minWidth: 275,height:300, border:1, borderRadius: '25px',}}>
+                                <Box sx={{alignContent: 'center', justifyContent: 'center',  }}>
                                     <CardContent>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             {value.ownerName}
@@ -91,22 +114,31 @@ export function ServicePage() {
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
                                             {value.address}
                                         </Typography>
+
                                         <Typography variant="body2">
                                             {value.ownerEmail}
                                             <br />
                                             {value.reservationDate}
                                         </Typography>
+
                                     </CardContent>
-                                    <CardActions>
-                                        <Button size="small">Learn More</Button>
+                                    <Box sx={{height:'75px'}}></Box>
+                                    <CardActions sx={{ justifyContent: "center", }}>
+                                        <Button
+                                        href='/detail' 
+                                        variant="contained"
+                                        >자세히 보기</Button>
                                     </CardActions>
+                                   
+                                </Box>
                                 </Card>
                             </Grid>
                         ))}
                     </Grid>
                 </Grid>
             </Grid>
-
+            </Grid> 
+        </Grid>
         </div>
     );
 }

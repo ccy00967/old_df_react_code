@@ -1,10 +1,11 @@
-import { Button, ButtonGroup, Grid, Stack } from "@mui/material";
+import { Button, ButtonGroup, Grid,  } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { LogoButton } from "./LogoButton";
 import { useSelector } from "react-redux";
 import { logOut } from "./login_fuc";
+
 
 
 export function CustomAppBar() {
@@ -26,8 +27,8 @@ export function CustomAppBar() {
                 <Toolbar
                  variant="regular"
                  sx={(theme) => ({
-                    bgcolor : '#F6F6F6',
-                    width: '100vh', height: '8vh',
+                   bgcolor : 'snow',
+                   width: '1400px', height: '8vh',
                    display: 'flex',
                    alignItems: 'center',
                    justifyContent: 'space-between',
@@ -47,18 +48,18 @@ export function CustomAppBar() {
                             //my={4}
                             display="flex"
                             alignItems="center"
-                            gap={4}
-                            p={2}
+                            gap={1}
+                            p={1}
                         //sx={{ border: '2px solid grey' }}
                         >
                             <LogoButton />
-
                         </Box>
                         <Button href="/introduction" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>소개 페이지</Button>
                         <Button href="/a" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>연결 업체</Button>
                         <Button href="/aa" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>고객센터</Button>
                         {/* <Button href="/service" variant="text" xs={4}>서비스 신청하기</Button> */}
                         {userInfo.success ? UserBriefInfoButton(userInfo) : LoginAndRegisterButton()}
+                        
                     </Grid> }
                 </Toolbar>
             </AppBar>
@@ -125,10 +126,14 @@ function LoginAndRegisterButton() {
 }
 
 function UserBriefInfoButton(userInfo) {
+    
     return (
+    
         <Button
+           
             variant="outlined"
             size="large"
+            href="/"
             style={
                 {
                     color: 'green',
@@ -136,11 +141,14 @@ function UserBriefInfoButton(userInfo) {
                     borderColor: 'green',
                 }
             }
-            onClick={async () => {
+             onClick={async () => {
+                
                 await logOut() // 이놈을 사용할때는 onClick에 async를 달것!
             }}
         >
             {userInfo.authenticatedUser.email}
         </Button>
+       
+        
     );
 }

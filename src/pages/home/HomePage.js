@@ -41,7 +41,11 @@ export function HomePage() {
                     </Typography>
                 </Box>
                 <Box>
-                    <Button variant="contained" color="success" href="/service"
+                    <Button 
+                    variant="contained" 
+                    color="success" 
+                    href="/service" 
+                    component = "a"
                     sx={{position: 'fixed',
                         right: '30vh',
                         bottom: '22vh',
