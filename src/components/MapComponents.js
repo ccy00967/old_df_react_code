@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { TextField, Button } from '@mui/material';
+import { createRoot } from 'react-dom/client';
 
 const MapComponent = () => {
   const [addressInfo, setAddressInfo] = useState(null);
@@ -247,7 +248,9 @@ const MapComponent = () => {
       );
 
       // HTML을 설정할 때 JSX를 사용하여 React 컴포넌트에 주입
-      ReactDOM.render(addressInput, document.getElementById('search'));
+      const root = createRoot(document.getElementById('search'))
+      root.render(addressInput);
+      //ReactDOM.render(addressInput, document.getElementById('search'));
     };
 
     // 네이버 지도 API 스크립트가 로드된 후에 initMap 함수 호출
