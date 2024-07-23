@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useSelector } from "react-redux";
 import { server } from "../../components/login_fuc";
+import { useDaumPostcodePopup } from "react-daum-postcode";
 
 const postCustomerRequest = async function (userInfo, address, requestContent, reservationDate) {
 
@@ -31,6 +32,18 @@ const postCustomerRequest = async function (userInfo, address, requestContent, r
 }
 
 export function ServiceRequestPage() {
+
+    const open = useDaumPostcodePopup();
+
+    const handleComplete = (data) => {
+        console.log(data);
+        setAddress(data.address);
+    };
+
+    const handleClick = (e) => {
+        open({ onComplete: handleComplete });
+        e.preventDefault();
+    };
 
     const userInfo = useSelector(state => { return state.persist.userInfo; });
     const navigate = useNavigate(); // 리액트 페이지 라우트
@@ -72,18 +85,21 @@ export function ServiceRequestPage() {
                             방제 신청서 작성
                         </Typography>
 
+                        <Container ></Container>
+
                         <TextField
                             margin="normal"
-                            required // 이걸 지우면 *표시가 사라짐
                             fullWidth
                             id="address"
                             label="방제 주소"
                             name="address"
                             autoComplete="address"
                             autoFocus
-                            onChange={(e) => { setAddress(e.target.value); }}
-                          
+                            onChange={(e) => { setAddress(e.target.value);
                         />
+
+                        <Button variant="contained" onClick={handleClick} > 주소찾기 </Button>
+
                         <TextField
                             margin="normal"
                             required // 이걸 지우면 *표시가 사라짐

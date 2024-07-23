@@ -26,8 +26,9 @@ export const logIn = function (userEmail, password) {
             password: password,
         })
     })
-        .then((res) => res.json())
+        .then((res) => { console.log(res); return res.json();})
         .then((data) => {
+            console.log(data);
             store.dispatch(userInfoSlice.actions.getUserInfo(data));
         });
 }

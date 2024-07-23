@@ -16,12 +16,13 @@ export function HomePage() {
             backgroundImage: `url(${img})`,
             backgroundSize: "cover",
             backgroundPosition: "center center",
+            overflow: 'hidden',
         }}>
             <Container sx={{ width: "75vh" }} maxWidth="mx">
                 <Box sx={{ height: '100vh', 
                            position: "fixed",
                            left: '10vh', top: '40vh',
-                           
+                            
                             }} >
 
                     <Typography     sx={{
