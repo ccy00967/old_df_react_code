@@ -1,10 +1,11 @@
-import { Button, ButtonGroup, Grid, Stack } from "@mui/material";
+import { Button, ButtonGroup, Grid,  } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { LogoButton } from "./LogoButton";
 import { useSelector } from "react-redux";
 import { logOut } from "./login_fuc";
+
 
 
 export function CustomAppBar() {
@@ -26,8 +27,8 @@ export function CustomAppBar() {
                 <Toolbar
                  variant="regular"
                  sx={(theme) => ({
-                    bgcolor : 'snow',
-                    width: '70vh', height: '8vh',
+                   bgcolor : 'snow',
+                   width: '1400px', height: '8vh',
                    display: 'flex',
                    alignItems: 'center',
                    justifyContent: 'space-between',
@@ -47,18 +48,18 @@ export function CustomAppBar() {
                             //my={4}
                             display="flex"
                             alignItems="center"
-                            gap={4}
-                            p={2}
+                            gap={1}
+                            p={1}
                         //sx={{ border: '2px solid grey' }}
                         >
                             <LogoButton />
-
                         </Box>
-                        <Button href="/a" variant="text" xs={4} sx={{fontSize:'1.5vh',}}>소개 페이지</Button>
-                        <Button href="/a" variant="text" xs={4} sx={{fontSize:'1.5vh',}}>연결 업체</Button>
-                        <Button href="/a" variant="text" xs={4} sx={{fontSize:'1.5vh',}}>고객센터</Button>
+                        <Button href="/introduction" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>소개 페이지</Button>
+                        <Button href="/a" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>연결 업체</Button>
+                        <Button href="/aa" variant="text" xs={4} sx={{fontSize:'1.5vh', color:'#65558f'}}>고객센터</Button>
                         {/* <Button href="/service" variant="text" xs={4}>서비스 신청하기</Button> */}
                         {userInfo.success ? UserBriefInfoButton(userInfo) : LoginAndRegisterButton()}
+                        
                     </Grid> }
                 </Toolbar>
             </AppBar>
@@ -76,46 +77,63 @@ function LoginAndRegisterButton() {
             alignItems: 'center',
         }}
         >
-
             <Button 
-           color="primary"
-           href="/login" 
-           variant="outlined"
-           component = "a"
-           target="_blank"
-           size="small"
-           sx={{width: '10vh',height: '4vh',
-            borderRadius: '999px',
-            fontSize: '1.5vh',
-        }}>
+                color="primary"
+                href="/login" 
+                variant="contained"
+                component="a"
+                size="small"
+                sx={{
+                    width: '10vh',
+                    height: '4vh',
+                    backgroundColor: '#65558f',
+                    borderRadius: '999px',
+                    fontSize: '1.5vh',
+                    color: 'white',
+                    transition: 'transform 0.3s ease-in-out', // 애니메이션 추가
+                    '&:hover': {
+                        transform: 'translateY(-3px)', // 호버 시 위로 살짝 띄우기
+                        backgroundColor: '#65558f' // 배경색 변경 방지
+                    }
+                }}
+            >
                 로그인
-
-                
-                </Button>
+            </Button>
             <Button 
-            color="primary"
-            href="/register" 
-            variant="outlined"
-            component = "a"
-            target="_blank"
-            size="small"
-            sx={{width: '10vh',height: '4vh',
-                
-                fontSize: '1.5vh',
-                borderRadius: '999px'
-            }}>
+                color="primary"
+                href="/register" 
+                variant="contained"
+                component="a"
+                size="small"
+                sx={{
+                    width: '10vh',
+                    height: '4vh',
+                    fontSize: '1.5vh',
+                    borderRadius: '999px',
+                    backgroundColor: '#EADDFF',
+                    color: 'white',
+                    transition: 'transform 0.3s ease-in-out', // 애니메이션 추가
+                    '&:hover': {
+                        transform: 'translateY(-3px)', // 호버 시 위로 살짝 띄우기
+                        backgroundColor: '#EADDFF' // 배경색 변경 방지
+                    }
+                }}
+            >
                 회원가입
-                </Button>
-       
-                </Box>
+            </Button>
+        </Box>
     );
 }
 
 function UserBriefInfoButton(userInfo) {
+    
     return (
+    
         <Button
+           
             variant="outlined"
             size="large"
+            href="/"
             style={
                 {
                     color: 'green',
@@ -123,11 +141,14 @@ function UserBriefInfoButton(userInfo) {
                     borderColor: 'green',
                 }
             }
-            onClick={async () => {
+             onClick={async () => {
+                
                 await logOut() // 이놈을 사용할때는 onClick에 async를 달것!
             }}
         >
             {userInfo.authenticatedUser.email}
         </Button>
+       
+        
     );
 }
