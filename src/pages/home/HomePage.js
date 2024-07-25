@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Container, Grid } from "@mui/material";
+import { Button, ButtonGroup, Container, Grid, Stack } from "@mui/material";
 import img from '../../assets/img/dronefield_bg.jpg'
 import logo from '../../assets/img/dronefield_logo.jpg'
 import AppBar from '@mui/material/AppBar';
@@ -8,59 +8,75 @@ import Typography from '@mui/material/Typography';
 import { useSelector } from "react-redux";
 
 
+//alignItems="center"
+//alignContent='center'
 export function HomePage() {
     return (
         <div style={{
             height: "100vh",
-            backgroundColor: "green",
             backgroundImage: `url(${img})`,
             backgroundSize: "cover",
             backgroundPosition: "center center",
             overflow: 'hidden',
+            display: 'flex',
+            justifyContent: 'center',
         }}>
-            <Container sx={{ width: "75vh" }} maxWidth="mx">
-                <Box sx={{ height: '100vh', 
-                           position: "fixed",
-                           left: '10vh', top: '40vh',
-                            
-                            }} >
+            <Stack width='100%'>
+                <Box
+                    //width='100vh'
+                    height='40%'
+                >
+                </Box>
 
-                    <Typography     sx={{
-                        fontSize: '12vh',
-                        fontWeight: 'bold',
-                        color: 'white'
-                    }}
+                <Box
+                    width='100%'
+                    height='30%'
+                    display="flex"
+                    alignItems="center"
+                //alignContent='start'
+                //bgcolor='yellow'
+                >
+                    <Stack paddingLeft="5%">
+                        <Typography
+                            variant="h1"
+                            color='white'
+                            fontWeight={"bold"}
+                        >
+                            드론평야
+                        </Typography>
+                        <Typography
+                            variant="h2"
+                            color='white'
+                            fontWeight={"bold"}
+                        >
+                            방제를 편하게!
+                        </Typography>
+                        <Button
+                            href="/detail">123123123
+                        </Button>
+                    </Stack>
+                </Box>
+
+                <Box
+                    width='100%'
+                    height='30%'
+                    display='flex'
+                    alignItems="start"
+                    justifyContent="center"
+                >
+                    <Box
+                        paddingLeft='50%'
+                        //bgcolor='black'
                     >
-                        드론평야
-                    </Typography>
-                    <Typography sx={{
-                        fontSize: '8vh',
-                        fontWeight: 'bold',
-                        color: 'white'}}>
-                        방제를 편하게!
-                    </Typography>
+                        <Button
+                            size="large"
+                            variant="contained"
+                            href="/service" >
+                            방제 신청
+                        </Button>
+                    </Box>
                 </Box>
-                <Box>
-                    <Button 
-                    variant="contained" 
-                    color="success" 
-                    href="/service" 
-                    component = "a"
-                    sx={{position: 'fixed',
-                        right: '30vh',
-                        bottom: '22vh',
-                        width: '30vh',
-                        height: '13vh',
-                        borderRadius: '4vh',
-                        fontSize: '4vh',
-                       
-                    }}>
-                        방제 신청</Button>
-                </Box>
-                <Button
-                href="/detail">123123123132</Button>
-            </Container>
-            
-        </div>
+            </Stack>
+        </div >
     )
 }
