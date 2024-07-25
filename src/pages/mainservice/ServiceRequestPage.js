@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import 'dayjs/locale/ko';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useSelector } from "react-redux";
 import { server } from "../../components/login_fuc";
@@ -127,7 +128,7 @@ export function ServiceRequestPage() {
                            
                         />
                         
-                         <LocalizationProvider dateAdapter={AdapterDayjs}  >
+                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko" >
                             <DateTimePicker
                                 label="원하는 날짜 입력"
                                 //value={reservationDate}

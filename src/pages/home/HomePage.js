@@ -57,6 +57,8 @@ export function HomePage() {
                     }}>
                         방제 신청</Button>
                 </Box>
+                <Button
+                href="/detail">123123123132</Button>
             </Container>
             
         </div>
