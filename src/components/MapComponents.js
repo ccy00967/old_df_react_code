@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Grid, Box, Stack } from '@mui/material';
 import { createRoot } from 'react-dom/client';
 
 const MapComponent = () => {
@@ -11,7 +11,7 @@ const MapComponent = () => {
     const initMap = async () => {
       const { naver } = window; // 네이버 지도 객체
       const mapOptions = {
-        center: new naver.maps.LatLng(37.3595316, 127.1052133), // 초기 중심 좌표
+        center: new naver.maps.LatLng(35.1409402, 126.925774), // 초기 중심 좌표
         zoom: 15, // 초기 줌 레벨
         mapTypeControl: true
       };
@@ -25,7 +25,7 @@ const MapComponent = () => {
       });
 
       // 클릭 이벤트 리스너 등록
-      map.addListener('click', function(e) {
+      map.addListener('click', function (e) {
         searchCoordinateToAddress(e.coord);
       });
 
@@ -38,22 +38,22 @@ const MapComponent = () => {
             naver.maps.Service.OrderType.ADDR,
             naver.maps.Service.OrderType.ROAD_ADDR
           ].join(',')
-        }, function(status, response) {
+        }, function (status, response) {
           if (status === naver.maps.Service.Status.ERROR) {
             return alert('Something Wrong!');
           }
 
           var items = response.v2.results,
-              address = '',
-              htmlAddresses = [];
+            address = '',
+            htmlAddresses = [];
 
-          for (var i=0, ii=items.length, item, addrType; i<ii; i++) {
+          for (var i = 0, ii = items.length, item, addrType; i < ii; i++) {
             item = items[i];
             address = makeAddress(item) || '';
             addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
 
-            htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
-            
+            htmlAddresses.push((i + 1) + '. ' + addrType + ' ' + address);
+
             // 지번 주소인 경우 상태 업데이트
             if (addrType === '[지번 주소]') {
               setJibunAddress(address);
@@ -74,7 +74,7 @@ const MapComponent = () => {
       function searchAddressToCoordinate(address) {
         naver.maps.Service.geocode({
           query: address
-        }, function(status, response) {
+        }, function (status, response) {
           if (status === naver.maps.Service.Status.ERROR) {
             return alert('Something Wrong!');
           }
@@ -84,19 +84,19 @@ const MapComponent = () => {
           }
 
           var item = response.v2.addresses[0],
-              point = new naver.maps.Point(item.x, item.y);
+            point = new naver.maps.Point(item.x, item.y);
 
           setAddressInfo({
-                address: address,
-                roadAddress: item.roadAddress,
-                jibunAddress: item.jibunAddress,
-                englishAddress: item.englishAddress,
-                point: point
-              });     // 주소 정보 저장
+            address: address,
+            roadAddress: item.roadAddress,
+            jibunAddress: item.jibunAddress,
+            englishAddress: item.englishAddress,
+            point: point
+          });     // 주소 정보 저장
 
           infoWindow.setContent([
             '<div style="padding:10px;min-width:200px;line-height:150%;">',
-            '<h4 style="margin-top:5px;">검색 주소 : '+ address +'</h4><br />',
+            '<h4 style="margin-top:5px;">검색 주소 : ' + address + '</h4><br />',
             (item.roadAddress ? '[도로명 주소] ' + item.roadAddress + '<br />' : ''),
             (item.jibunAddress ? '[지번 주소] ' + item.jibunAddress + '<br />' : ''),
             (item.englishAddress ? '[영문명 주소] ' + item.englishAddress + '<br />' : ''),
@@ -114,9 +114,9 @@ const MapComponent = () => {
         }
 
         var name = item.name,
-            region = item.region,
-            land = item.land,
-            isRoadAddress = name === 'roadaddr';
+          region = item.region,
+          land = item.land,
+          isRoadAddress = name === 'roadaddr';
 
         var sido = '', sigugun = '', dongmyun = '', ri = '', rest = '';
 
@@ -231,15 +231,12 @@ const MapComponent = () => {
             autoComplete="address"
             placeholder="주소를 입력해 주세요."
             onKeyDown={handleKeyDown}
-            InputProps={{
-              style: { borderRadius: '20px' },
-            }}
           />
-          <Button 
-            id="submit" 
-            variant="contained" 
-            color="primary" 
-            style={{ marginLeft: '10px', borderRadius: '5px', backgroundColor: '#999191', height: '40px', minWidth: '100px' }} 
+          <Button
+            id="submit"
+            variant="contained"
+            color="primary"
+            style={{ marginLeft: '10px', borderRadius: '5px', backgroundColor: '#999191', height: '40px', minWidth: '100px' }}
             onClick={handleSubmit}
           >
             주소 찾기
@@ -280,32 +277,35 @@ const MapComponent = () => {
 
   return (
     <div>
-      <div id="map" style={{ width: '100%', height: '400px' }}></div>
-      <div id="search"></div>
-      <TextField
-        sx={{ mt: 1 }}
-        disabled
-        margin="normal"
-        fullWidth
-        id="jibunAddress"
-        label="지번 주소"
-        value={jibunAddress}
-        InputProps={{
-          style: { borderRadius: '20px' },
-        }}
-      />
-      <TextField
-        sx={{ mt: 1 }}
-        margin="normal"
-        fullWidth
-        id="DetailAddress"
-        label="상세 주소"
-        placeholder='상세 주소를 입력해주세요.'
-        InputProps={{
-          style: { borderRadius: '20px' },
-        }}
-      />
-    </div> 
+      <Grid container spacing={2} alignItems="center">
+
+        <Grid xs={6}>
+          <div id="map" style={{ width: '100%', height: '400px' }}></div>
+        </Grid>
+
+        <Grid xs={0.5}>
+        </Grid>
+
+        <Grid xs={5.5} >
+          <Stack spacing={3}>
+            <div id="search"></div>
+            <TextField
+              disabled
+              fullWidth
+              id="jibunAddress"
+              label="지번 주소"
+              value={jibunAddress}
+            />
+            <TextField
+              fullWidth
+              id="DetailAddress"
+              label="상세 주소"
+              placeholder='상세 주소를 입력해주세요.'
+            />
+          </Stack>
+        </Grid>
+      </Grid>
+    </div>
   );
 }; // 검색한 주소 지번주소로 자동 입력
 
