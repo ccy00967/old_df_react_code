@@ -66,7 +66,6 @@ export function ServicePage() {
     return (
 
         <div>
-
             <Box sx={{ height: 130 }}></Box>
 
             <Grid container spacing={2}>
@@ -165,6 +164,7 @@ export function ServicePage() {
                                         </Card>
                                     </Grid>
                                 ))}
+   
                             </Grid>
                         </Grid>
                     </Grid>
