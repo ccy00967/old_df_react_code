@@ -9,6 +9,7 @@ import { ServiceRequestPage } from './pages/mainservice/ServiceRequestPage';
 import { DetailedPage } from './pages/mainservice/DetailedPage';
 import { IntroductionPage } from './pages/home/IntroductionPage';
 import { ContactPage } from './pages/mainservice/Contact';
+import { ForgotPassword } from './pages/login/ForgotPassword';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Route path="/requestform" element={<ServiceRequestPage />}></Route>
       <Route path="/detail" element={<DetailedPage />}></Route>
       <Route path="/introduction" element={<IntroductionPage />}></Route>
+      <Route path="/forgot" element={<ForgotPassword />}></Route>
       {/* <Route path="/contact" element={<ContactPage />}></Route> */}
     </Routes>
   </div>

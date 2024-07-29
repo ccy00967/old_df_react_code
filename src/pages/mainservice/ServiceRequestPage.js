@@ -1,4 +1,4 @@
-import { Box, Button, Container, CssBaseline, Stack, TextField, Typography,Grid, } from "@mui/material";
+import { Box, Button, Container, CssBaseline, Stack, TextField, Typography, Grid, } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -72,21 +72,21 @@ export function ServiceRequestPage() {
                 <Box
                     component="form"
                     sx={{
-                       // width: '100%',
+                        // width: '100%',
                         marginTop: 10,
                         //display: 'flex',
                         //flexDirection: 'column',
                         alignItems: 'center',
-                        
+
                     }}
                 >
                     <Stack spacing={3}>
-                        <Box sx={{height:'40'}}></Box>
+                        <Box sx={{ height: '40' }}></Box>
                         <Typography component="h1" variant="h4">
                             방제 신청서 작성
                         </Typography>
 
-                        <Container ></Container>
+                        
 
                         <TextField
                             margin="normal"
@@ -96,7 +96,7 @@ export function ServiceRequestPage() {
                             name="address"
                             autoComplete="address"
                             autoFocus
-                            onChange={(e) => { setAddress(e.target.value);}}
+                            onChange={(e) => { setAddress(e.target.value); }}
                         />
 
                         <Button variant="contained" onClick={handleClick} > 주소찾기 </Button>
@@ -111,10 +111,10 @@ export function ServiceRequestPage() {
                             autoComplete="information1"
                             autoFocus
                             onChange={(e) => { setAddress(e.target.value); }}
-                            sx={{width:'50%'}}
-                            
+                            sx={{ width: '50%' }}
+
                         />
-                         <TextField
+                        <TextField
                             margin="normal"
                             required // 이걸 지우면 *표시가 사라짐
                             fullWidth
@@ -124,11 +124,11 @@ export function ServiceRequestPage() {
                             autoComplete="information2"
                             autoFocus
                             onChange={(e) => { setAddress(e.target.value); }}
-                            sx={{width:'50%'}}
-                           
+                            sx={{ width: '50%' }}
+
                         />
-                        
-                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko" >
+
+                        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko" >
                             <DateTimePicker
                                 label="원하는 날짜 입력"
                                 //value={reservationDate}
@@ -136,46 +136,46 @@ export function ServiceRequestPage() {
                                     setDate(dayjs(value).format('YYYY-MM-DDTHH:mm:ss'))
                                     //console.log(reservationDate)
                                 }}
-                                
+
                             />
                         </LocalizationProvider>
-                    
+
                         <TextField
-                        margin="normal"
-                        required
-                        id = "type"
-                        label="작물 종류"
-                        name="type"
-                        autoComplete="type"
-                        autoFocus
-                        onChange={(e) => { setAddress(e.target.value) }}
-                        
+                            margin="normal"
+                            required
+                            id="type"
+                            label="작물 종류"
+                            name="type"
+                            autoComplete="type"
+                            autoFocus
+                            onChange={(e) => { setAddress(e.target.value) }}
+
                         />
 
                         <Grid container spacing={0} sx={{}}>
-                        <Grid item xs={4} >
-                        <TextField
-                        margin="normal"
-                        required
-                        id = "area"
-                        label="농지 면적(평)"
-                        name="area"
-                        autoComplete="area"
-                        
-                        autoFocus
-                        onChange={(e) => { setAddress(e.target.value) }}
-                        
-                        />
-                        </Grid>
-                        <Grid item xs={8}>
-                            <Box >
-                                산출가격: 100,000,000 원 평수 x 30원 예정
-                            </Box>
-                        </Grid>
+                            <Grid item xs={4} >
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    id="area"
+                                    label="농지 면적(평)"
+                                    name="area"
+                                    autoComplete="area"
+
+                                    autoFocus
+                                    onChange={(e) => { setAddress(e.target.value) }}
+
+                                />
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Box >
+                                    산출가격: 100,000,000 원 평수 x 30원 예정
+                                </Box>
+                            </Grid>
                         </Grid>
 
 
-                        
+
                         <TextField
                             margin="normal"
                             required
@@ -187,30 +187,30 @@ export function ServiceRequestPage() {
                             id="requestContent"
                             autoComplete="current-password"
                             onChange={(e) => { setContent(e.target.value) }}
-                            
+
                         />
 
-                       <Box >최종 결제 금액 : xxxx 원</Box>
-                        <Box justifyContent={"center"}>                      
-                              <Button
-                            type="submit" // submit 버튼은 페이지를 새로고침해버린다
-                            //type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
-                            size="large"
-                            variant="contained"
-                            
-                            
-                            href="/service"
-                            //sx={{ mt: 5, mb: 4 }}
-                            onClick={() => {
-                                postCustomerRequest(userInfo, address, requestContent, reservationDate)   //자택주소 1,2 작물종류 농지 면적 추가하기
-                                // 나중에 리팩터링하면서 적절한 응답 만들기
-                            }}
-                            sx={{width: '20%',}}
-                           
-                        >
-                            결제하기
-                        </Button>
-                       </Box>
+                        <Box >최종 결제 금액 : xxxx 원</Box>
+                        <Box justifyContent={"center"}>
+                            <Button
+                                type="submit" // submit 버튼은 페이지를 새로고침해버린다
+                                //type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
+                                size="large"
+                                variant="contained"
+
+
+                                href="/service"
+                                //sx={{ mt: 5, mb: 4 }}
+                                onClick={() => {
+                                    postCustomerRequest(userInfo, address, requestContent, reservationDate)   //자택주소 1,2 작물종류 농지 면적 추가하기
+                                    // 나중에 리팩터링하면서 적절한 응답 만들기
+                                }}
+                                sx={{ width: '20%', }}
+
+                            >
+                                결제하기
+                            </Button>
+                        </Box>
 
                     </Stack>
                 </Box>
