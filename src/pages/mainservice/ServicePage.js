@@ -121,13 +121,13 @@ export function ServicePage() {
                                             <br />
                                             {value.reservationDate}
                                         </Typography>
-
+                                        
                                     </CardContent>
                                     <Box sx={{height:'75px'}}></Box>
                                     <CardActions sx={{ justifyContent: "center", }}>
                                         <Button
                                         href='/detail' 
-                                        variant="contained"
+                                        variant="contained"  
                                         >자세히 보기</Button>
                                     </CardActions>
                                    
