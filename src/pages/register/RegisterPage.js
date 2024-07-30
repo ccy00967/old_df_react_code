@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { register } from "../../components/login_fuc";
 import MapComponent from '../../components/MapComponents';
 import { setEmail, setPassword, setName, handleOpen, handleClose } from '../../state/UserSlice';
-
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 
 const handleVerificationCodeSubmit = async (verificationCode) => {
@@ -116,7 +118,62 @@ export function RegisterPage() {
                         autoComplete="name"
                         placeholder="이름을 입력해 주세요."
                         autoFocus
-                        sx={{ m: 1, width: '25%' }}
+                        sx={{ m: 1, width: '30%' }}
+                    />
+
+                    <TextField
+                        margin="normal"
+                        required // 이걸 지우면 *표시가 사라짐
+                        id="phonenumber"
+                        label="전화번호"
+                        name="phonenumber"
+                        autoComplete="phonenumber"
+                        placeholder="전화번호를 입력해 주세요."
+                        sx={{ m: 1, width: '40%' }}
+                    />
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko" >
+                        <DateTimePicker
+                            label="생년월일 입력"
+                            //value={reservationDate}
+                            onChange={(value) => {
+                                //setDate(dayjs(value).format('YYYY-MM-DDTHH:mm:ss'))
+                                //console.log(reservationDate)
+                            }}
+                        />
+                    </LocalizationProvider>
+
+                    <TextField
+                        margin="normal"
+                        required // 이걸 지우면 *표시가 사라짐
+                        id="gender"
+                        label="성별"
+                        name="gender"
+                        autoComplete="gender"
+                        placeholder="성별을 입력해 주세요. (0:여자, 1:남자)"
+                        sx={{ m: 1, width: '40%' }}
+                    />
+
+                    <TextField
+                        margin="normal"
+                        required // 이걸 지우면 *표시가 사라짐
+                        id="nationalinfo"
+                        label="내,외국인"
+                        name="nationalinfo"
+                        autoComplete="nationalinfo"
+                        placeholder="내,외국인 선택. (0:내국인, 1:외국인)"
+                        sx={{ m: 1, width: '40%' }}
+                    />
+
+                    <TextField
+                        margin="normal"
+                        required // 이걸 지우면 *표시가 사라짐
+                        id="nickname"
+                        label="닉네임"
+                        name="nickname"
+                        autoComplete="nickname"
+                        placeholder="닉네임 입력"
+                        sx={{ m: 1, width: '40%' }}
                     />
 
                     <Grid container spacing={2} alignItems="center">
@@ -176,11 +233,11 @@ export function RegisterPage() {
                         variant="contained"
                         size="large"
                         disableElevation
-                        //sx={{ m: 1, width: '25%' }}
+                    //sx={{ m: 1, width: '25%' }}
                     >
                         회원 가입
                     </Button>
-                <Box height="100px"></Box>
+                    <Box height="100px"></Box>
                 </Stack>
             </Container>
             {/* <Modal
