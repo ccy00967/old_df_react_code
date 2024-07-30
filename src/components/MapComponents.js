@@ -57,16 +57,16 @@ const initMap = async () => {
       }
 
       console.log(htmlAddresses)
-      searchAddressToCoordinate(htmlAddresses[1]);
+      searchAddressToCoordinate(htmlAddresses[0]);
 
-      infoWindow.setContent([
-        '<div style="padding:10px;min-width:200px;line-height:150%;">',
-        '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
-        htmlAddresses.join('<br />'),
-        '</div>'
-      ].join('\n'));
+      // infoWindow.setContent([
+      //   '<div style="padding:10px;min-width:200px;line-height:150%;">',
+      //   '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
+      //   htmlAddresses.join('<br />'),
+      //   '</div>'
+      // ].join('\n'));
 
-      infoWindow.open(map, latlng);
+      // infoWindow.open(map, latlng);
     });
   }
 
@@ -258,6 +258,7 @@ const initMap = async () => {
 };
 
 
+
 const MapComponent = () => {
 
   const addressInfo = useSelector((state) => state.address);
@@ -284,7 +285,7 @@ const MapComponent = () => {
       }
     };
     
-  }, [addressInfo]); // [] 안에 있는 변수가 변할 때마다 useEffect가 호출됨
+  }, []); // [] 안에 있는 변수가 변할 때마다 useEffect가 호출됨
 
 
 
