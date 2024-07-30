@@ -1,4 +1,4 @@
-import { Box, Button, Container, TextField, Typography, Stack, Grid } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Stack, Grid, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -143,16 +143,19 @@ export function RegisterPage() {
                         />
                     </LocalizationProvider>
 
-                    <TextField
-                        margin="normal"
-                        required // 이걸 지우면 *표시가 사라짐
-                        id="gender"
-                        label="성별"
-                        name="gender"
-                        autoComplete="gender"
-                        placeholder="성별을 입력해 주세요. (0:여자, 1:남자)"
-                        sx={{ m: 1, width: '40%' }}
-                    />
+                    <FormControl variant="standard" sx={{maxWidth:50}}>
+                        <InputLabel id="genderselect">성별</InputLabel>
+                        <Select
+                            labelId="genderselect"
+                            id="genderselect"
+                            /*value={gender}
+                            onChange={handleChange}*/
+                            label="성별"
+                        >
+                            <MenuItem value={'남자'}>남</MenuItem>
+                            <MenuItem value={'여자'}>여</MenuItem>
+                        </Select>
+                    </FormControl>
 
                     <TextField
                         margin="normal"
