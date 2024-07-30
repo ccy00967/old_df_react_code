@@ -8,7 +8,7 @@ import store from '../state/store';
 
 
 
-const initMap = async (dispatch) => {
+const initMap = async () => {
   const { naver } = window; // 네이버 지도 객체
   const mapOptions = {
     center: new naver.maps.LatLng(35.1409402, 126.925774), // 초기 중심 좌표
@@ -260,13 +260,10 @@ const initMap = async (dispatch) => {
 
 const MapComponent = () => {
 
-  //const dispatch = useDispatch();
-  const addressInfo = useSelector((state) => state.user.address);
-
-  //const [addressInfo, setAddressInfo] = useState({});
+  const addressInfo = useSelector((state) => state.address);
 
   useEffect(() => {
-    initMap()
+    //initMap()
     // 네이버 지도 API 스크립트가 로드된 후에 initMap 함수 호출
     if (window.naver) {
       initMap();
