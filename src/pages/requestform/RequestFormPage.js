@@ -10,7 +10,7 @@ import { server } from "../../pages/login/login_fuc";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import MapComponent from "../../components/MapComponents";
 
-const postCustomerRequest = async function (userInfo, address, requestContent, reservationDate) {
+const postCustomerRequest = async function (userInfo, address, requestContent, reservationDate,cropsinfo,size) {
 
     await fetch("customer-requests/", {
         method: 'POST',
@@ -22,6 +22,8 @@ const postCustomerRequest = async function (userInfo, address, requestContent, r
             address: address,
             requestContent: requestContent,
             reservationDate: reservationDate,
+            cropsinfo: cropsinfo,
+            size: size,
         })
     })
         .then((res) => res.json())
@@ -53,8 +55,10 @@ export function RequestFormPage() {
 
     const [address, setAddress] = useState('');
     const [requestContent, setContent] = useState('');
+    const [cropsinfo, setCropsinfo] = useState('');
+    const [size, setSize] = useState('');
     const [reservationDate, setDate] = useState(dayjs('').format('YYYY-MM-DDTHH:mm:ss')); // 날짜관리 패키지 dayjs를 사용 - 이유: mui 추천
-
+    
 
     // useEffect(() => {
     //     if (userInfo.success === true) {
@@ -110,12 +114,12 @@ export function RequestFormPage() {
                         <TextField
                             margin="normal"
                             required
-                            id="type"
+                            id="cropsinfo"
                             label="작물 종류"
-                            name="type"
-                            autoComplete="type"
+                            name="cropsinfo"
+                            autoComplete="cropsinfo"
                             autoFocus
-                            onChange={(e) => { setAddress(e.target.value) }}  //
+                            onChange={(e) => { setCropsinfo(e.target.value) }}  //
 
                         />
 
@@ -124,13 +128,13 @@ export function RequestFormPage() {
                                 <TextField
                                     margin="normal"
                                     required
-                                    id="area"
+                                    id="size"
                                     label="농지 면적(평)"
-                                    name="area"
-                                    autoComplete="area"
+                                    name="size"
+                                    autoComplete="size"
 
                                     autoFocus
-                                    onChange={(e) => { setAddress(e.target.value) }}  //
+                                    onChange={(e) => { setSize(e.target.value) }}  //
 
                                 />
                             </Grid>
@@ -169,7 +173,7 @@ export function RequestFormPage() {
                                 href="/service"
                                 //sx={{ mt: 5, mb: 4 }}
                                 onClick={() => {
-                                    postCustomerRequest(userInfo, address, requestContent, reservationDate)   //자택주소 1,2 작물종류 농지 면적 추가하기
+                                    postCustomerRequest(userInfo, address, requestContent, reservationDate,cropsinfo,size)   //자택주소 1,2 작물종류 농지 면적 추가하기
                                     // 나중에 리팩터링하면서 적절한 응답 만들기
                                 }}
                                 sx={{ width: '20%', }}
