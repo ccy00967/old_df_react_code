@@ -8,7 +8,6 @@ import { CustomAppBar } from './components/CustomAppBar';
 import { RequestFormPage } from './pages/requestform/RequestFormPage';
 import { DetailedPage } from './pages/postedrequest/DetailedPage';
 import { IntroductionPage } from './pages/home/IntroductionPage';
-// import { ForgotPassword } from './pages/login/ForgotPassword';
 
 
 function App() {
@@ -23,8 +22,6 @@ function App() {
       <Route path="/requestform" element={<RequestFormPage />}></Route>
       <Route path="/detail" element={<DetailedPage />}></Route>
       <Route path="/introduction" element={<IntroductionPage />}></Route>
-      {/* <Route path="/forgot" element={<ForgotPassword />}></Route> */}
-      {/* <Route path="/contact" element={<ContactPage />}></Route> */}
     </Routes>
   </div>
   );
