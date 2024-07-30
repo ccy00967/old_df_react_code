@@ -41,8 +41,11 @@ const userSlice = createSlice({
         handleClose: (state) => {
             state.open = false;
         },
+        setAddress: (state, action) => {
+            state.address = action.payload;
+        },
     },
 });
 
-export const { setEmail, setPassword, setName, setUserData, handleOpen, handleClose } = userSlice.actions;
-export default userSlice.reducer;
+export const { setEmail, setPassword, setName, setUserData, setAddress, handleOpen, handleClose } = userSlice.actions;
+export default userSlice;
