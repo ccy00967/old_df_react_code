@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { server } from '../../components/login_fuc';
+import { server } from '../../pages/login/login_fuc';
 import { dark } from '@mui/material/styles/createPalette';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Stack } from '@mui/system';

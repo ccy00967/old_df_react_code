@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { LogoButton } from "./LogoButton";
 import { useSelector } from "react-redux";
-import { logOut } from "./login_fuc";
+import { logOut } from "../pages/login/login_fuc";
 
 
 

@@ -1,11 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+const Address = {
+    roadaddress: '',
+    jibunAddress: '',
+    englishAddress: '',
+    navermapsx: '',
+    navermapsy: '',
+}
+
+const UserRegistraion = {
     userEmail: '',
+    name : '',
+    phone_number: '',
+    birth: '',
+    gender: '',
+    nationalinfo: '',
+    nickname: '',
     password: '',
-    userName: '',
-    open: false,
-};
+    address: Address,
+}
+
+const initialState = UserRegistraion
 
 const userSlice = createSlice({
     name: 'user',
@@ -26,8 +41,11 @@ const userSlice = createSlice({
         handleClose: (state) => {
             state.open = false;
         },
+        setAddress: (state, action) => {
+            state.address = action.payload;
+        },
     },
 });
 
-export const { setEmail, setPassword, setName, setUserData, handleOpen, handleClose } = userSlice.actions;
-export default userSlice.reducer;
+export const { setEmail, setPassword, setName, setUserData, setAddress, handleOpen, handleClose } = userSlice.actions;
+export default userSlice;
