@@ -1,6 +1,6 @@
-import { persistor } from "..";
-import userInfoSlice from "../state/UserInfo";
-import store from "../state/store";
+import { persistor } from "../../";
+import userInfoSlice from "../../state/UserInfo";
+import store from "../../state/store";
 
 
 // 로그인과 회원가입 함수를 여기로 분리하였지만 뭔가 엉성하다

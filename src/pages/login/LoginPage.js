@@ -3,7 +3,7 @@ import img from '../../assets/img/dronefield_bg.jpg'
 import { useEffect, useState } from "react";
 import { LogoButton } from "../../components/LogoButton";
 import { useNavigate } from "react-router-dom";
-import { logIn } from "../../components/login_fuc";
+import { logIn } from "./login_fuc";
 import { useSelector } from "react-redux";
 
 

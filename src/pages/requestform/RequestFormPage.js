@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useSelector } from "react-redux";
-import { server } from "../../components/login_fuc";
+import { server } from "../../pages/login/login_fuc";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 
 const postCustomerRequest = async function (userInfo, address, requestContent, reservationDate) {

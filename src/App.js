@@ -2,14 +2,13 @@ import './App.css';
 import { HomePage } from './pages/home/HomePage';
 import { Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/login/LoginPage';
-import { ServicePage } from './pages/mainservice/ServicePage';
-import { RegisterPage } from './pages/login/RegisterPage';
+import { ServicePage } from './pages/myinfo/ServicePage';
+import { RegisterPage } from './pages/register/RegisterPage';
 import { CustomAppBar } from './components/CustomAppBar';
-import { ServiceRequestPage } from './pages/mainservice/ServiceRequestPage';
-import { DetailedPage } from './pages/mainservice/DetailedPage';
+import { RequestFormPage } from './pages/requestform/RequestFormPage';
+import { DetailedPage } from './pages/postedrequest/DetailedPage';
 import { IntroductionPage } from './pages/home/IntroductionPage';
-import { ContactPage } from './pages/mainservice/Contact';
-import { ForgotPassword } from './pages/login/ForgotPassword';
+// import { ForgotPassword } from './pages/login/ForgotPassword';
 
 
 function App() {
@@ -21,10 +20,10 @@ function App() {
       <Route path="/login" element={<LoginPage />}></Route>
       <Route path="/register" element={<RegisterPage />}></Route>
       <Route path="/service" element={<ServicePage />}></Route>
-      <Route path="/requestform" element={<ServiceRequestPage />}></Route>
+      <Route path="/requestform" element={<RequestFormPage />}></Route>
       <Route path="/detail" element={<DetailedPage />}></Route>
       <Route path="/introduction" element={<IntroductionPage />}></Route>
-      <Route path="/forgot" element={<ForgotPassword />}></Route>
+      {/* <Route path="/forgot" element={<ForgotPassword />}></Route> */}
       {/* <Route path="/contact" element={<ContactPage />}></Route> */}
     </Routes>
   </div>
