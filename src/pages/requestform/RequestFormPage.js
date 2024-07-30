@@ -54,6 +54,7 @@ export function RequestFormPage() {
     const [requestContent, setContent] = useState('');
     const [reservationDate, setDate] = useState(dayjs('').format('YYYY-MM-DDTHH:mm:ss')); // 날짜관리 패키지 dayjs를 사용 - 이유: mui 추천
 
+
     // useEffect(() => {
     //     if (userInfo.success === true) {
     //         navigate("/");
@@ -110,7 +111,7 @@ export function RequestFormPage() {
                             name="information1"
                             autoComplete="information1"
                             autoFocus
-                            onChange={(e) => { setAddress(e.target.value); }}
+                            onChange={(e) => { setAddress(e.target.value); }} //
                             sx={{ width: '50%' }}
 
                         />
@@ -123,7 +124,7 @@ export function RequestFormPage() {
                             name="information2"
                             autoComplete="information2"
                             autoFocus
-                            onChange={(e) => { setAddress(e.target.value); }}
+                            onChange={(e) => { setAddress(e.target.value); }} //
                             sx={{ width: '50%' }}
 
                         />
@@ -148,7 +149,7 @@ export function RequestFormPage() {
                             name="type"
                             autoComplete="type"
                             autoFocus
-                            onChange={(e) => { setAddress(e.target.value) }}
+                            onChange={(e) => { setAddress(e.target.value) }}  //
 
                         />
 
@@ -163,7 +164,7 @@ export function RequestFormPage() {
                                     autoComplete="area"
 
                                     autoFocus
-                                    onChange={(e) => { setAddress(e.target.value) }}
+                                    onChange={(e) => { setAddress(e.target.value) }}  //
 
                                 />
                             </Grid>
