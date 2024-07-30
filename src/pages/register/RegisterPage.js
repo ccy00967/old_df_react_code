@@ -2,7 +2,7 @@ import { Box, Button, Container, TextField, Typography, Stack, Grid } from "@mui
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { register } from "../../components/login_fuc";
+import { register } from "../../pages/login/login_fuc";
 import MapComponent from '../../components/MapComponents';
 import { setEmail, setPassword, setName, handleOpen, handleClose } from '../../state/UserSlice';
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -216,10 +216,10 @@ export function RegisterPage() {
                         margin="normal"
                         required
                         fullWidth
-                        name="password"
+                        name="password confirm"
                         label="비밀번호 확인"
                         type="password"
-                        id="password"
+                        id="password confirm"
                         placeholder="비밀번호가 일치하지 않습니다."
                     />
 

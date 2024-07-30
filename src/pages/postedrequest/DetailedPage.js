@@ -5,7 +5,7 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useSelector } from "react-redux";
-import { server } from "../../components/login_fuc";
+import { server } from "../../pages/login/login_fuc";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { dark } from '@mui/material/styles/createPalette';
 import { grey } from "@mui/material/colors";
