@@ -32,7 +32,7 @@ const postCustomerRequest = async function (userInfo, address, requestContent, r
     //return customerRequests;
 }
 
-export function ServiceRequestPage() {
+export function RequestFormPage() {
 
     const open = useDaumPostcodePopup();
 
