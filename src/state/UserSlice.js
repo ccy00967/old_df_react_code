@@ -1,11 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+const Address = {
+    roadaddress: '',
+    jibunAddress: '',
+    englishAddress: '',
+    navermapsx: '',
+    navermapsy: '',
+}
+
+const UserRegistraion = {
     userEmail: '',
+    name : '',
+    phone_number: '',
+    birth: '',
+    gender: '',
+    nationalinfo: '',
+    nickname: '',
     password: '',
-    userName: '',
-    open: false,
-};
+    address: Address,
+}
+
+const initialState = UserRegistraion
 
 const userSlice = createSlice({
     name: 'user',
