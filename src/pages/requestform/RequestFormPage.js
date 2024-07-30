@@ -8,6 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useSelector } from "react-redux";
 import { server } from "../../pages/login/login_fuc";
 import { useDaumPostcodePopup } from "react-daum-postcode";
+import MapComponent from "../../components/MapComponents";
 
 const postCustomerRequest = async function (userInfo, address, requestContent, reservationDate) {
 
@@ -87,47 +88,12 @@ export function RequestFormPage() {
                             방제 신청서 작성
                         </Typography>
 
-                        
 
-                        <TextField
-                            margin="normal"
-                            fullWidth
-                            id="address"
-                            label="방제 주소"
-                            name="address"
-                            autoComplete="address"
-                            autoFocus
-                            onChange={(e) => { setAddress(e.target.value); }}
-                        />
 
-                        <Button variant="contained" onClick={handleClick} > 주소찾기 </Button>
+                        <div className="MapApp">
+                            <MapComponent />
+                        </div>
 
-                        <TextField
-                            margin="normal"
-                            required // 이걸 지우면 *표시가 사라짐
-                            fullWidth
-                            id="information1"
-                            label="자택 주소 자세한 정보1"
-                            name="information1"
-                            autoComplete="information1"
-                            autoFocus
-                            onChange={(e) => { setAddress(e.target.value); }} //
-                            sx={{ width: '50%' }}
-
-                        />
-                        <TextField
-                            margin="normal"
-                            required // 이걸 지우면 *표시가 사라짐
-                            fullWidth
-                            id="information2"
-                            label="자택 주소 자세한 정보2"
-                            name="information2"
-                            autoComplete="information2"
-                            autoFocus
-                            onChange={(e) => { setAddress(e.target.value); }} //
-                            sx={{ width: '50%' }}
-
-                        />
 
                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko" >
                             <DateTimePicker
