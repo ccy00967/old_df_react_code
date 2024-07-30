@@ -11,7 +11,7 @@ import { useDaumPostcodePopup } from "react-daum-postcode";
 
 const postCustomerRequest = async function (userInfo, address, requestContent, reservationDate) {
 
-    await fetch(server + "customer-requests/", {
+    await fetch("customer-requests/", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

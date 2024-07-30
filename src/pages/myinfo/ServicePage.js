@@ -16,7 +16,7 @@ import { Stack } from '@mui/system';
 const getCustomerRequests = async function (userInfo, getRequests) {
     let length = 0;
     let customerRequests = []
-    await fetch(server + "customer-requests/", {
+    await fetch("customer-requests/", {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
