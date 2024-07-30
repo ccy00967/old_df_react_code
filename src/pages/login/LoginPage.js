@@ -68,7 +68,7 @@ export function LoginPage() {
                         <TextField
                             margin="normal"
                             id="email"
-                            //label="이메일주소"
+                            label="이메일 주소"
                             placeholder="이메일을 입력해주세요."
                             name="email"
                             autoComplete="email"
@@ -81,7 +81,7 @@ export function LoginPage() {
                         <TextField
                             margin="normal"
                             name="password"
-                            //label="Password"
+                            label="비밀번호"
                             placeholder="비밀번호를 입력해주세요."
                             type="password"
                             id="password"
