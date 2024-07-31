@@ -21,22 +21,22 @@ const registrationSlice = createSlice({
             state.userEmail = action.payload;
         },
         setName: (state, action) => {
-            state.userName = action.payload;
+            state.name = action.payload;
         },
         setPhonenumber: (state, action) => {
-            state.userPhone = action.payload;
+            state.phone_number = action.payload;
         },
         setBirth: (state, action) => {
             state.birth = action.payload;
         },
         setGender: (state, action) => {
-            state.userGender = action.payload;
+            state.gender = action.payload;
         },
         setNationalinfo: (state, action) => {
-            state.userNation = action.payload;
+            state.nationalinfo = action.payload;
         },
         setNickname: (state, action) => {
-            state.userNickname = action.payload;
+            state.nickname = action.payload;
         },
         setPassword: (state, action) => {
             state.password = action.payload;

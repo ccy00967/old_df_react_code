@@ -1,32 +1,34 @@
 import { persistor } from "../../";
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerRoute, emailsendRoute, emailvalidateRoute } from "../../components/backend";
 import userInfoSlice from "../../state/UserInfo";
 import store from "../../state/store";
 import { setEmail, setGender, setNationalinfo } from '../../state/registration';
-import {ToggleButtonGroup, ToggleButton, Button, TextField } from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, Button, TextField } from '@mui/material';
 import { name } from "dayjs/locale/ko";
 
-export const register = async function (userEmail, password, userName, userPhone, userGender, userNation, userNickname) {
+export const register = async function () {
     //const dispatch = useDispatch();
     // 로그인 버튼을 클릭하면 백엔드 서버에 요청을 보낸다
     // 이때 body에 필요한 정보가 할당된다
     // 데이터를 다른곳에 리턴하고 싶다면 fetch앞에 return 필요
-
+    const registration = store.getState().registration;
+    const address = store.getState().address;
     let userData = {};
 
     await fetch(registerRoute, {
         method: 'POST',
         headers: [["Content-Type", "application/x-www-form-urlencoded"]],
         body: JSON.stringify({
-            name: userName,
-            phone_number: userPhone,
-            nationalinfo: userNation,
-            nickname: userNickname,
-            gender: userGender,
-            email: userEmail,
-            password: password,
+            name: registration.name,
+            phone_number: registration.phone_number,
+            nationalinfo: registration.nationalinfo,
+            nickname: registration.nickname,
+            gender: registration.gender,
+            password: registration.password,
+            birth: registration.birth,
+            address: address,
         })
     })
         .then((res) => res.json())
@@ -39,6 +41,11 @@ export const register = async function (userEmail, password, userName, userPhone
 
     return userData
 }
+
+
+
+
+
 
 export const handleEmailChange = (e, dispatch, setEmailError) => {
     const value = e.target.value;
@@ -134,7 +141,7 @@ export default RegisterComponent;
 // 성별 토글 버튼
 export const GenderToggleButton = () => {
     const dispatch = useDispatch();
-    const userGender = useSelector((state) => state.user.userGender) || '1'; // 현재 성별 상태를 가져오고, 기본값을 '1'로 설정
+    const gender = useSelector((state) => state.registration.gender) || '1'; // 현재 성별 상태를 가져오고, 기본값을 '1'로 설정
 
     const handleChange = (event, newAlignment) => {
         if (newAlignment !== null) {
@@ -146,7 +153,7 @@ export const GenderToggleButton = () => {
         <ToggleButtonGroup
             color="primary"
             exclusive
-            value={userGender} // 현재 성별 상태를 value로 설정
+            value={gender} // 현재 성별 상태를 value로 설정
             onChange={handleChange} // 변경 이벤트 핸들러를 설정
             aria-label="Platform"
             fullWidth
@@ -160,10 +167,10 @@ export const GenderToggleButton = () => {
 // 국적 토글 버튼
 export const NationToggleButton = () => {
     const dispatch = useDispatch();
-    const userNation = useSelector((state) => state.user.userNation) || '0'; // 현재 성별 상태를 가져오고, 기본값을 '1'로 설정
+    const nationalinfo = useSelector((state) => state.registration.nationalinfo) || '0'; // 현재 성별 상태를 가져오고, 기본값을 '1'로 설정
 
     const handleChange = (event, newAlignment) => {
-        if (newAlignment !== null) {
+        if (newAlignment) {
             dispatch(setNationalinfo(newAlignment)); // 국적 상태를 업데이트
         }
     };
@@ -172,8 +179,8 @@ export const NationToggleButton = () => {
         <ToggleButtonGroup
             color="primary"
             exclusive
-            value={userNation} // 현재 국적 상태를 value로 설정
-            onChange={handleChange} 
+            value={nationalinfo} // 현재 국적 상태를 value로 설정
+            onChange={handleChange}
             aria-label="Platform"
             fullWidth
         >

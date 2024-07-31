@@ -16,7 +16,7 @@ export function RegisterPage() {
 
     //const userInfo = useSelector(state => { return state.persist.userInfo; });
     const navigate = useNavigate(); // 리액트 페이지 라우트
-    const userEmail = useSelector(state => state.user.userEmail);
+    const userEmail = useSelector(state => state.registration.userEmail);
 
     const dispatch = useDispatch();
 
@@ -247,6 +247,7 @@ export function RegisterPage() {
                         variant="contained"
                         size="large"
                         disableElevation
+                        onClick={() => register()}
                     //sx={{ m: 1, width: '25%' }}
                     >
                         회원 가입
