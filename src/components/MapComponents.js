@@ -1,10 +1,11 @@
 import React, { useEffect, useState,  } from 'react';
 import ReactDOM from 'react-dom';
-import { TextField, Button, Grid, Box, Stack } from '@mui/material';
+import { TextField, Button, Grid, Box, Stack, InputAdornment } from '@mui/material';
 import { createRoot } from 'react-dom/client';
 import { useSelector, useDispatch } from 'react-redux';
 import userSlice from '../state/UserSlice';
 import store from '../state/store';
+import { Home } from '@mui/icons-material';
 
 
 
@@ -56,7 +57,6 @@ const initMap = async () => {
         htmlAddresses.push(address);
       }
 
-      console.log(htmlAddresses)
       searchAddressToCoordinate(htmlAddresses[0]);
 
       // infoWindow.setContent([
@@ -237,6 +237,13 @@ const initMap = async () => {
         name="address"
         autoComplete="address"
         placeholder="주소를 입력해 주세요."
+        InputProps={{
+          startAdornment: (
+              <InputAdornment position="start">
+                  <Home />
+              </InputAdornment>
+          ),
+      }}
         onKeyDown={handleKeyDown}
       />
       <Button
@@ -275,8 +282,6 @@ const MapComponent = () => {
       script.onload = initMap;
       document.head.appendChild(script);
     }
-
-    console.log(addressInfo);
     
     return () => {
       // 컴포넌트가 언마운트될 때 정리 작업 수행

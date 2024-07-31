@@ -1,4 +1,4 @@
-import { Box, Button, Container, TextField, Typography, Stack, Grid, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Stack, Grid, MenuItem, FormControl, InputLabel, Select, FormHelperText, InputAdornment,ToggleButton, ToggleButtonGroup  } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,8 @@ import MapComponent from '../../components/MapComponents';
 import { setEmail, setPassword, setName, handleOpen, handleClose } from '../../state/UserSlice';
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AccountCircle, PhoneIphone, Person, Email, Lock, PermContactCalendar, Badge } from '@mui/icons-material';
 import dayjs from "dayjs";
 
 
@@ -101,84 +103,13 @@ export function RegisterPage() {
 
     return (
         <div>
-            <Container component="main" sx={{ width: '40%' }}>
+            <Container component="main" sx={{ width: '40%', minWidth: '500px' }}>
 
                 <Box height="130px" />
 
                 <Stack spacing={5}>
 
                     <Typography variant="h4">회원가입</Typography>
-
-                    <TextField
-                        margin="normal"
-                        required // 이걸 지우면 *표시가 사라짐
-                        id="name"
-                        label="이름"
-                        name="name"
-                        autoComplete="name"
-                        placeholder="이름을 입력해 주세요."
-                        autoFocus
-                        sx={{ m: 1, width: '30%' }}
-                    />
-
-                    <TextField
-                        margin="normal"
-                        required // 이걸 지우면 *표시가 사라짐
-                        id="phonenumber"
-                        label="전화번호"
-                        name="phonenumber"
-                        autoComplete="phonenumber"
-                        placeholder="전화번호를 입력해 주세요."
-                        sx={{ m: 1, width: '40%' }}
-                    />
-
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko" >
-                        <DateTimePicker
-                            label="생년월일 입력"
-                            //value={reservationDate}
-                            onChange={(value) => {
-                                //setDate(dayjs(value).format('YYYY-MM-DDTHH:mm:ss'))
-                                //console.log(reservationDate)
-                            }}
-                        />
-                    </LocalizationProvider>
-
-                    <FormControl variant="standard" sx={{maxWidth:50}}>
-                        <InputLabel id="genderselect">성별</InputLabel>
-                        <Select
-                            labelId="genderselect"
-                            id="genderselect"
-                            /*value={gender}
-                            onChange={handleChange}*/
-                            label="성별"
-                        >
-                            <MenuItem value={'남자'}>남</MenuItem>
-                            <MenuItem value={'여자'}>여</MenuItem>
-                        </Select>
-                    </FormControl>
-
-                    <TextField
-                        margin="normal"
-                        required // 이걸 지우면 *표시가 사라짐
-                        id="nationalinfo"
-                        label="내,외국인"
-                        name="nationalinfo"
-                        autoComplete="nationalinfo"
-                        placeholder="내,외국인 선택. (0:내국인, 1:외국인)"
-                        sx={{ m: 1, width: '40%' }}
-                    />
-
-                    <TextField
-                        margin="normal"
-                        required // 이걸 지우면 *표시가 사라짐
-                        id="nickname"
-                        label="닉네임"
-                        name="nickname"
-                        autoComplete="nickname"
-                        placeholder="닉네임 입력"
-                        sx={{ m: 1, width: '40%' }}
-                    />
-
                     <Grid container spacing={2} alignItems="center">
                         <Grid xs={6}>
                             <TextField
@@ -189,16 +120,29 @@ export function RegisterPage() {
                                 name="email"
                                 autoComplete="email"
                                 placeholder="이메일을 입력해 주세요."
-                                value={userEmail}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Email />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Grid>
-                        <Grid xs={3}>
+                        <Grid xs={5}>
                             <Button
                                 type="button"
                                 color="primary"
                                 variant="contained"
                                 size="large"
                                 disableElevation
+                                sx={{
+                                    width: '150px',  // 원하는 너비로 조정
+                                    height: '40px',  // 원하는 높이로 조정
+                                    textAlign: 'center',  // 텍스트가 가운데 정렬되도록 설정
+                                    padding: '0',  // 패딩을 없애서 크기 고정
+                                    lineHeight: 'normal',  // 텍스트의 줄 높이를 조정
+                                }}
                             >
                                 이메일 인증하기
                             </Button>
@@ -213,6 +157,14 @@ export function RegisterPage() {
                         type="password"
                         id="password"
                         placeholder="비밀번호를 입력해 주세요."
+                        margin="dense"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Lock />
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <TextField
                         sx={{ mt: 1, width: '75%' }}
@@ -223,8 +175,106 @@ export function RegisterPage() {
                         label="비밀번호 확인"
                         type="password"
                         id="password confirm"
-                        placeholder="비밀번호가 일치하지 않습니다."
+                        placeholder="비밀번호를 다시 입력해주세요."
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Lock />
+                                </InputAdornment>
+                            ),
+                        }}
                     />
+
+                    <Box sx={{ display: 'flex', width: '100%', maxHeight: '40px', minWidth: '50px' }}>
+                    <ToggleButtonGroup
+                        color="primary"
+                        exclusive
+                        aria-label="Platform"
+                        fullWidth
+                    >
+                        <ToggleButton value="male">남자</ToggleButton>
+                        <ToggleButton value="Female">여자</ToggleButton>
+                    </ToggleButtonGroup>
+
+
+                    <ToggleButtonGroup
+                        color="primary"
+                        exclusive
+                        aria-label="Platform"
+                        fullWidth
+                    >
+                        <ToggleButton value="local">내국인</ToggleButton>
+                        <ToggleButton value="foreigner">외국인</ToggleButton>
+                    </ToggleButtonGroup>
+                    </Box>
+
+                    <TextField
+                        margin="normal"
+                        required // 이걸 지우면 *표시가 사라짐
+                        id="nickname"
+                        label="닉네임"
+                        name="nickname"
+                        autoComplete="nickname"
+                        placeholder="닉네임 입력"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Badge />
+                                </InputAdornment>
+                            ),
+                        }}
+                        sx={{ m: 1, width: '40%' }}
+                    />
+
+                    <Box sx={{ display: 'flex', width: '100%' }}>
+                        <TextField
+                            margin="normal"
+                            required // 이걸 지우면 *표시가 사라짐
+                            id="name"
+                            label="이름"
+                            name="name"
+                            autoComplete="name"
+                            placeholder="이름을 입력해 주세요."
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <AccountCircle />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            sx={{ width: '45%' }}
+                        />
+
+                        <TextField
+                            margin="normal"
+                            required // 이걸 지우면 *표시가 사라짐
+                            id="phonenumber"
+                            label="전화번호"
+                            name="phonenumber"
+                            autoComplete="phonenumber"
+                            placeholder="전화번호를 입력해 주세요."
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <PhoneIphone />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            sx={{ ml: 1, width: '45%' }}
+                        />
+                    </Box>
+                    
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko" >
+                        <DatePicker
+                            label="생년월일 입력"
+
+                            //value={reservationDate}
+                            onChange={(value) => {
+                                //setDate(dayjs(value).format('YYYY-MM-DD'))
+                                //console.log(reservationDate)
+                            }}
+                        />
+                    </LocalizationProvider>
 
                     <div className="MapApp">
                         <MapComponent />
