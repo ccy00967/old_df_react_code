@@ -1,10 +1,11 @@
 import React, { useEffect, useState,  } from 'react';
 import ReactDOM from 'react-dom';
-import { TextField, Button, Grid, Box, Stack } from '@mui/material';
+import { TextField, Button, Grid, Box, Stack, InputAdornment } from '@mui/material';
 import { createRoot } from 'react-dom/client';
 import { useSelector, useDispatch } from 'react-redux';
 import userSlice from '../state/UserSlice';
 import store from '../state/store';
+import { Home } from '@mui/icons-material';
 
 
 
@@ -56,17 +57,16 @@ const initMap = async () => {
         htmlAddresses.push(address);
       }
 
-      console.log(htmlAddresses)
-      searchAddressToCoordinate(htmlAddresses[1]);
+      searchAddressToCoordinate(htmlAddresses[0]);
 
-      infoWindow.setContent([
-        '<div style="padding:10px;min-width:200px;line-height:150%;">',
-        '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
-        htmlAddresses.join('<br />'),
-        '</div>'
-      ].join('\n'));
+      // infoWindow.setContent([
+      //   '<div style="padding:10px;min-width:200px;line-height:150%;">',
+      //   '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
+      //   htmlAddresses.join('<br />'),
+      //   '</div>'
+      // ].join('\n'));
 
-      infoWindow.open(map, latlng);
+      // infoWindow.open(map, latlng);
     });
   }
 
@@ -237,6 +237,13 @@ const initMap = async () => {
         name="address"
         autoComplete="address"
         placeholder="주소를 입력해 주세요."
+        InputProps={{
+          startAdornment: (
+              <InputAdornment position="start">
+                  <Home />
+              </InputAdornment>
+          ),
+      }}
         onKeyDown={handleKeyDown}
       />
       <Button
@@ -258,6 +265,7 @@ const initMap = async () => {
 };
 
 
+
 const MapComponent = () => {
 
   const addressInfo = useSelector((state) => state.address);
@@ -274,8 +282,6 @@ const MapComponent = () => {
       script.onload = initMap;
       document.head.appendChild(script);
     }
-
-    console.log(addressInfo);
     
     return () => {
       // 컴포넌트가 언마운트될 때 정리 작업 수행
@@ -284,7 +290,7 @@ const MapComponent = () => {
       }
     };
     
-  }, [addressInfo]); // [] 안에 있는 변수가 변할 때마다 useEffect가 호출됨
+  }, []); // [] 안에 있는 변수가 변할 때마다 useEffect가 호출됨
 
 
 

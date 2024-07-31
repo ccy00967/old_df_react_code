@@ -11,7 +11,7 @@ const Address = {
 const initialState = Address
 
 const addressSlice = createSlice({
-    name: 'user',
+    name: 'address',
     initialState,
     reducers: {
         setAddress: (state, action) => {
