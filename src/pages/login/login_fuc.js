@@ -35,7 +35,7 @@ export const register = async function (userEmail, password, userName) {
 
     let userData = {};
 
-    await fetch("https://192.168. / ~~/ register", {
+    await fetch(loginRoute, {
         method: 'POST',
         headers: [["Content-Type", "application/json"]],
         body: JSON.stringify({
