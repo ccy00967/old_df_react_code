@@ -29,11 +29,29 @@ const userSlice = createSlice({
         setEmail: (state, action) => {
             state.userEmail = action.payload;
         },
+        setName: (state, action) => {
+            state.userName = action.payload;
+        },
+        setPhonenumber: (state, action) => {
+            state.userPhone = action.payload;
+        },
+        setBirth: (state, action) => {
+            state.birth = action.payload;
+        },
+        setGender: (state, action) => {
+            state.userGender = action.payload;
+        },
+        setNationalinfo: (state, action) => {
+            state.userNation = action.payload;
+        },
+        setNickname: (state, action) => {
+            state.userNickname = action.payload;
+        },
         setPassword: (state, action) => {
             state.password = action.payload;
         },
-        setName: (state, action) => {
-            state.userName = action.payload;
+        setAddress: (state, action) => {
+            state.address = action.payload;
         },
         handleOpen: (state) => {
             state.open = true;
@@ -41,11 +59,8 @@ const userSlice = createSlice({
         handleClose: (state) => {
             state.open = false;
         },
-        setAddress: (state, action) => {
-            state.address = action.payload;
-        },
     },
 });
 
-export const { setEmail, setPassword, setName, setUserData, setAddress, handleOpen, handleClose } = userSlice.actions;
+export const { setEmail, setPassword, setName, setUserData, setAddress, handleOpen, handleClose, setBirth, setGender, setNationalinfo, setNickname, setPhonenumber } = userSlice.actions;
 export default userSlice;
