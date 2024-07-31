@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../pages/login/login_fuc";
-import MapComponent from '../../components/MapComponents';
 import { setEmail, setPassword, setName, handleOpen, handleClose } from '../../state/UserSlice';
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { NaverMaps } from "../../components/naver_maps/NaverMaps";
 
 
 const handleVerificationCodeSubmit = async (verificationCode) => {
@@ -73,17 +73,6 @@ const handleEmailVerification = async (userEmail, setShowVerification) => {
         console.error('Error sending email verification:', error);
     }
 };
-
-const App = () => {
-    return (
-        <div className="App">
-            <h1>네이버 지도 테스트</h1>
-            <MapComponent />
-        </div>
-    );
-}; // 네이버 맵컴포넌트 연결
-
-export default App;
 
 export function RegisterPage() {
 
@@ -224,7 +213,7 @@ export function RegisterPage() {
                     />
 
                     <div className="MapApp">
-                        <MapComponent />
+                        <NaverMaps />
                     </div>
 
                     <Button

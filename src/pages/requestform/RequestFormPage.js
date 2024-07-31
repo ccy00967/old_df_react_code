@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useSelector } from "react-redux";
 import { server } from "../../pages/login/login_fuc";
 import { useDaumPostcodePopup } from "react-daum-postcode";
-import MapComponent from "../../components/MapComponents";
+import { NaverMaps } from "../../components/naver_maps/NaverMaps";
 
 const postCustomerRequest = async function (userInfo, address, requestContent, reservationDate) {
 
@@ -90,7 +90,7 @@ export function RequestFormPage() {
 
 
                         <div className="MapApp">
-                            <MapComponent />
+                            <NaverMaps />
                         </div>
 
 
