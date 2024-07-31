@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register, handleEmailChange, handleEmailVerification, handleVerificationCodeSubmit, GenderToggleButton, NationToggleButton, handleVerificationCodeChange, RegisterComponent } from "../../pages/register/register_fuc";
-import { setEmail, setPassword, setNickname, setName, setPhonenumber } from '../../state/UserSlice';
+import { setEmail, setPassword, setNickname, setName, setPhonenumber } from '../../state/registration';
 
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
