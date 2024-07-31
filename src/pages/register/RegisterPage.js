@@ -1,16 +1,16 @@
-import { Box, Button, Container, TextField, Typography, Stack, Grid, MenuItem, FormControl, InputLabel, Select, FormHelperText, InputAdornment,ToggleButton, ToggleButtonGroup  } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Stack, Grid, MenuItem, FormControl, InputLabel, Select, FormHelperText, InputAdornment, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register, handleEmailChange, handleEmailVerification, handleVerificationCodeSubmit, GenderToggleButton, NationToggleButton, handleVerificationCodeChange, RegisterComponent } from "../../pages/register/register_fuc";
-import { setEmail, setPassword, setNickname, setName,setPhonenumber} from '../../state/UserSlice';
-import MapComponent from '../../components/MapComponents';
+import { setEmail, setPassword, setNickname, setName, setPhonenumber } from '../../state/UserSlice';
+
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AccountCircle, PhoneIphone, Person, Email, Lock, PermContactCalendar, Badge, CalendarToday } from '@mui/icons-material';
 import dayjs from "dayjs";
-
+import { NaverMaps } from "../../components/naver_maps/NaverMaps";
 
 export function RegisterPage() {
 
@@ -27,7 +27,7 @@ export function RegisterPage() {
     return (
         <div>
             {/* <Container component="main" sx={{ width: '40%', minWidth: '500px' }}> */}
-            <Container component="main" maxWidth="md"> 
+            <Container component="main" maxWidth="md">
 
                 <Box height="130px" />
 
@@ -63,8 +63,8 @@ export function RegisterPage() {
                                 size="large"
                                 disableElevation
                                 sx={{
-                                    width: '150px',  
-                                    height: '40px',  
+                                    width: '150px',
+                                    height: '40px',
                                     textAlign: 'center',  // 텍스트가 가운데 정렬되도록 설정
                                     padding: '0',  // 패딩을 없애서 크기 고정
                                     lineHeight: 'normal',  // 텍스트의 줄 높이를 조정
@@ -72,7 +72,7 @@ export function RegisterPage() {
                                 onClick={() => handleEmailVerification(userEmail, setShowVerification)}
                             >
                                 이메일 인증하기
-                            </Button> 
+                            </Button>
                         </Grid>
                     </Grid>
                     {showVerification && (
@@ -104,7 +104,7 @@ export function RegisterPage() {
                             >
                                 인증번호 확인
                             </Button> */}
-                            < RegisterComponent />
+                                < RegisterComponent />
                             </Grid>
                         </Grid>
                     )}
@@ -147,9 +147,9 @@ export function RegisterPage() {
                     />
 
                     <Box sx={{ display: 'flex', width: '100%', maxHeight: '40px', minWidth: '50px' }}>
-                    <GenderToggleButton />
+                        <GenderToggleButton />
 
-                    <NationToggleButton />
+                        <NationToggleButton />
                     </Box>
 
                     <TextField
@@ -210,7 +210,7 @@ export function RegisterPage() {
                             sx={{ ml: 1, width: '45%' }}
                         />
                     </Box>
-                    
+
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko" >
                         <DatePicker
                             label="생년월일 입력"
@@ -238,7 +238,8 @@ export function RegisterPage() {
                         }}
                     /> */}
 
-                        <MapComponent />
+                    <NaverMaps />
+
 
                     <Button
                         //type="submit" // submit 버튼은 페이지를 새로고침해버린다

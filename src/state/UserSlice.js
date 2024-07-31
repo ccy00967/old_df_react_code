@@ -1,13 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const Address = {
-    roadaddress: '',
-    jibunAddress: '',
-    englishAddress: '',
-    navermapsx: '',
-    navermapsy: '',
-}
-
 const UserRegistraion = {
     userEmail: '',
     name : '',
@@ -17,7 +9,6 @@ const UserRegistraion = {
     nationalinfo: '',
     nickname: '',
     password: '',
-    address: Address,
 }
 
 const initialState = UserRegistraion
