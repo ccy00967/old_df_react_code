@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
     key: "root", // 저장될 이름
     storage, // 로컬 스토리지에 저장
-    //whitelist: ["userInfo"],
+    whitelist: ["userInfo"],
     whitelist: ["user"],
 };
 
