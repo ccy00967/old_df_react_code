@@ -14,7 +14,6 @@ import { grey } from "@mui/material/colors";
 export function DetailedPage() {
 
 
-
     return (
         <div>
             <Stack sx={{ alignItems: 'center', justifyItems: 'center' }}>
@@ -47,7 +46,7 @@ export function DetailedPage() {
 
                         <Grid item xs={4}>
                         </Grid>
-                        
+
                         <Grid item xs={4}>
                             <Typography component="h1" variant="h6" >010 - xxxx - xxxx</Typography>
                         </Grid>
@@ -80,20 +79,17 @@ export function DetailedPage() {
 
 
                 <Box sx={{ width: '40%', borderBottom: 1, borderColor: 'grey.500' }}>
-                    <Grid container spacing={5} >
-                        <Grid item xs={12}>
-                            <Typography component="h1" variant="h6" >방제 주소</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component="h1" variant="h6" >방제 규모</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component="h1" variant="h6" >작물 종류</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component="h1" variant="h6" >예약날짜</Typography>
-                        </Grid>
-                    </Grid>
+
+                    <Stack spacing={3}>
+                        <Typography component="h1" variant="h6" >방제 주소</Typography>
+
+                        <Typography component="h1" variant="h6" >방제 규모</Typography>
+
+                        <Typography component="h1" variant="h6" >작물 종류</Typography>
+
+                        <Typography component="h1" variant="h6" >예약날짜</Typography>
+                    </Stack>
+
                     <Box sx={{ height: 20 }} />
                 </Box>
 
@@ -118,13 +114,14 @@ export function DetailedPage() {
                 <Box sx={{ height: '30px' }} />
                 <Box sx={{ width: '350px' }}>
 
-                    <Card 
-                        sx={{ 
-                        height: 250,
-                        border: 1, 
-                        borderRadius: '25px', 
-                        borderColor: 'grey.500' }}>
-                            
+                    <Card
+                        sx={{
+                            height: 250,
+                            border: 1,
+                            borderRadius: '25px',
+                            borderColor: 'grey.500'
+                        }}>
+
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="h2">
                                 방제 업체
@@ -132,11 +129,13 @@ export function DetailedPage() {
                             <Typography variant="body2" color="text.secondary">
                                 로고
                             </Typography>
-                            <Grid container spacing={5}>
-                                <Grid item xs={12}>방제 업체 정보</Grid>
-                                <Grid item xs={12}>방제 업체 정보</Grid>
-                                <Grid item xs={12}>방제 업체 정보</Grid>
-                            </Grid>
+
+                            <Stack spacing={5}>
+                                <Typography>방제 업체 정보</Typography>
+                                <Typography>방제 업체 정보</Typography>
+                                <Typography>방제 업체 정보</Typography>
+                            </Stack>
+
                         </CardContent>
 
                     </Card>
