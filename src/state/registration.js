@@ -13,8 +13,8 @@ const UserRegistraion = {
 
 const initialState = UserRegistraion
 
-const userSlice = createSlice({
-    name: 'user',
+const registrationSlice = createSlice({
+    name: 'registration',
     initialState,
     reducers: {
         setEmail: (state, action) => {
@@ -53,5 +53,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { setEmail, setPassword, setName, setUserData, setAddress, handleOpen, handleClose, setBirth, setGender, setNationalinfo, setNickname, setPhonenumber } = userSlice.actions;
-export default userSlice;
+export const { setEmail, setPassword, setName, setUserData, setAddress, handleOpen, handleClose, setBirth, setGender, setNationalinfo, setNickname, setPhonenumber } = registrationSlice.actions;
+export default registrationSlice;

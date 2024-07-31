@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerRoute, emailsendRoute, emailvalidateRoute } from "../../components/backend";
 import userInfoSlice from "../../state/UserInfo";
 import store from "../../state/store";
-import { setEmail, setGender, setNationalinfo } from '../../state/UserSlice';
+import { setEmail, setGender, setNationalinfo } from '../../state/registration';
 import {ToggleButtonGroup, ToggleButton, Button, TextField } from '@mui/material';
 import { name } from "dayjs/locale/ko";
 
