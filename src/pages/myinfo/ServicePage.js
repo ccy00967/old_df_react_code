@@ -92,7 +92,7 @@ export function ServicePage() {
                                 lineHeight: 'normal',  // 텍스트의 줄 높이를 조정
                             }}
                         >
-                            서비스 신청 작성
+                            방제 신청
                         </Button>
 
                         <Button

@@ -22,7 +22,7 @@ export const logIn = function (userEmail, password) {
     })
         .then((res) => { console.log(res); return res.json();})
         .then((data) => {
-            console.log(data);
+            console.log(String(data));
             store.dispatch(userInfoSlice.actions.getUserInfo(data));
         });
 }
