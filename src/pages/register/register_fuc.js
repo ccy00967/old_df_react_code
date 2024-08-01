@@ -19,7 +19,8 @@ export const register = async function () {
 
     await fetch(registerRoute, {
         method: 'POST',
-        headers: [["Content-Type", "application/x-www-form-urlencoded"]],
+        headers: [["Content-Type", "application/json"]],
+        credentials: "include",
         body: JSON.stringify({
             name: registration.name,
             phone_number: registration.phone_number,

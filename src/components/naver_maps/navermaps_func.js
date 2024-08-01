@@ -52,7 +52,6 @@ const initMap = async () => {
                 htmlAddresses.push(address);
             }
 
-            console.log(htmlAddresses)
             searchAddressToCoordinate(htmlAddresses[0]);
 
             // infoWindow.setContent([

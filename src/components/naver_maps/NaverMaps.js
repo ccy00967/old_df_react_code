@@ -31,7 +31,6 @@ export function NaverMaps() {
 
   }, []); // [] 안에 있는 변수가 변할 때마다 useEffect가 호출됨
 
-  console.log(addressInfo);
   return (
     <div>
       <Grid container spacing={2} alignItems="center">

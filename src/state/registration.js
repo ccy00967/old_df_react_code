@@ -5,8 +5,8 @@ const UserRegistraion = {
     name : '',
     phone_number: '',
     birth: '',
-    gender: '',
-    nationalinfo: '',
+    gender: '1',
+    nationalinfo: '0',
     nickname: '',
     password: '',
 }
