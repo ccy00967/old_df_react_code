@@ -25,7 +25,7 @@ import { data } from "jquery";
 
 export function DetailedPage() {
 
-    const getDetailed = async function (setdetail,setdetail2) {
+    const getDetailed = async function (setdetail,setdetailaddress,setdetailowner) {
         //const url = "requestsRoute + 2c00ba43-8e7b-498c-aab3-5ac3ee94aa97/";
     
         //  try {
@@ -33,7 +33,7 @@ export function DetailedPage() {
         let length = 0;
         let customerRequests = []
         //const response = 
-        await fetch("https://192.168.0.28:1337/customer/requests/cc8471e7-0491-4549-893d-ae1db3ce40c4/", {
+        await fetch("https://192.168.0.28:1337/customer/requests/dc8a44b8-07b3-498a-a06a-1a200aa78097/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,11 +49,12 @@ export function DetailedPage() {
                 //const data = await response.json();
                 length = data.length
                 customerRequests = { ...data }
-                console.log(11,customerRequests)
                 setdetail(customerRequests)
-                setdetail2(customerRequests.address)                
-               //aa(data)
+                setdetailaddress(customerRequests.address)
+                setdetailowner(customerRequests.requestowner)                
+                //aa(data)
             });
+            //console.log(11,customerRequests.orderid)
     
         // } catch (error) {
         //     console.error(error.message);
@@ -66,10 +67,10 @@ export function DetailedPage() {
     const userInfo = useSelector(state => { return state.persist.userInfo; });
     const navigate = useNavigate();
     const [detail,setdetail] = useState([]);
-    const [detail2,setdetail2] = useState([]);
-
+    const [detailaddress,setdetailaddress] = useState([]);
+    const [detailowner,setdetailowner] = useState([]);
     useEffect(() => {
-        getDetailed(setdetail,setdetail2)
+        getDetailed(setdetail,setdetailaddress,setdetailowner)
         
     }, [])
     
@@ -105,14 +106,14 @@ export function DetailedPage() {
                         </Grid>
 
                         <Grid item xs={2}>
-                            <Typography component="h1" variant="h6" >{userInfo.authenticatedUser.name}</Typography>
+                            <Typography component="h1" variant="h6" >{detailowner.name}</Typography>
                         </Grid>
 
                         <Grid item xs={4}>
                         </Grid>
 
                         <Grid item xs={4}>
-                            <Typography component="h1" variant="h6" >{userInfo.authenticatedUser.phone_number}</Typography>
+                            <Typography component="h1" variant="h6" >{detailowner.phone_number}</Typography>
                         </Grid>
                     </Grid>
                 </Box>
@@ -145,9 +146,9 @@ export function DetailedPage() {
                 <Box sx={{ width: '40%', borderBottom: 1, borderColor: 'grey.500' }}>
 
                     <Stack spacing={3}>
-                        <Typography component="h1" variant="h6" >{detail2.jibunAddress}</Typography>
+                        <Typography component="h1" variant="h6" >{detailaddress.jibunAddress}</Typography>
 
-                        <Typography component="h1" variant="h6" >{detail.size}</Typography>
+                        <Typography component="h1" variant="h6" >{detail.size}평</Typography>
 
                         <Typography component="h1" variant="h6" >{detail.cropsinfo}</Typography>
 
