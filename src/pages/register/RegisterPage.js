@@ -77,32 +77,6 @@ export function RegisterPage() {
                     {showVerification && (
                         <Grid container spacing={2} alignItems="center">
                             <Grid item xs={6}>
-                                {/* <TextField
-                                    required
-                                    fullWidth
-                                    id="verificationCode"
-                                    label="인증번호"
-                                    name="verificationCode"
-                                    placeholder="인증번호를 입력해 주세요."
-                                    onChange={(e) => handleVerificationCodeChange(e, setVerificationCode)}
-                                />
-                                <Button
-                                type="button"
-                                color="primary"
-                                variant="contained"
-                                size="large"
-                                disableElevation
-                                sx={{
-                                    width: '150px',  
-                                    height: '40px',  
-                                    textAlign: 'center',  // 텍스트가 가운데 정렬되도록 설정
-                                    padding: '0',  // 패딩을 없애서 크기 고정
-                                    lineHeight: 'normal',  // 텍스트의 줄 높이를 조정
-                                }}
-                                onClick={() => handleVerificationCodeSubmit(verificationCode)}
-                            >
-                                인증번호 확인
-                            </Button> */}
                                 < RegisterComponent />
                             </Grid>
                         </Grid>
@@ -273,29 +247,4 @@ export function RegisterPage() {
     )
 }
 
-/*
- {showVerification && (
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Box sx={{ flexGrow: 1 }}>
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        id="verificationCode"
-                                        label="인증번호"
-                                        name="verificationCode"
-                                        autoComplete="off"
-                                        placeholder="인증번호를 입력해 주세요."
-                                    />
-                                </Box>
-                                <Button
-                                    type="button"
-                                    color="primary"
-                                    variant="contained"
-                                    size="small"
-                                >
-                                    인증번호 확인
-                                </Button>
-                            </Box>
-                        )}
-*/
+

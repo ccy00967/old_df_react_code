@@ -84,12 +84,30 @@ export function ServicePage() {
                             type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
                             variant="contained"
                             href='/requestform'
-
+                            sx={{
+                                width: '140px',
+                                height: '35px',
+                                textAlign: 'center',  // 텍스트가 가운데 정렬되도록 설정
+                                padding: '0',  // 패딩을 없애서 크기 고정
+                                lineHeight: 'normal',  // 텍스트의 줄 높이를 조정
+                            }}
                         >
                             서비스 신청 작성
                         </Button>
 
-                        <Typography>신청서 현황</Typography>
+                        <Button
+                        type="button"
+                        variant='contained'
+                        href="/request"
+                        sx={{
+                            width: '140px',
+                            height: '35px',
+                            textAlign: 'center',
+                            padding: '0',  
+                            lineHeight: 'normal',  
+                        }}>                           
+                            신청서 현황
+                        </Button>
                         <Typography>확인 대기목록</Typography>
                         <Typography>완료 내역</Typography>
 

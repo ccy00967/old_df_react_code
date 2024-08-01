@@ -16,19 +16,14 @@ export const register = async function () {
     const registration = store.getState().registration;
     const address = store.getState().address;
     let userData = {};
+    console.log(registration);
 
     await fetch(registerRoute, {
         method: 'POST',
         headers: [["Content-Type", "application/json"]],
         credentials: "include",
         body: JSON.stringify({
-            name: registration.name,
-            phone_number: registration.phone_number,
-            nationalinfo: registration.nationalinfo,
-            nickname: registration.nickname,
-            gender: registration.gender,
-            password: registration.password,
-            birth: registration.birth,
+            ...registration,
             address: address,
         })
     })
