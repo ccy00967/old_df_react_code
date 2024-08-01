@@ -8,6 +8,7 @@ import { CustomAppBar } from './components/CustomAppBar';
 import { RequestFormPage } from './pages/requestform/RequestFormPage';
 import { DetailedPage } from './pages/postedrequest/DetailedPage';
 import { IntroductionPage } from './pages/home/IntroductionPage';
+import { RequestsPage } from './pages/requests/RequestsPage';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <Route path="/requestform" element={<RequestFormPage />}></Route>
       <Route path="/detail" element={<DetailedPage />}></Route>
       <Route path="/introduction" element={<IntroductionPage />}></Route>
+      <Route path="/request" element={<RequestsPage />}></Route>
     </Routes>
   </div>
   );
