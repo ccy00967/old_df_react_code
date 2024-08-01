@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register, handleEmailChange, handleEmailVerification, handleVerificationCodeSubmit, GenderToggleButton, NationToggleButton, handleVerificationCodeChange, RegisterComponent } from "../../pages/register/register_fuc";
-import { setEmail, setPassword, setNickname, setName, setPhonenumber } from '../../state/registration';
+import { setEmail, setPassword, setNickname, setName, setPhonenumber, setBirth } from '../../state/registration';
 
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -16,13 +16,12 @@ export function RegisterPage() {
 
     //const userInfo = useSelector(state => { return state.persist.userInfo; });
     const navigate = useNavigate(); // 리액트 페이지 라우트
-    const userEmail = useSelector(state => state.user.userEmail);
+    const userEmail = useSelector(state => state.registration.userEmail);
 
     const dispatch = useDispatch();
 
     const [emailError, setEmailError] = useState('');
     const [showVerification, setShowVerification] = useState(false);
-    const [verificationCode, setVerificationCode] = useState('');
 
     return (
         <div>
@@ -215,10 +214,10 @@ export function RegisterPage() {
                         <DatePicker
                             label="생년월일 입력"
                             //value={reservationDate}
-                            onChange={(value) => {
+                            onChange={(newValue) => dispatch(setBirth(dayjs(newValue).format('YYYY-MM-DD')))
                                 //setDate(dayjs(value).format('YYYY-MM-DDTHH:mm:ss'))
                                 //console.log(reservationDate)
-                            }}
+                            }
                         />
                     </LocalizationProvider>
                     {/* <TextField
@@ -247,6 +246,7 @@ export function RegisterPage() {
                         variant="contained"
                         size="large"
                         disableElevation
+                        onClick={() => register()}
                     //sx={{ m: 1, width: '25%' }}
                     >
                         회원 가입
