@@ -13,7 +13,7 @@ import { dark } from '@mui/material/styles/createPalette';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Stack } from '@mui/system';
 
-const getCustomerRequests = async function (userInfo, getRequests) {
+const getCustomerRequests = async function (userInfo, setcustomer) {
     let length = 0;
     let customerRequests = []
     await fetch("customer-requests/", {
@@ -29,7 +29,7 @@ const getCustomerRequests = async function (userInfo, getRequests) {
             length = data.length
             customerRequests = { ...data } // 왜인지 length가 사라져서 객체만 받아진다(...을 붙이면 객체를 한번 풀어서 넣는다)
             console.log(customerRequests)
-            getRequests(data)
+            setcustomer(data)
         });
 
     //console.log(customerRequests);
@@ -49,7 +49,7 @@ export function ServicePage() {
     const userInfo = useSelector(state => { return state.persist.userInfo; });
     const navigate = useNavigate(); // 리액트 페이지 라우트
 
-    const [customerRequests, getRequests] = useState([]);
+    const [customerRequests, setcustomer] = useState([]);
 
     // useState(getCustomerRequests(userInfo));
     //console.log(customerRequests)
@@ -78,7 +78,7 @@ export function ServicePage() {
                         <Box height={40}></Box>
 
                         <Typography>사용자 닉네임</Typography>
-                        {/* <text>{userInfo.authenticatedUser.email}</text>  */}
+                         {/* <text>{userInfo.authenticatedUser.name}</text> */}
                         <Button
                             // type="submit" // submit 버튼은 페이지를 새로고침해버린다
                             type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
