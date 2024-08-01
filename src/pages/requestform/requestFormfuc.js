@@ -1,3 +1,4 @@
+import { data } from "jquery";
 import { requestsRoute } from "../../components/backend";
 import requestSlice from "../../state/request";
 import store from "../../state/store";
@@ -5,30 +6,77 @@ import store from "../../state/store";
 
 
 
+export const postCustomerRequest = async function () {
 
-export const postCustomerRequest = async function ( address, requestContent, reservationDate,cropsinfo,size,) {
+
+    const request = store.getState().request
+    const userInfo = store.getState().persist.userInfo
+    const address = store.getState().address
+
+    // console.log(request)
+    // console.log(userInfo)
 
     await fetch(requestsRoute, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            //authorization: "Bearer " + userInfo.access,
+            authorization: "Bearer " + userInfo.access,
         },
         body: JSON.stringify({
-            address: address,
-            size: size,
-            cropsinfo: cropsinfo,
-            reservationDate: reservationDate,
-            requestContent: requestContent,
-            
-        })
+            ...request,
+            address: address
+        }),
     })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data.body);
+            console.log(data);
             store.dispatch(requestSlice.actions.setRequest(data));
+
         });
 
     //console.log(customerRequests);
     //return customerRequests;
+
 }
+
+// {
+//     request: request,
+//         address: address
+// }
+
+// {
+//     ...request,
+//         address: address
+// }
+
+// {
+//     request: {
+//         size: string;
+//         cropsinfo: string;
+//         reservationDate: string;
+//         requestContent: string;
+//     }
+//     address: {
+//         roadaddress: string;
+//         jibunAddress: string;
+//         englishAddress: string;
+//         navermapsx: string;
+//         navermapsy: string;
+//     }
+// }
+
+// {
+
+//     size: string;
+//     cropsinfo: string;
+//     reservationDate: string;
+//     requestContent: string;
+
+//     address: {
+//         roadaddress: string;
+//         jibunAddress: string;
+//         englishAddress: string;
+//         navermapsx: string;
+//         navermapsy: string;
+//     }
+// }

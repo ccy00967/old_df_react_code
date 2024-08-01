@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const Request ={
-    address: '',
     size: '',
     cropsinfo:'',
     reservationDate: '',
@@ -17,7 +16,6 @@ const requestSlice = createSlice({
     initialState,
     reducers: {
         setRequest: (state, action) => {
-            state.address = action.payload.address;
             state.size = action.payload.size;
             state.cropsinfo = action.payload.cropsinfo;
             state.reservationDate = action.payload.reservationDate;

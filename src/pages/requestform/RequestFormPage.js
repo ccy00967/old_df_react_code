@@ -152,7 +152,7 @@ export function RequestFormPage() {
                               //  href="/service"
                                 //sx={{ mt: 5, mb: 4 }}
                                 onClick={() => {
-                                    postCustomerRequest( address, requestContent, reservationDate,cropsinfo,size)   //자택주소 1,2 작물종류 농지 면적 추가하기
+                                    postCustomerRequest()   //자택주소 1,2 작물종류 농지 면적 추가하기
                                     // 나중에 리팩터링하면서 적절한 응답 만들기
                                 }}
                                 sx={{ width: '20%', }}
