@@ -8,8 +8,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useDispatch, useSelector } from "react-redux";
 import { server } from "../../pages/login/login_fuc";
 import { useDaumPostcodePopup } from "react-daum-postcode";
-import {postCustomerRequest } from "./requestFormfuc";
+import { postCustomerRequest } from "./requestFormfuc";
 import { NaverMaps } from "../../components/naver_maps/NaverMaps";
+import requestSlice from "../../state/request";
 
 
 export function RequestFormPage() {
@@ -19,7 +20,7 @@ export function RequestFormPage() {
 
     const handleComplete = (data) => {
         console.log(data);
-    
+
     };
 
     const handleClick = (e) => {
@@ -35,13 +36,7 @@ export function RequestFormPage() {
     const [cropsinfo, setCropsinfo] = useState('');
     const [size, setSize] = useState('');
     const [reservationDate, setDate] = useState(dayjs('').format('YYYY-MM-DDTHH:mm:ss')); // 날짜관리 패키지 dayjs를 사용 - 이유: mui 추천
-    
 
-    // useEffect(() => {
-    //     if (userInfo.success === true) {
-    //         navigate("/");
-    //     }
-    // });
 
     // const loginFormInit = {
     //     email: '',
@@ -117,7 +112,7 @@ export function RequestFormPage() {
                             </Grid>
                             <Grid item xs={8}>
                                 <Box >
-                                    산출가격: {size*30} 원 평수 x 30원 예정
+                                    산출가격: {size * 30} 원 평수 x 30원 예정
                                 </Box>
                             </Grid>
                         </Grid>
@@ -138,21 +133,26 @@ export function RequestFormPage() {
 
                         />
 
-                        <Box >최종 결제 금액 : {size*30} 원</Box>
+                        <Box >최종 결제 금액 : {size * 30} 원</Box>
 
                         <Box justifyContent={"center"}>
 
                             <Button
-                               // type="submit" // submit 버튼은 페이지를 새로고침해버린다
+                                // type="submit" // submit 버튼은 페이지를 새로고침해버린다
                                 type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
                                 size="large"
                                 variant="contained"
 
 
-                              //  href="/service"
+                                //  href="/service"
                                 //sx={{ mt: 5, mb: 4 }}
                                 onClick={() => {
-                                    postCustomerRequest()   //자택주소 1,2 작물종류 농지 면적 추가하기
+                                    postCustomerRequest({
+                                        requestContent,
+                                        cropsinfo,
+                                        size,
+                                        reservationDate,
+                                    })   //자택주소 1,2 작물종류 농지 면적 추가하기
                                     // 나중에 리팩터링하면서 적절한 응답 만들기
                                 }}
                                 sx={{ width: '20%', }}
