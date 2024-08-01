@@ -9,9 +9,33 @@ import { server } from "../../pages/login/login_fuc";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { dark } from '@mui/material/styles/createPalette';
 import { grey } from "@mui/material/colors";
+import store from "../../state/store";
+
 
 
 export function DetailedPage() {
+    const getDetailed = async function () {
+        const url = "";
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    authorization: "Bearer " + store.getState().persist.userInfo.access,
+                },
+            })
+
+            if (!response.ok) {
+                throw new Error("Error");
+            }
+
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
 
 
     return (

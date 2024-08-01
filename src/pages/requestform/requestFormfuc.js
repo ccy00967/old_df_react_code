@@ -1,19 +1,17 @@
 import { data } from "jquery";
 import { requestsRoute } from "../../components/backend";
-import requestSlice from "../../state/request";
 import store from "../../state/store";
 
 
 
+export const postCustomerRequest = async function (request) {
 
-export const postCustomerRequest = async function () {
 
+    //const request = store.getState().request;
+    const userInfo = store.getState().persist.userInfo;
+    const address = store.getState().address;
 
-    const request = store.getState().request
-    const userInfo = store.getState().persist.userInfo
-    const address = store.getState().address
-
-    // console.log(request)
+    console.log(request)
     // console.log(userInfo)
 
     await fetch(requestsRoute, {
@@ -29,10 +27,9 @@ export const postCustomerRequest = async function () {
     })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
-            store.dispatch(requestSlice.actions.setRequest(data));
-
-        });
+            //console.log(data);
+            //store.dispatch(requestSlice.actions.setRequest(data));
+        })
 
     //console.log(customerRequests);
     //return customerRequests;

@@ -9,4 +9,4 @@ export const registerRoute = server + "user/register/";
 export const emailsendRoute = server + "user/emailsend/";
 export const emailvalidateRoute = server + "user/validatekeycheck/";
 
-export const requestsRoute = server + "customer/customer-requests/";
+export const requestsRoute = server + "customer/requests/";
