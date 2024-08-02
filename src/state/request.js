@@ -1,8 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Address } from "./address";
-import { UserRegistraion } from "./registration";
 import { TossPayment } from "./tosspayments";
 
+const UserRegistraion = {
+    userEmail: '',
+    name: '',
+    phone_number: '',
+    birth: '',
+    gender: '1',
+    nationalinfo: '0',
+    nickname: '',
+    password: '',
+}
 
 const Request = {
     orderid: '',
