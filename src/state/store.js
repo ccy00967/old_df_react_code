@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import counterSlice from './couter'
 import { persisted_reducer } from './persist'
 import addressSlice from './address';
-import requestSlice from './request';
 import registrationSlice from './registration';
 
 
@@ -14,7 +13,7 @@ const store = configureStore({
     counter: counterSlice.reducer,
     registration: registrationSlice.reducer,
     address: addressSlice.reducer,
-    request: requestSlice.reducer,
+    //request: requestSlice.reducer,
     // userInfo: userInfoSlice.reducer, // persistance로 새로고��으로 인한 데이터 ��제 방지
     // userInfo: userInfoSlice.reducer, // persistance로 새로고침으로 인한 데이터 삭제 방지
     persist: persisted_reducer, // 로컬에 저장될 데이터들을 persist로 불러올수 있게된다
