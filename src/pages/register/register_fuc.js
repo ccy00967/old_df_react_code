@@ -1,18 +1,14 @@
 import { persistor } from "../../";
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { registerRoute, emailsendRoute, emailvalidateRoute } from "../../components/backend";
 import userInfoSlice from "../../state/UserInfo";
 import store from "../../state/store";
-import { setEmail, setGender, setNationalinfo } from '../../state/registration';
 import { ToggleButtonGroup, ToggleButton, Button, TextField } from '@mui/material';
-import { name } from "dayjs/locale/ko";
 
-export const register = async function () {
-    const registration = store.getState().registration;
+// 회원가입 요청
+export const register = async function (password, nickname, name, phonenumber, birth, gender, nationalinfo) {
     const address = store.getState().address;
     let userData = {};
-    console.log(registration);
 
     try {
         const response = await fetch(registerRoute, {
@@ -20,7 +16,13 @@ export const register = async function () {
             headers: [["Content-Type", "application/json"]],
             credentials: "include",
             body: JSON.stringify({
-                ...registration, // registration에 있는 정보 분리해서 보내기
+                password: password,
+                nickname: nickname,
+                name: name,
+                phone_number: phonenumber,
+                birth: birth,
+                gender: gender,
+                nationalinfo: nationalinfo,
                 address: address,
             })
         });
@@ -31,7 +33,6 @@ export const register = async function () {
             alert('회원가입이 완료되었습니다!');
             window.location.href = '/';
         } else {
-            const errorData = await response.json();
             alert(`양식을 다시 확인해 주세요.`);
         }
     } catch (error) {
@@ -41,34 +42,13 @@ export const register = async function () {
     return userData;
 }
 
-
-
-
-
-
-export const handleEmailChange = (e, dispatch, setEmailError) => {
-    const value = e.target.value;
-    dispatch(setEmail(value));
-    //console.log(store.getState().user.email);
-
-    // 이메일 형식 검증
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (value && !emailRegex.test(value)) {
-        setEmailError('이메일 형식이 올바르지 않습니다.');
-    } else {
-        setEmailError('');
-    }
-};
-
-
+// 이메일 인증번호 전송
 export const handleEmailVerification = async (userEmail, setShowVerification) => {
     try {
         const response = await fetch(emailsendRoute, {
             method: 'POST',
 
             headers: [["Content-Type", 'application/x-www-form-urlencoded'],
-                // ["Access-Control-Allow-Origin", "*"],
-                // ["Access-Control-Allow-Credentials", 'true'],
             ],
             credentials: "include",
             body: new URLSearchParams({ email: userEmail }),
@@ -86,105 +66,25 @@ export const handleEmailVerification = async (userEmail, setShowVerification) =>
     }
 };
 
-export const RegisterComponent = () => {
-    const [verificationCode, setVerificationCode] = useState('');
+// 이메일 인증번호 확인
+export const handleVerificationCodeSubmit = async function (verificationCode) {
+    try {
+        const response = await fetch(emailvalidateRoute, {
+            method: 'POST',
+            mode: 'cors',
+            headers: [["Content-Type", 'application/x-www-form-urlencoded']],
+            body: new URLSearchParams({ validatekey: verificationCode }),
+            credentials: "include",
+        });
 
-    const handleVerificationCodeChange = (e) => {
-        setVerificationCode(e.target.value);
-    };
-
-    const handleVerificationCodeSubmit = async () => {
-        try {
-            const response = await fetch(emailvalidateRoute, {
-                method: 'POST',
-                mode: 'cors',
-                headers: [["Content-Type", 'application/x-www-form-urlencoded']],
-                body: new URLSearchParams({ validatekey: verificationCode }),
-                credentials: "include",
-            });
-
-            if (response.ok) {
-                alert('이메일 인증에 성공했습니다.');
-            } else {
-                console.error('Error verifying email:', response.statusText);
-                alert('인증번호가 일치하지 않습니다.');
-            }
-        } catch (error) {
-            console.error('Error verifying email:', error);
+        if (response.ok) {
+            alert('이메일 인증에 성공했습니다.');
+        } else {
+            console.error('Error verifying email:', response.statusText);
             alert('인증번호가 일치하지 않습니다.');
         }
-    };
-
-    return (
-        <div>
-            <TextField
-                label="인증번호 입력"
-                variant="outlined"
-                value={verificationCode}
-                onChange={handleVerificationCodeChange}
-                fullWidth
-                margin="normal"
-            />
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleVerificationCodeSubmit}
-            >
-                인증번호 확인
-            </Button>
-        </div>
-    );
-};
-
-export default RegisterComponent;
-// 성별 토글 버튼
-export const GenderToggleButton = () => {
-    const dispatch = useDispatch();
-    const gender = useSelector((state) => state.registration.gender) || '1'; // 현재 성별 상태를 가져오고, 기본값을 '1'로 설정
-
-    const handleChange = (event, newAlignment) => {
-        if (newAlignment !== null) {
-            dispatch(setGender(newAlignment)); // 성별 상태를 업데이트
-        }
-    };
-
-    return (
-        <ToggleButtonGroup
-            color="primary"
-            exclusive
-            value={gender} // 현재 성별 상태를 value로 설정
-            onChange={handleChange} // 변경 이벤트 핸들러를 설정
-            aria-label="Platform"
-            fullWidth
-        >
-            <ToggleButton value='1'>남자</ToggleButton>
-            <ToggleButton value='0'>여자</ToggleButton>
-        </ToggleButtonGroup>
-    );
-};
-
-// 국적 토글 버튼
-export const NationToggleButton = () => {
-    const dispatch = useDispatch();
-    const nationalinfo = useSelector((state) => state.registration.nationalinfo) || '0'; // 현재 성별 상태를 가져오고, 기본값을 '1'로 설정
-
-    const handleChange = (event, newAlignment) => {
-        if (newAlignment) {
-            dispatch(setNationalinfo(newAlignment)); // 국적 상태를 업데이트
-        }
-    };
-
-    return (
-        <ToggleButtonGroup
-            color="primary"
-            exclusive
-            value={nationalinfo} // 현재 국적 상태를 value로 설정
-            onChange={handleChange}
-            aria-label="Platform"
-            fullWidth
-        >
-            <ToggleButton value='0'>내국인</ToggleButton>
-            <ToggleButton value='1'>외국인</ToggleButton>
-        </ToggleButtonGroup>
-    );
+    } catch (error) {
+        console.error('Error verifying email:', error);
+        alert('인증번호가 일치하지 않습니다.');
+    }
 };
