@@ -23,7 +23,7 @@ import {getDetailed} from "./detailed_fuc";
 //     reservationDate: "",
 // }
 export function DetailedPage() {
-    const [data, setData] = useState(null);
+    //const [data, setData] = useState(null);
 
     // const getDetailed = async function () {
     //     const url = "";
