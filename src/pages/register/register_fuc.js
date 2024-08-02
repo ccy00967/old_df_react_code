@@ -9,33 +9,36 @@ import { ToggleButtonGroup, ToggleButton, Button, TextField } from '@mui/materia
 import { name } from "dayjs/locale/ko";
 
 export const register = async function () {
-    //const dispatch = useDispatch();
-    // 로그인 버튼을 클릭하면 백엔드 서버에 요청을 보낸다
-    // 이때 body에 필요한 정보가 할당된다
-    // 데이터를 다른곳에 리턴하고 싶다면 fetch앞에 return 필요
     const registration = store.getState().registration;
     const address = store.getState().address;
     let userData = {};
     console.log(registration);
 
-    await fetch(registerRoute, {
-        method: 'POST',
-        headers: [["Content-Type", "application/json"]],
-        credentials: "include",
-        body: JSON.stringify({
-            ...registration,
-            address: address,
-        })
-    })
-        .then((res) => res.json())
-        .then((data) => {
-            //store.dispatch(userInfoSlice.actions.getUserInfo(data));
-            //console.log(data)
-            //logIn(userEmail, password);
-            userData = data;
+    try {
+        const response = await fetch(registerRoute, {
+            method: 'POST',
+            headers: [["Content-Type", "application/json"]],
+            credentials: "include",
+            body: JSON.stringify({
+                ...registration, // registration에 있는 정보 분리해서 보내기
+                address: address,
+            })
         });
 
-    return userData
+        if (response.ok) {
+            const data = await response.json();
+            userData = data;
+            alert('회원가입이 완료되었습니다!');
+            window.location.href = '/';
+        } else {
+            const errorData = await response.json();
+            alert(`양식을 다시 확인해 주세요.`);
+        }
+    } catch (error) {
+        alert(`양식을 다시 확인해 주세요.`);
+    }
+
+    return userData;
 }
 
 

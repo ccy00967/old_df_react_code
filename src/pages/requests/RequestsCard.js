@@ -8,6 +8,7 @@ const fetchRequestsData = async (setData) => {
         const response = await fetch(requestsRoute);
         const data = await response.json();
         const formattedData = data.map(item => ({
+            orderid: item.orderid,
             address: item.address.jibunAddress,
             cropsinfo: item.cropsinfo,
             size: item.size,
@@ -31,6 +32,7 @@ const formatDate = (date) => {
 
 // 방제 신청 정보 카드
 const RequestCard = ({ item }) => (
+    
     <Card sx={{
         height: '400px',
         minHeight: '250px',
@@ -64,13 +66,4 @@ export function RequestsCard() {
         fetchRequestsData(setData);
     }, []);
 
-    return (
-        <Grid container spacing={3}>
-            {data.map((item, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                    <RequestCard item={item} />
-                </Grid>
-            ))}
-        </Grid>
-    );
 }
