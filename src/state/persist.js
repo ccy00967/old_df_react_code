@@ -2,6 +2,7 @@ import persistReducer from 'redux-persist/es/persistReducer'
 import storage from 'redux-persist/lib/storage'
 import userInfoSlice from './UserInfo'
 import { combineReducers } from '@reduxjs/toolkit';
+import requestSlice from './request';
 
 // ****** 아래는 로컬 저장을 관리하는 코드 ********
 // 이때 persistReducer와 store가 같은파일에 존재하면 에러가 생긴다 - 종속성에러라고 하는데 잘 모르겠음
@@ -9,6 +10,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 // 여기서 persist로 저장할 리듀서들을 통합한다
 const rootReducer = combineReducers({
     userInfo: userInfoSlice.reducer,
+    request: requestSlice.reducer,
 });
 
 // config 작성

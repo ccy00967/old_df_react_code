@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import store from "../../state/store";
 
 export function PaymentSuccessPage() {
   const navigate = useNavigate();
@@ -14,17 +15,20 @@ export function PaymentSuccessPage() {
         paymentKey: searchParams.get("paymentKey"),
       };
 
-      const response = await fetch("/api/confirm/payment", {
-        method: "POST",
+      const response = await fetch("https://192.168.0.28:1337/payments/success/" + searchParams.get("orderId") + "/", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + store.getState().persist.userInfo.access,
         },
         body: JSON.stringify(requestData),
+        credentials: "include",
       });
 
       const json = await response.json();
 
       if (!response.ok) {
+        console.log({ message: json.message, code: json.code })
         throw { message: json.message, code: json.code };
       }
 

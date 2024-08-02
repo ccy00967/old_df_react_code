@@ -5,43 +5,18 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useDispatch, useSelector } from "react-redux";
-import { server } from "../../pages/login/login_fuc";
-import { useDaumPostcodePopup } from "react-daum-postcode";
 import { postCustomerRequest } from "./requestFormfuc";
 import { NaverMaps } from "../../components/naver_maps/NaverMaps";
-import requestSlice from "../../state/request";
 
 
 export function RequestFormPage() {
 
-    const open = useDaumPostcodePopup();
-    const dispatch = useDispatch();
-
-    const handleComplete = (data) => {
-        console.log(data);
-
-    };
-
-    const handleClick = (e) => {
-        open({ onComplete: handleComplete });
-        e.preventDefault();
-    };
-
-    const address = useSelector(state => { return state.address; });
     const navigate = useNavigate(); // 리액트 페이지 라우트
-
 
     const [requestContent, setContent] = useState('');
     const [cropsinfo, setCropsinfo] = useState('');
     const [size, setSize] = useState('');
     const [reservationDate, setDate] = useState(dayjs('').format('YYYY-MM-DDTHH:mm:ss')); // 날짜관리 패키지 dayjs를 사용 - 이유: mui 추천
-
-
-    // const loginFormInit = {
-    //     email: '',
-    //     password: '',
-    // }
 
     return (
         <div>
@@ -143,17 +118,15 @@ export function RequestFormPage() {
                                 size="large"
                                 variant="contained"
 
-
-                                //  href="/service"
-                                //sx={{ mt: 5, mb: 4 }}
-                                onClick={() => {
-                                    postCustomerRequest({
+                                onClick={async () => {
+                                    await postCustomerRequest({
                                         requestContent,
                                         cropsinfo,
                                         size,
                                         reservationDate,
-                                    })   //자택주소 1,2 작물종류 농지 면적 추가하기
-                                    // 나중에 리팩터링하면서 적절한 응답 만들기
+                                    })
+
+                                    navigate("/payment")
                                 }}
                                 sx={{ width: '20%', }}
 

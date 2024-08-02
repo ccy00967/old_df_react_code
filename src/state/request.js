@@ -1,44 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const Request ={
-    size: '',
-    cropsinfo:'',
-    reservationDate: '',
-    requestContent: '',
-
-}
-
-
-// postReturnRequest ={
+// Request ={
 //     size: '',
+//     amount: '',
 //     cropsinfo:'',
 //     reservationDate: '',
 //     requestContent: '',
 //     orderid: '',
 //     requestowner:'',
-//     address: '',
 //     created: '',
-
 // }
 
-
-const initialState = Request
+const initialState = {
+};
 
 const requestSlice = createSlice({
     name: 'request',
-    initialState,
+    initialState: initialState,
     reducers: {
-        setSize: (state, action) => {
-            state.size = action.payload.size;
-        },
-        setCropsinfo: (state, action) => {
-            state.cropsinfo = action.payload.cropsinfo;
-        },
-        setReservationDate: (state, action) => {
-            state.reservationDate = action.payload.reservationDate;
-        },
-        setrequestContent: (state, action) => {
-            state.requestContent = action.payload.requestContent;
+        setRequestData: (state, action) => {
+            return action.payload
         },
     },
 });
