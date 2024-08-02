@@ -10,3 +10,5 @@ export const emailsendRoute = server + "user/emailsend/";
 export const emailvalidateRoute = server + "user/validatekeycheck/";
 
 export const requestsRoute = server + "customer/requests/";
+
+export const tosspaymentSuccess = server + "payments/success/";
