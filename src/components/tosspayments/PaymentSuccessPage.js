@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import store from "../../state/store";
+import { tosspaymentSuccess } from "../backend";
 
 export function PaymentSuccessPage() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export function PaymentSuccessPage() {
         paymentKey: searchParams.get("paymentKey"),
       };
 
-      const response = await fetch("https://192.168.0.28:1337/payments/success/" + searchParams.get("orderId") + "/", {
+      const response = await fetch(tosspaymentSuccess + searchParams.get("orderId") + "/", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
