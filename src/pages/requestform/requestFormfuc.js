@@ -23,7 +23,6 @@ export const postCustomerRequest = async function (request) {
     })
         .then((res) => res.json())
         .then((data) => {
-            //console.log(data);
             store.dispatch(requestSlice.actions.setRequestData(data));
         })
 }

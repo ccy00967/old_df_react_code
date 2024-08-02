@@ -54,7 +54,7 @@ export function NaverMaps() {
             />
             <TextField
               fullWidth
-              id="DetailAddress"
+              id="DetailedAddress"
               label="상세 주소"
               placeholder='상세 주소를 입력해주세요.'
             />

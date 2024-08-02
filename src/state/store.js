@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import counterSlice from './couter'
 import { persisted_reducer } from './persist'
 import addressSlice from './address';
-import registrationSlice from './registration';
 
 
 // 이제 slice들을 store로 만들기 -> slice들의 reducer를 store에 모으기
@@ -11,7 +10,6 @@ import registrationSlice from './registration';
 const store = configureStore({
   reducer: {
     counter: counterSlice.reducer,
-    registration: registrationSlice.reducer,
     address: addressSlice.reducer,
     //request: requestSlice.reducer,
     // userInfo: userInfoSlice.reducer, // persistance로 새로고��으로 인한 데이터 ��제 방지

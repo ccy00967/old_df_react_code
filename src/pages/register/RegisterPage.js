@@ -1,27 +1,60 @@
-import { Box, Button, Container, TextField, Typography, Stack, Grid, MenuItem, FormControl, InputLabel, Select, FormHelperText, InputAdornment, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Stack, Grid, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { register, handleEmailChange, handleEmailVerification, handleVerificationCodeSubmit, GenderToggleButton, NationToggleButton, handleVerificationCodeChange, RegisterComponent } from "../../pages/register/register_fuc";
-import { setEmail, setPassword, setNickname, setName, setPhonenumber, setBirth } from '../../state/registration';
+import { register, handleEmailVerification, handleVerificationCodeSubmit} from "../../pages/register/register_fuc";
+import {emailvalidateRoute} from "../../components/backend";
 
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AccountCircle, PhoneIphone, Person, Email, Lock, PermContactCalendar, Badge, CalendarToday } from '@mui/icons-material';
 import dayjs from "dayjs";
 import { NaverMaps } from "../../components/naver_maps/NaverMaps";
 
 export function RegisterPage() {
 
-    //const userInfo = useSelector(state => { return state.persist.userInfo; });
-    const navigate = useNavigate(); // 리액트 페이지 라우트
-    const userEmail = useSelector(state => state.registration.userEmail);
-
-    const dispatch = useDispatch();
-
-    const [emailError, setEmailError] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [name, setName] = useState('');
+    const [phonenumber, setPhonenumber] = useState('');
+    const [birth, setBirth] = useState('');
+    const [gender, setGender] = useState('1');
+    const [nationalinfo, setNationalinfo] = useState('0');
+    
+    
+    const [emailError, setEmailError] = useState(false);
     const [showVerification, setShowVerification] = useState(false);
+    const [verificationCode, setVerificationCode] = useState('');
+
+
+    // 이메일 형식 검증
+    const handleEmailChange = (e) => {
+        const value = e.target.value;
+        setEmail(value);
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            setEmailError(true);
+        } else {
+            setEmailError(false);
+        }
+    };
+
+
+    // 국적 상태를 업데이트
+    const nationUpdate = (event, nationchange) => {
+        if (nationchange) {
+            setNationalinfo(nationchange);
+        }
+    };
+
+    // 성별 상태를 업데이트
+    const genderUpdate = (event, genchange) => {
+        if (genchange !== null) {
+            setGender(genchange);
+        }
+    };
+
 
     return (
         <div>
@@ -43,15 +76,9 @@ export function RegisterPage() {
                                 name="email"
                                 autoComplete="email"
                                 placeholder="이메일을 입력해 주세요."
-                                //value={userEmail}
-                                onChange={(e) => handleEmailChange(e, dispatch, setEmailError)}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Email />
-                                        </InputAdornment>
-                                    ),
-                                }}
+                                autoFocus
+                                error={emailError}
+                                onChange={handleEmailChange}
                             />
                         </Grid>
                         <Grid xs={5}>
@@ -68,7 +95,8 @@ export function RegisterPage() {
                                     padding: '0',  // 패딩을 없애서 크기 고정
                                     lineHeight: 'normal',  // 텍스트의 줄 높이를 조정
                                 }}
-                                onClick={() => handleEmailVerification(userEmail, setShowVerification)}
+                                onClick={() => handleEmailVerification(email, setShowVerification)}
+                                disabled={emailError}
                             >
                                 이메일 인증하기
                             </Button>
@@ -77,7 +105,21 @@ export function RegisterPage() {
                     {showVerification && (
                         <Grid container spacing={2} alignItems="center">
                             <Grid item xs={6}>
-                                < RegisterComponent />
+                                <TextField
+                                    label="인증번호 입력"
+                                    variant="outlined"
+                                    value={verificationCode}
+                                    onChange={(e) => setVerificationCode(e.target.value)}
+                                    fullWidth
+                                    margin="normal"
+                                />
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleVerificationCodeSubmit(verificationCode)}
+                                >
+                                    인증번호 확인
+                                </Button>
                             </Grid>
                         </Grid>
                     )}
@@ -91,16 +133,9 @@ export function RegisterPage() {
                         id="password"
                         placeholder="비밀번호를 입력해 주세요."
                         margin="dense"
-                        onChange={(e) => dispatch(setPassword(e.target.value))}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Lock />
-                                </InputAdornment>
-                            ),
-                        }}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-                    <TextField
+                    {/* <TextField
                         sx={{ mt: 1, width: '75%' }}
                         margin="normal"
                         required
@@ -110,19 +145,32 @@ export function RegisterPage() {
                         type="password"
                         id="password confirm"
                         placeholder="비밀번호를 다시 입력해주세요."
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Lock />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
+                    /> */}
 
                     <Box sx={{ display: 'flex', width: '100%', maxHeight: '40px', minWidth: '50px' }}>
-                        <GenderToggleButton />
+                        <ToggleButtonGroup
+                            color="primary"
+                            exclusive
+                            value={gender} // 현재 성별 상태를 value로 설정
+                            onChange={genderUpdate} // 변경 이벤트 핸들러를 설정
+                            aria-label="Platform"
+                            fullWidth
+                        >
+                            <ToggleButton value='1'>남자</ToggleButton>
+                            <ToggleButton value='0'>여자</ToggleButton>
+                        </ToggleButtonGroup>
 
-                        <NationToggleButton />
+                        <ToggleButtonGroup
+                            color="primary"
+                            exclusive
+                            value={nationalinfo} // 현재 국적 상태를 value로 설정
+                            onChange={nationUpdate}
+                            aria-label="Platform"
+                            fullWidth
+                        >
+                            <ToggleButton value='0'>내국인</ToggleButton>
+                            <ToggleButton value='1'>외국인</ToggleButton>
+                        </ToggleButtonGroup>
                     </Box>
 
                     <TextField
@@ -133,14 +181,7 @@ export function RegisterPage() {
                         name="nickname"
                         autoComplete="nickname"
                         placeholder="닉네임 입력"
-                        onChange={(e) => dispatch(setNickname(e.target.value))}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Badge />
-                                </InputAdornment>
-                            ),
-                        }}
+                        onChange={(e) => setNickname(e.target.value)}
                         sx={{ m: 1, width: '40%' }}
                     />
 
@@ -153,14 +194,7 @@ export function RegisterPage() {
                             name="name"
                             autoComplete="name"
                             placeholder="사용자 성함을 입력해 주세요."
-                            onChange={(e) => dispatch(setName(e.target.value))}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle />
-                                    </InputAdornment>
-                                ),
-                            }}
+                            onChange={(e) => setName(e.target.value)}
                             sx={{ width: '45%' }}
                         />
 
@@ -172,14 +206,7 @@ export function RegisterPage() {
                             name="phonenumber"
                             autoComplete="phonenumber"
                             placeholder="전화번호를 입력해 주세요."
-                            onChange={(e) => dispatch(setPhonenumber(e.target.value))}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <PhoneIphone />
-                                    </InputAdornment>
-                                ),
-                            }}
+                            onChange={(e) => setPhonenumber(e.target.value)}
                             sx={{ ml: 1, width: '45%' }}
                         />
                     </Box>
@@ -188,9 +215,7 @@ export function RegisterPage() {
                         <DatePicker
                             label="생년월일 입력"
                             //value={reservationDate}
-                            onChange={(newValue) => dispatch(setBirth(dayjs(newValue).format('YYYY-MM-DD')))
-                                //setDate(dayjs(value).format('YYYY-MM-DDTHH:mm:ss'))
-                                //console.log(reservationDate)
+                            onChange={(newValue) => setBirth(dayjs(newValue).format('YYYY-MM-DD'))
                             }
                         />
                     </LocalizationProvider>
@@ -220,7 +245,7 @@ export function RegisterPage() {
                         variant="contained"
                         size="large"
                         disableElevation
-                        onClick={() => register()}
+                        onClick={() => register(password, nickname, name, phonenumber, birth, gender, nationalinfo)}
                     //sx={{ m: 1, width: '25%' }}
                     >
                         회원 가입
