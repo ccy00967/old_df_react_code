@@ -11,7 +11,7 @@ export const getDetailed = async function (setdetail, setdetailaddress, setdetai
     let length = 0;
     let customerRequests = []
     //const response = 
-    await fetch("https://192.168.0.28:1337/customer/requests/dc8a44b8-07b3-498a-a06a-1a200aa78097/", {
+    await fetch("https://192.168.0.28:1337/customer/requests/df765609-5df0-4d89-9a7e-56fa51d2e392/", {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

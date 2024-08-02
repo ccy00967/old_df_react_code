@@ -25,34 +25,34 @@ import {getDetailed} from "./detailed_fuc";
 export function DetailedPage() {
     const [data, setData] = useState(null);
 
-    const getDetailed = async function () {
-        const url = "";
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: "Bearer " + store.getState().persist.userInfo.access,
-                },
-            });
-            if (!response.ok) {
-                throw new Error("Error");
-            }
-            const data = await response.json();
-            setData(data);
-            console.log(data);
-        } catch (error) {
-            console.error(error.message);
-        }
-    };
+    // const getDetailed = async function () {
+    //     const url = "";
+    //     try {
+    //         const response = await fetch(url, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 authorization: "Bearer " + store.getState().persist.userInfo.access,
+    //             },
+    //         });
+    //         if (!response.ok) {
+    //             throw new Error("Error");
+    //         }
+    //         const data = await response.json();
+    //         setData(data);
+    //         console.log(data);
+    //     } catch (error) {
+    //         console.error(error.message);
+    //     }
+    // };
 
-    useEffect(() => {
-        getDetailed();
-    }, []);
+    // useEffect(() => {
+    //     getDetailed();
+    // }, []);
 
-    if (!data) {
-        return <div>Loading...</div>;
-    }
+    // if (!data) {
+    //     return <div>Loading...</div>;
+    // }
 
 
    
