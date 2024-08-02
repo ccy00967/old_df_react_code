@@ -10,9 +10,18 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { dark } from '@mui/material/styles/createPalette';
 import { grey } from "@mui/material/colors";
 import store from "../../state/store";
+import { data } from "jquery";
+import {getDetailed} from "./detailed_fuc";
 
 
-
+ 
+// const CustomerRequestForm = {
+//     address: "",
+//     cropsinfo: "",
+//     ownerName: "",
+//     requestContent: "",
+//     reservationDate: "",
+// }
 export function DetailedPage() {
     const [data, setData] = useState(null);
 
@@ -46,9 +55,24 @@ export function DetailedPage() {
     }
 
 
+   
+    const userInfo = useSelector(state => { return state.persist.userInfo; });
+    const navigate = useNavigate();
+    const [detail,setdetail] = useState([]);
+    const [detailaddress,setdetailaddress] = useState([]);
+    const [detailowner,setdetailowner] = useState([]);
+    useEffect(() => {
+        getDetailed(setdetail,setdetailaddress,setdetailowner)
+        
+    }, [])
+    
+   // console.log(detail2.jibunAddress)
+   
+
     return (
         <div>
             <Stack sx={{ alignItems: 'center', justifyItems: 'center' }}>
+                {/* {customerRequests((value) =>())} */}
 
                 <Box
                     sx={{ height: 130 }} />
@@ -60,7 +84,7 @@ export function DetailedPage() {
 
                 <Box sx={{ height: 70 }} />
 
-
+                {/* <Button onClick={getDetailed}>getrequests</Button> */}
 
 
                 <Box sx={{ width: '40%', borderBottom: 1, borderColor: 'grey.500' }}>
@@ -68,19 +92,20 @@ export function DetailedPage() {
 
                     <Grid container spacing={0} alignItems="center">
 
+
                         <Grid item xs={2}>
                             <AccountCircleIcon sx={{ fontSize: 90, color: dark.contrastText }} />
                         </Grid>
 
                         <Grid item xs={2}>
-                            <Typography component="h1" variant="h6" >사용자 이름</Typography>
+                            <Typography component="h1" variant="h6" >{detailowner.name}</Typography>
                         </Grid>
 
                         <Grid item xs={4}>
                         </Grid>
 
                         <Grid item xs={4}>
-                            <Typography component="h1" variant="h6" >010 - xxxx - xxxx</Typography>
+                            <Typography component="h1" variant="h6" >{detailowner.phone_number}</Typography>
                         </Grid>
                     </Grid>
                 </Box>
@@ -113,13 +138,13 @@ export function DetailedPage() {
                 <Box sx={{ width: '40%', borderBottom: 1, borderColor: 'grey.500' }}>
 
                     <Stack spacing={3}>
-                        <Typography component="h1" variant="h6" >방제 주소</Typography>
+                        <Typography component="h1" variant="h6" >{detailaddress.jibunAddress}</Typography>
 
-                        <Typography component="h1" variant="h6" >방제 규모</Typography>
+                        <Typography component="h1" variant="h6" >{detail.size}평</Typography>
 
-                        <Typography component="h1" variant="h6" >작물 종류</Typography>
+                        <Typography component="h1" variant="h6" >{detail.cropsinfo}</Typography>
 
-                        <Typography component="h1" variant="h6" >예약날짜</Typography>
+                        <Typography component="h1" variant="h6" >{detail.reservationDate}</Typography>
                     </Stack>
 
                     <Box sx={{ height: 20 }} />
