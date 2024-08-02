@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const Address = {
+export const Address = {
     roadaddress: '',
     jibunAddress: '',
     englishAddress: '',

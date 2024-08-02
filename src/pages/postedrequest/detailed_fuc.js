@@ -3,7 +3,7 @@ import store from "../../state/store";
 
 
 
-export const getDetailed = async function (setdetail, setdetailaddress, setdetailowner) {
+export const getDetailed = async function () {
     //const url = "requestsRoute + 2c00ba43-8e7b-498c-aab3-5ac3ee94aa97/";
 
     //  try {
@@ -27,9 +27,9 @@ export const getDetailed = async function (setdetail, setdetailaddress, setdetai
             //const data = await response.json();
             length = data.length
             customerRequests = { ...data }
-            setdetail(customerRequests)
-            setdetailaddress(customerRequests.address)
-            setdetailowner(customerRequests.requestowner)
+            // setdetail(customerRequests)
+            // setdetailaddress(customerRequests.address)
+            // setdetailowner(customerRequests.requestowner)
             //aa(data)
         });
     //console.log(11,customerRequests.orderid)

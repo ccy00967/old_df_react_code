@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const TossPayment = {
+export const TossPayment = {
     orderid: "",
 }
 

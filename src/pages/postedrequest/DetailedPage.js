@@ -11,63 +11,20 @@ import { dark } from '@mui/material/styles/createPalette';
 import { grey } from "@mui/material/colors";
 import store from "../../state/store";
 import { data } from "jquery";
-import {getDetailed} from "./detailed_fuc";
+import { getDetailed } from "./detailed_fuc";
+import requestSlice from "../../state/request";
+import { requestsRoute } from "../../components/backend";
 
 
- 
-// const CustomerRequestForm = {
-//     address: "",
-//     cropsinfo: "",
-//     ownerName: "",
-//     requestContent: "",
-//     reservationDate: "",
-// }
+
 export function DetailedPage() {
-    //const [data, setData] = useState(null);
 
-    // const getDetailed = async function () {
-    //     const url = "";
-    //     try {
-    //         const response = await fetch(url, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 authorization: "Bearer " + store.getState().persist.userInfo.access,
-    //             },
-    //         });
-    //         if (!response.ok) {
-    //             throw new Error("Error");
-    //         }
-    //         const data = await response.json();
-    //         setData(data);
-    //         console.log(data);
-    //     } catch (error) {
-    //         console.error(error.message);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     getDetailed();
-    // }, []);
-
-    // if (!data) {
-    //     return <div>Loading...</div>;
-    // }
-
+    const navigate = useNavigate();  
+    const detail = useSelector(state => { return state.persist.request; });
+    console.log(detail);
 
    
-    const userInfo = useSelector(state => { return state.persist.userInfo; });
-    const navigate = useNavigate();
-    const [detail,setdetail] = useState([]);
-    const [detailaddress,setdetailaddress] = useState([]);
-    const [detailowner,setdetailowner] = useState([]);
-    useEffect(() => {
-        getDetailed(setdetail,setdetailaddress,setdetailowner)
-        
-    }, [])
-    
-   // console.log(detail2.jibunAddress)
-   
+
 
     return (
         <div>
@@ -84,7 +41,8 @@ export function DetailedPage() {
 
                 <Box sx={{ height: 70 }} />
 
-                {/* <Button onClick={getDetailed}>getrequests</Button> */}
+             
+              {/* <Button onClick={getDetailed}>getrequests</Button> */}
 
 
                 <Box sx={{ width: '40%', borderBottom: 1, borderColor: 'grey.500' }}>
@@ -98,14 +56,14 @@ export function DetailedPage() {
                         </Grid>
 
                         <Grid item xs={2}>
-                            <Typography component="h1" variant="h6" >{detailowner.name}</Typography>
+                            <Typography component="h1" variant="h6" >{detail.requestowner.name}</Typography>
                         </Grid>
 
                         <Grid item xs={4}>
                         </Grid>
 
                         <Grid item xs={4}>
-                            <Typography component="h1" variant="h6" >{detailowner.phone_number}</Typography>
+                            <Typography component="h1" variant="h6" >{detail.requestowner.phone_number}</Typography>
                         </Grid>
                     </Grid>
                 </Box>
@@ -138,7 +96,7 @@ export function DetailedPage() {
                 <Box sx={{ width: '40%', borderBottom: 1, borderColor: 'grey.500' }}>
 
                     <Stack spacing={3}>
-                        <Typography component="h1" variant="h6" >{detailaddress.jibunAddress}</Typography>
+                        <Typography component="h1" variant="h6" >{detail.address.jibunAddress}</Typography>
 
                         <Typography component="h1" variant="h6" >{detail.size}평</Typography>
 

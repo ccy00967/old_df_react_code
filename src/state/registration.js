@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const UserRegistraion = {
+export const UserRegistraion = {
     userEmail: '',
-    name : '',
+    name: '',
     phone_number: '',
     birth: '',
     gender: '1',
