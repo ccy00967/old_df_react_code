@@ -66,4 +66,13 @@ export function RequestsCard() {
         fetchRequestsData(setData);
     }, []);
 
+    return (
+        <Grid container spacing={3}>
+            {data.map((item, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                    <RequestCard item={item} />
+                </Grid>
+            ))}
+        </Grid>
+    );
 }
