@@ -66,12 +66,12 @@ export function HomePage() {
                 >
                     <Box
                         paddingLeft='50%'
-                        //bgcolor='black'
+                    //bgcolor='black'
                     >
                         <Button
                             size="large"
                             variant="contained"
-                            href="/service" >
+                            href="/request" >
                             방제 신청
                         </Button>
                     </Box>

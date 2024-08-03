@@ -104,10 +104,9 @@ function UserBriefInfoButton(userInfo) {
     return (
 
         <Button
-
             variant="outlined"
             size="large"
-            href="/"
+            href="/service"
             style={
                 {
                     color: 'green',
@@ -115,14 +114,9 @@ function UserBriefInfoButton(userInfo) {
                     borderColor: 'green',
                 }
             }
-            onClick={async () => {
-
-                await logOut() // 이놈을 사용할때는 onClick에 async를 달것!
-            }}
         >
             {userInfo.authenticatedUser.email}
         </Button>
-
 
     );
 }
