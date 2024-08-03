@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { server } from '../../pages/login/login_fuc';
+import { logOut, server } from '../../pages/login/login_fuc';
 import { dark } from '@mui/material/styles/createPalette';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Stack } from '@mui/system';
@@ -78,7 +78,7 @@ export function ServicePage() {
                         <Box height={40}></Box>
 
                         <Typography>사용자 닉네임</Typography>
-                         {/* <text>{userInfo.authenticatedUser.name}</text> */}
+                        {/* <text>{userInfo.authenticatedUser.name}</text> */}
                         <Button
                             // type="submit" // submit 버튼은 페이지를 새로고침해버린다
                             type="button" // 페이지를 새로고침하지 않는다 - 개발할때 console확인은 이걸로 하기
@@ -96,21 +96,31 @@ export function ServicePage() {
                         </Button>
 
                         <Button
-                        type="button"
-                        variant='contained'
-                        href="/request"
-                        sx={{
-                            width: '140px',
-                            height: '35px',
-                            textAlign: 'center',
-                            padding: '0',  
-                            lineHeight: 'normal',  
-                        }}>                           
+                            type="button"
+                            variant='contained'
+                            href="/request"
+                            sx={{
+                                width: '140px',
+                                height: '35px',
+                                textAlign: 'center',
+                                padding: '0',
+                                lineHeight: 'normal',
+                            }}>
                             신청서 현황
                         </Button>
                         <Typography>확인 대기목록</Typography>
                         <Typography>완료 내역</Typography>
 
+                        <Button
+                            variant="outlined"
+                            href="/"
+                            color="error"
+                            onClick={async () => {
+                                logOut() // 이놈을 사용할때는 onClick에 async를 달것!
+                            }}
+                        >
+                            로그아웃
+                        </Button>
 
                     </Stack>
                 </Grid>
@@ -171,7 +181,7 @@ export function ServicePage() {
                                                 <Box sx={{ height: '75px' }}></Box>
 
                                                 <CardActions sx={{ justifyContent: "center", }}>
-                                                    
+
                                                     <Button
                                                         href='/detail'
                                                         variant="contained"
@@ -182,7 +192,7 @@ export function ServicePage() {
                                         </Card>
                                     </Grid>
                                 ))}
-   
+
                             </Grid>
                         </Grid>
                     </Grid>
