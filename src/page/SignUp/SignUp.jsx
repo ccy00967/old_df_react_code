@@ -203,18 +203,57 @@ const SignUp = () => {
   const click_PASS = () => {
     setAlert_pass("ok"); // no 혹은 ok
   };
-  const click_otp_send = () => {
+  const click_otp_send = async () => {
     if (id === "") {
       setAlert_id("no");
     } else {
-      setAlert_id("ok");
+      try {
+        const response = await fetch('https://junradodronefield.com:1337/user/emailsend/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: id }),
+        });
+  
+        if (response.ok) {
+          setAlert_id("ok");
+        } else {
+          setAlert_id("no");
+        }
+      } catch (error) {
+        console.error('Error sending OTP:', error);
+        setAlert_id("no");
+      }
     }
   };
-  const click_otp_check = () => {
+  const click_otp_check = async () => {
     if (otp === "") {
       setAlert_otp("no");
     } else {
-      setAlert_otp("ok");
+      try {
+        const response = await fetch('https://junradodronefield.com:1337/user/validatekeycheck/', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: new URLSearchParams({ validatekey: otp }),
+        });
+  
+        if (response.ok) {
+          alert('이메일 인증에 성공했습니다.');
+          setAlert_otp("ok");
+        } else {
+          console.error('Error verifying email:', response.statusText);
+          alert('인증번호가 일치하지 않습니다.');
+          setAlert_otp("no");
+        }
+      } catch (error) {
+        console.error('Error verifying email:', error);
+        alert('인증번호가 일치하지 않습니다.');
+        setAlert_otp("no");
+      }
     }
   };
 
