@@ -235,7 +235,12 @@ const SignUp = () => {
 
       console.log(res)
 
-      setAlert_otp("ok");
+      if (res.ok) {
+        setAlert_otp("ok");
+      }
+      else {
+        setAlert_otp("no");
+      }
     }
   };
 
