@@ -125,37 +125,48 @@ const Login = (props) => {
     return "";
   };
 
-  const Login_API = () => {
+  const Login_API = async () => {
     // User_info 저장
     const userinfo = {
-      access_token: "",
-      refresh_token: "",
+      access: "",
+      refresh: "",
+      uuid: "",
       userType: userType,
     };
     setUser_info(userinfo);
     localStorage.setItem("User_info", JSON.stringify(userinfo));
-
-    // axios
-    //   .post(
-    //     "https://junradodronefield.com:1337/swagger/user/login",
-    //     {
-    //       email: emaill,
-    //       password: password,
-    //     },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/x-www-form-urlencoded"
-    //       },
-    //     }
-    //   )
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
+  
+    // Prepare the data to be sent
+    const data = {
+      email: emaill,
+      password: password,
+    };
+  
+    try {
+      const response = await fetch('https://junradodronefield.com:1337/user/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(data),
+      });
+  
+      if (response.ok) {
+        const resData = await response.json();
+        console.log(resData);
+        // Update userinfo with tokens if needed
+        userinfo.access = resData.access;
+        userinfo.refresh = resData.refresh;
+        userinfo.uuid = resData.uuid;
+        setUser_info(userinfo);
+        localStorage.setItem("User_info", JSON.stringify(userinfo));
+      } else {
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Network error', error);
+    }
   };
-  // 엔터 시 로그인 실행
   const enterPress = (e) => {
     if (e.key === "Enter") {
       Login_API();
