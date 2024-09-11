@@ -203,17 +203,38 @@ const SignUp = () => {
   const click_PASS = () => {
     setAlert_pass("ok"); // no 혹은 ok
   };
-  const click_otp_send = () => {
+
+  const click_otp_send = async () => {
     if (id === "") {
       setAlert_id("no");
     } else {
+
+      await fetch('https://192.168.0.28:1337/user/emailsend/', {
+        method: 'POST',
+        headers: [["Content-Type", 'application/json'],
+        ],
+        credentials: "include",
+        body: JSON.stringify({ email: id }),
+      });
+
       setAlert_id("ok");
     }
   };
-  const click_otp_check = () => {
+  const click_otp_check = async () => {
     if (otp === "") {
       setAlert_otp("no");
     } else {
+
+      const res = await fetch('https://192.168.0.28:1337/user/validatekeycheck/', {
+        method: 'POST',
+        headers: [["Content-Type", 'application/json'],
+        ],
+        credentials: "include",
+        body: JSON.stringify({ validatekey: otp }),
+      });
+
+      console.log(res)
+
       setAlert_otp("ok");
     }
   };
