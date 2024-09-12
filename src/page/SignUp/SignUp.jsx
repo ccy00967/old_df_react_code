@@ -13,6 +13,7 @@ import {
   RowView,
 } from "../../Component/common_style";
 import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
+import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
 
 const LoginBox = styled(CenterView)`
   width: 100%;
@@ -125,6 +126,12 @@ const SignUp = () => {
   const [addr, setAddr] = useState("");
   const [addrDetail, setAddrDetail] = useState("");
 
+  // 임시 나이스 본인인증 - 모달창을 띄워서 필요정보 직접입력
+  const [modalOpen, setModalOpen] = useState(false);
+  const closeModal = () => { setModalOpen(false) }
+  // 임시 본인인증 데이터 - 나이스에서는 토큰으로 넘어올 예정
+  const [nicepass_data, setNicepass] = useState("");
+
   const setting_type1 = () => setUserType("농업인");
   const setting_type2 = () => setUserType("드론조종사");
   const setting_type3 = () => setUserType("농약상");
@@ -201,6 +208,9 @@ const SignUp = () => {
   };
 
   const click_PASS = () => {
+    // 모달창 열기
+    setModalOpen(true);
+    console.log(modalOpen);
     setAlert_pass("ok"); // no 혹은 ok
   };
 
@@ -338,7 +348,6 @@ const SignUp = () => {
         </AlertText>
 
         <div className="title">인증번호</div>
-
         <RowView>
           <InputBox
             type={"password"}
@@ -405,7 +414,12 @@ const SignUp = () => {
           가입하기
         </Btn>
       </LoginBox>
+      {
+        modalOpen &&
+        <TmpNicepassModal isOpen={modalOpen} closeModal={closeModal} nicepass_data={setNicepass}></TmpNicepassModal>
+      }
     </Common_Layout>
+
   );
 };
 
