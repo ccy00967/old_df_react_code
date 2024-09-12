@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -113,6 +113,7 @@ const Login = (props) => {
   const [userType, setUserType] = useState("농업인");
   const [emaill, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
 
   const setting_type1 = () => setUserType("농업인");
   const setting_type2 = () => setUserType("드론조종사");
@@ -126,22 +127,12 @@ const Login = (props) => {
   };
 
   const Login_API = async () => {
-    // User_info 저장
-    const userinfo = {
-      access: "",
-      refresh: "",
-      uuid: "",
-      userType: userType,
-    };
-    setUser_info(userinfo);
-    localStorage.setItem("User_info", JSON.stringify(userinfo));
-  
     // Prepare the data to be sent
     const data = {
       email: emaill,
       password: password,
     };
-  
+
     try {
       const response = await fetch('https://junradodronefield.com:1337/user/login/', {
         method: 'POST',
@@ -149,17 +140,22 @@ const Login = (props) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams(data),
+        credentials: 'include',
       });
-  
+
       if (response.ok) {
         const resData = await response.json();
-        console.log(resData);
-        // Update userinfo with tokens if needed
-        userinfo.access = resData.access;
-        userinfo.refresh = resData.refresh;
-        userinfo.uuid = resData.uuid;
+        const userinfo = {
+          access: resData.access,
+          refresh: resData.refresh,
+          uuid: resData.uuid,
+          userType: userType,
+        };
         setUser_info(userinfo);
         localStorage.setItem("User_info", JSON.stringify(userinfo));
+
+        // 로그인 후 사용자 정보 가져오기
+        fetchUserInfo(resData.uuid, resData.access);
       } else {
         console.error('Login failed');
       }
@@ -167,6 +163,30 @@ const Login = (props) => {
       console.error('Network error', error);
     }
   };
+
+  const fetchUserInfo = async (uuid, accessToken) => {
+    try {
+      const response = await fetch(`https://junradodronefield.com:1337/user/userinfo/${uuid}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUserName(data.name);
+      } else {
+        console.error('Error fetching user info:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
+
   const enterPress = (e) => {
     if (e.key === "Enter") {
       Login_API();
@@ -183,7 +203,7 @@ const Login = (props) => {
       {isLogin ? (
         <>
           <Text>
-            <span>홍길동 </span>
+            <span>{userName} </span>
             {User_info.userType}님,
             <br />
             안녕하세요!
