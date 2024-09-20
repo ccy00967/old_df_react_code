@@ -131,7 +131,8 @@ const Login = (props) => {
     const userinfo = {
       access_token: "",
       refresh_token: "",
-      userType: userType,
+      //userType: userType,
+      uuid: "",
     };
     setUser_info(userinfo);
     localStorage.setItem("User_info", JSON.stringify(userinfo));
