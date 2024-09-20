@@ -1,14 +1,14 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import styled from "styled-components";
 import {
-    BackgroundArea,
-    CenterView,
-    GreenColor,
-    hoverGreen,
-    Icon,
-    redColor,
-    RowView,
-    RowView2,
+  BackgroundArea,
+  CenterView,
+  GreenColor,
+  hoverGreen,
+  Icon,
+  redColor,
+  RowView,
+  RowView2,
 } from "../../../../Component/common_style";
 import noScroll from "../../../../Component/function/noScroll";
 import useEscapeKey from "../../../../Component/function/useEscapeKey";
@@ -102,102 +102,135 @@ const InputBox = styled.input`
   }
 `;
 
-const TmpNicepassModal = ({ isOpen, closeModal, nicepass_data }) => {
-    //const [modalOpen, setModalOpen] = useState(false);
-    const [data, setData] = useState({});
+const nice_pass_model = {
+  name: "",
+  birth: "",
+  nationalinfo: "",
+  mobileco: "",
+  phone_number: "",
+}
 
-    // useImperativeHandle(ref, () => ({
-    //     visible: (data) => {
-    //         data ? setData(data) : setData({});
-    //         setModalOpen(true);
-    //     },
-    // }));
-    // 모달 open시 스크롤방지F
-    noScroll(isOpen);
+const TmpNicepassModal = ({ isOpen, closeModal, setNicepass }) => {
+  //const [modalOpen, setModalOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [birth, setBirth] = useState("");
+  const [gender, setGender] = useState("");
+  const [nationalinfo, setNationalinfo] = useState("");
+  const [mobileco, setMobileco] = useState("");
+  const [phone_number, setPhone] = useState("");
 
-    // 결제하기
-    const info_push = () => {
-        console.log(data);
-        nicepass_data(data);
-    };
+  // useImperativeHandle(ref, () => ({
+  //     visible: (data) => {
+  //         data ? setData(data) : setData({});
+  //         setModalOpen(true);
+  //     },
+  // }));
+  // 모달 open시 스크롤방지
+  noScroll(isOpen);
 
-    // 닫기
-    // const closeModal = () => {
-    //     setModalOpen(false);
-    // };
-    // useEscapeKey(closeModal);
+  // 결제하기
+  const info_push = () => {
+    nice_pass_model["name"] = name
+    nice_pass_model["birth"] = birth
+    nice_pass_model["gender"] = gender
+    nice_pass_model["nationalinfo"] = nationalinfo
+    nice_pass_model["mobileco"] = mobileco
+    nice_pass_model["phone_number"] = phone_number
 
-    return (
-        <BackgroundArea style={isOpen ? {} : { display: "none" }}>
-            <ModalBox>
-                <RowView2 className="end">
-                    <Icon
-                        className="pointer"
-                        onClick={closeModal}
-                        src={require("../../../../img/icon_close.png")}
-                    />
-                </RowView2>
+    console.log(nice_pass_model);
 
-                <CenterView>
-                    <TextSemiBold className="title" $fontsize={22}>
-                        임시 본인인증 창 - 나이스 PASS 표준창 예정
-                    </TextSemiBold>
-                </CenterView>
+    setNicepass(nice_pass_model);
 
-                <div className="title">이름</div>
-                <RowView>
-                    <InputBox
-                        placeholder="이름을 입력해주세요."
-                        //value={id}
-                        onChange={(name) => { setData({ name: name }) }}
-                    //className={alert_id}
-                    />
-                </RowView>
+    closeModal()
+  };
 
-                <div className="title">생년월일</div>
-                <RowView>
-                    <InputBox
-                        placeholder="year-month-day."
-                        //value={id}
-                        onChange={(birth) => { setData({ birth: birth }) }}
-                    //className={alert_id}
-                    />
-                </RowView>
+  // 닫기
+  // const closeModal = () => {
+  //     setModalOpen(false);
+  // };
+  // useEscapeKey(closeModal);
 
-                <div className="title">nationalinfo</div>
-                <RowView>
-                    <InputBox
-                        placeholder="nationalinfo를 입력해주세요."
-                        //value={id}
-                        onChange={(nationalinfo) => { setData({ nationalinfo: nationalinfo }) }}
-                    //className={alert_id}
-                    />
-                </RowView>
+  return (
+    <BackgroundArea style={isOpen ? {} : { display: "none" }}>
+      <ModalBox>
+        <RowView2 className="end">
+          <Icon
+            className="pointer"
+            onClick={closeModal}
+            src={require("../../../../img/icon_close.png")}
+          />
+        </RowView2>
 
-                <div className="title">통신사</div>
-                <RowView>
-                    <InputBox
-                        placeholder="mobileco를 입력해주세요."
-                        //value={id}
-                        onChange={(mobileco) => { setData({ mobileco: mobileco }) }}
-                    //className={alert_id}
-                    />
-                </RowView>
+        <CenterView>
+          <TextSemiBold className="title" $fontsize={22}>
+            임시 본인인증 창 - 나이스 PASS 표준창 예정
+          </TextSemiBold>
+        </CenterView>
 
-                <div className="title">휴대전화</div>
-                <RowView>
-                    <InputBox
-                        placeholder="phone_number를 입력해주세요."
-                        //value={id}
-                        onChange={(phone_number) => { setData({ phone_number: phone_number }) }}
-                    //className={alert_id}
-                    />
-                </RowView>
+        <div className="title">이름</div>
+        <RowView>
+          <InputBox
+            placeholder="이름을 입력해주세요."
+            //value={id}
+            onChange={(e) => { setName(e.target.value) }}
+          //className={alert_id}
+          />
+        </RowView>
 
-                <Btn onClick={info_push}>입력완료</Btn>
-            </ModalBox>
-        </BackgroundArea>
-    );
+        <div className="title">생년월일</div>
+        <RowView>
+          <InputBox
+            placeholder="year-month-day."
+            //value={id}
+            onChange={(e) => { setBirth(e.target.value) }}
+          //className={alert_id}
+          />
+        </RowView>
+
+        <div className="title">성별</div>
+        <RowView>
+          <InputBox
+            placeholder="0=W, 1=M"
+            //value={id}
+            onChange={(e) => { setGender(e.target.value) }}
+          //className={alert_id}
+          />
+        </RowView>
+
+        <div className="title">nationalinfo</div>
+        <RowView>
+          <InputBox
+            placeholder="nationalinfo를 입력해주세요."
+            //value={id}
+            onChange={(e) => { setNationalinfo(e.target.value) }}
+          //className={alert_id}
+          />
+        </RowView>
+
+        <div className="title">통신사</div>
+        <RowView>
+          <InputBox
+            placeholder="mobileco를 입력해주세요."
+            //value={id}
+            onChange={(e) => { setMobileco(e.target.value) }}
+          //className={alert_id}
+          />
+        </RowView>
+
+        <div className="title">휴대전화</div>
+        <RowView>
+          <InputBox
+            placeholder="phone_number를 입력해주세요."
+            //value={id}
+            onChange={(e) => { setPhone(e.target.value) }}
+          //className={alert_id}
+          />
+        </RowView>
+
+        <Btn onClick={info_push}>입력완료</Btn>
+      </ModalBox>
+    </BackgroundArea>
+  );
 };
 
 export default TmpNicepassModal

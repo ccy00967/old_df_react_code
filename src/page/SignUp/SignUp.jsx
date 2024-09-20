@@ -115,6 +115,30 @@ const Btn = styled.span`
   }
 `;
 
+// 로그인에 필요한 유저정보
+const userModel = {
+  name: "",
+  birth: "",
+  gender: "",
+  nationalinfo: "",
+  mobileco: "",
+  phone_number: "",
+  email: "",
+  password: "",
+  //role: "",
+  address: {},
+}
+
+// address에 들어갈 객체
+const Address = {
+  roadaddress: "도로명",
+  jibunAddress: "지번",
+  englishAddress: "영어주소",
+  navermapsx: "1234",
+  navermapsy: "1234",
+  detailAddress: "디테일",
+}
+
 const SignUp = () => {
   const Navigate = useNavigate();
 
@@ -123,14 +147,14 @@ const SignUp = () => {
   const [otp, setOtp] = useState("");
   const [pw, setPw] = useState("");
   const [pwCheck, setPwCheck] = useState("");
-  const [addr, setAddr] = useState("");
+  const [addr, setAddr] = useState(Address);
   const [addrDetail, setAddrDetail] = useState("");
 
   // 임시 나이스 본인인증 - 모달창을 띄워서 필요정보 직접입력
   const [modalOpen, setModalOpen] = useState(false);
   const closeModal = () => { setModalOpen(false) }
   // 임시 본인인증 데이터 - 나이스에서는 토큰으로 넘어올 예정
-  const [nicepass_data, setNicepass] = useState("");
+  const [niceData, setNicepass] = useState({});
 
   const setting_type1 = () => setUserType("농업인");
   const setting_type2 = () => setUserType("드론조종사");
@@ -164,7 +188,7 @@ const SignUp = () => {
   // (비밀번호 유효성검사) 영문/숫자/특수문자 포함 10~16자
   const isOk_Pw = (pw) => {
     const pattern =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{10,16}$/;
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,16}$/;
     return pattern.test(pw);
   };
 
@@ -199,7 +223,7 @@ const SignUp = () => {
   const alert_pw_message = {
     no: "비밀번호는 영문/숫자/특수문자 포함 10~16자를 포함해야 합니다.",
     ok: "사용가능한 비밀번호입니다.",
-    default: "영문/숫자/특수문자 포함 10~16자",
+    default: "영문/숫자/특수문자 포함 8~16자",
   };
   const alert_pwCheck_message = {
     no: "비밀번호가 일치하지 않습니다.",
@@ -219,7 +243,7 @@ const SignUp = () => {
       setAlert_id("no");
     } else {
 
-      await fetch('https://192.168.0.28:1337/user/emailsend/', {
+      await fetch('https://192.168.0.28:443/user/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
         ],
@@ -235,10 +259,9 @@ const SignUp = () => {
       setAlert_otp("no");
     } else {
 
-      const res = await fetch('https://192.168.0.28:1337/user/validatekeycheck/', {
+      const res = await fetch('https://192.168.0.28:443/user/validatekeycheck/', {
         method: 'POST',
-        headers: [["Content-Type", 'application/json'],
-        ],
+        headers: [["Content-Type", 'application/json']],
         credentials: "include",
         body: JSON.stringify({ validatekey: otp }),
       });
@@ -283,13 +306,17 @@ const SignUp = () => {
     // 약관 동의로 이동
     Navigate("rules", {
       state: {
-        회원선택: userType,
-        아이디: id,
-        인증번호: otp,
-        비밀번호: pw,
-        비밀번호_확인: pwCheck,
-        집_주소: `${addr} ${addrDetail}`,
-      },
+        name: niceData.name,
+        birth: niceData.birth,
+        gender: niceData.gender,
+        nationalinfo: niceData.nationalinfo,
+        mobileco: niceData.mobileco,
+        phone_number: niceData.phone_number,
+        //email: id,
+        password: pw,
+        //role: userType,
+        address: addr,
+      }
     });
   };
 
@@ -350,7 +377,7 @@ const SignUp = () => {
         <div className="title">인증번호</div>
         <RowView>
           <InputBox
-            type={"password"}
+            //type={"password"}
             placeholder="인증번호를 입력해주세요.(유효시간 5분)"
             value={otp}
             onChange={setting_otp}
@@ -396,7 +423,7 @@ const SignUp = () => {
         <RowView>
           <InputBox
             placeholder="집 주소를 입력해주세요."
-            value={addr}
+            value={addr.jibunAddress}
             readOnly
           />
           <Btn onClick={search_addr_API}>주소 찾기</Btn>
@@ -416,7 +443,7 @@ const SignUp = () => {
       </LoginBox>
       {
         modalOpen &&
-        <TmpNicepassModal isOpen={modalOpen} closeModal={closeModal} nicepass_data={setNicepass}></TmpNicepassModal>
+        <TmpNicepassModal isOpen={modalOpen} closeModal={closeModal} setNicepass={setNicepass}></TmpNicepassModal>
       }
     </Common_Layout>
 
