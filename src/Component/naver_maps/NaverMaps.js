@@ -1,66 +1,124 @@
-import React, { useEffect, useState, } from 'react';
-import ReactDOM from 'react-dom';
-import { TextField, Button, Grid, Box, Stack } from '@mui/material';
-import { createRoot } from 'react-dom/client';
-import { useSelector, useDispatch } from 'react-redux';
-import initMap from './navermaps_func';
+import React, { useEffect, useRef } from 'react';
 
+export function NaverMap({ center = { lat: 37.3595316, lng: 127.1052133 }, zoom = 15, address }) {
+    const mapRef = useRef(null);
 
-export function NaverMaps() {
+    useEffect(() => {
+        const { naver } = window;
 
-  const addressInfo = useSelector((state) => state.address);
+        if (!naver) return;
 
-  useEffect(() => {
-    // 네이버 지도 API 스크립트가 로드된 후에 initMap 함수 호출
-    if (window.naver) {
-      initMap();
-    } else {
-      const script = document.createElement('script');
-      script.src = 'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=jqfupb67n5'; // 여기에 클라이언트 ID를 넣어주세요.
-      script.async = true;
-      script.onload = initMap;
-      document.head.appendChild(script);
-    }
+        const map = new naver.maps.Map(mapRef.current, {
+            center: new naver.maps.LatLng(center.lat, center.lng),
+            zoom,
+            mapTypeControl: true,
+        });
 
-    return () => {
-      // 컴포넌트가 언마운트될 때 정리 작업 수행
-      if (window.naver && window.naver.maps) {
-        window.naver.maps.Event.clearInstanceListeners(window.naver.maps.Marker);
-      }
+        const infoWindow = new naver.maps.InfoWindow({
+            anchorSkew: true,
+        });
+
+        // 클릭 이벤트 등록
+        naver.maps.Event.addListener(map, 'click', function (e) {
+            searchCoordinateToAddress(e.coord, map, infoWindow);
+        });
+
+        // 주소로 좌표 검색 및 지도 업데이트
+        if (address) {
+            searchAddressToCoordinate(address, map, infoWindow);
+        }
+    }, [center, zoom, address]);
+
+    // 좌표 -> 주소 검색 함수
+    const searchCoordinateToAddress = (latlng, map, infoWindow) => {
+        infoWindow.close();
+
+        window.naver.maps.Service.reverseGeocode({
+            coords: latlng,
+            orders: [
+                window.naver.maps.Service.OrderType.ADDR,
+                window.naver.maps.Service.OrderType.ROAD_ADDR
+            ].join(','),
+        }, function (status, response) {
+            if (status === window.naver.maps.Service.Status.ERROR) {
+                return alert('Something went wrong!');
+            }
+
+            const items = response.v2.results;
+            let address = '';
+            let htmlAddresses = [];
+
+            for (let i = 0, ii = items.length; i < ii; i++) {
+                const item = items[i];
+                address = makeAddress(item) || '';
+                const addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
+                htmlAddresses.push((i + 1) + '. ' + addrType + ' ' + address);
+            }
+
+            infoWindow.setContent([
+                '<div style="padding:10px;min-width:200px;line-height:150%;">',
+                '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
+                htmlAddresses.join('<br />'),
+                '</div>'
+            ].join('\n'));
+
+            infoWindow.open(map, latlng);
+        });
     };
 
-  }, []); // [] 안에 있는 변수가 변할 때마다 useEffect가 호출됨
+    // 주소 -> 좌표 검색 함수
+    const searchAddressToCoordinate = (address, map, infoWindow) => {
+        window.naver.maps.Service.geocode({
+            query: address
+        }, function (status, response) {
+            if (status === window.naver.maps.Service.Status.ERROR) {
+                return alert('Something went wrong!');
+            }
 
-  return (
-    <div>
-      <Grid container spacing={2} alignItems="center">
+            if (response.v2.meta.totalCount === 0) {
+                return alert('No results found');
+            }
 
-        <Grid xs={6}>
-          <div id="map" style={{ width: '100%', height: '400px' }}></div>
-        </Grid>
+            const item = response.v2.addresses[0];
+            const point = new window.naver.maps.Point(item.x, item.y);
 
-        <Grid xs={0.5}>
-        </Grid>
+            const htmlAddresses = [];
+            if (item.roadAddress) htmlAddresses.push('[도로명 주소] ' + item.roadAddress);
+            if (item.jibunAddress) htmlAddresses.push('[지번 주소] ' + item.jibunAddress);
+            if (item.englishAddress) htmlAddresses.push('[영문 주소] ' + item.englishAddress);
 
-        <Grid xs={5.5} >
-          <Stack spacing={3}>
-            <div id="search"></div>
-            <TextField
-              disabled
-              fullWidth
-              id="jibunAddress"
-              label="지번 주소"
-              value={addressInfo.jibunAddress}
-            />
-            <TextField
-              fullWidth
-              id="DetailAddress"
-              label="상세 주소"
-              placeholder='상세 주소를 입력해주세요.'
-            />
-          </Stack>
-        </Grid>
-      </Grid>
-    </div>
-  );
-}; // 검색한 주소 지번주소로 자동 입력
+            infoWindow.setContent([
+                '<div style="padding:10px;min-width:200px;line-height:150%;">',
+                '<h4 style="margin-top:5px;">검색 주소 : ' + address + '</h4><br />',
+                htmlAddresses.join('<br />'),
+                '</div>'
+            ].join('\n'));
+
+            map.setCenter(point);
+            infoWindow.open(map, point);
+        });
+    };
+
+    // 주소 만들기 함수
+    const makeAddress = (item) => {
+        if (!item) return '';
+
+        const { region, land } = item;
+        let address = '';
+        if (region.area1.name) address += region.area1.name;
+        if (region.area2.name) address += ' ' + region.area2.name;
+        if (region.area3.name) address += ' ' + region.area3.name;
+        if (land && land.number1) {
+            address += ' ' + land.number1;
+            if (land.number2) address += '-' + land.number2;
+        }
+
+        return address;
+    };
+
+    return (
+        <div ref={mapRef} style={{ width: '100%', height: '400px' }} />
+    );
+}
+
+export default NaverMap;

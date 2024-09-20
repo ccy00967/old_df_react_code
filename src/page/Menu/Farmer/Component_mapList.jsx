@@ -14,6 +14,7 @@ import { ScrollToTop_smooth } from "../../../Component/function/ScrollTop";
 import PagingControl from "../../../Component/UI/PagingControl";
 import PerPageControl from "../../../Component/UI/PerPageControl";
 import SideMenuBar from "../SideMenuBar";
+import NaverMap from "../../../Component/naver_maps/NaverMaps";
 
 const ContentArea = styled.div`
   flex: 1;
@@ -130,7 +131,9 @@ const Component_mapList = (props) => {
         <RowView className="top">
           {children}
 
-          <MapArea id="map">지도</MapArea>
+          <MapArea>
+            <NaverMap center={{ lat: 37.3595316, lng: 127.1052133 }} zoom={15} />
+          </MapArea>
         </RowView>
 
         <PerPageControl
