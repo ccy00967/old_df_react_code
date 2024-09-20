@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 import {
   GreenColor,
   hoverGreen,
@@ -135,25 +136,25 @@ const Login = (props) => {
     setUser_info(userinfo);
     localStorage.setItem("User_info", JSON.stringify(userinfo));
 
-    // axios
-    //   .post(
-    //     "https://junradodronefield.com:1337/swagger/user/login",
-    //     {
-    //       email: emaill,
-    //       password: password,
-    //     },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/x-www-form-urlencoded"
-    //       },
-    //     }
-    //   )
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
+    //  axios
+    //    .post(
+    //      "https://junradodronefield.com:1337/swagger/user/login",
+    //      {
+    //        email: emaill,
+    //        password: password,
+    //      },
+    //      {
+    //        headers: {
+    //          "Content-Type": "application/x-www-form-urlencoded"
+    //        },
+    //      }
+    //    )
+    //    .then((res) => {
+    //      console.log(res.data);
+    //    })
+    //    .catch((err) => {
+    //      console.error(err);
+    //    });
   };
   // 엔터 시 로그인 실행
   const enterPress = (e) => {
