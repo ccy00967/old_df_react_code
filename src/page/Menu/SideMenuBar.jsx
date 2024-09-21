@@ -23,23 +23,23 @@ const SideMenu = styled.div`
   }
   div.isMain {
     color: ${(props) =>
-      props.$userType === "농업인"
-        ? GreenColor
-        : props.$userType === "드론조종사"
+    props.$userType === "농업인"
+      ? GreenColor
+      : props.$userType === "드론조종사"
         ? blueColor
         : redColor};
     background-color: ${(props) =>
-      props.$userType === "농업인"
-        ? lightGreenColor
-        : props.$userType === "드론조종사"
+    props.$userType === "농업인"
+      ? lightGreenColor
+      : props.$userType === "드론조종사"
         ? lightBlueColor
         : lightRedColor};
   }
   div.isSub {
     color: ${(props) =>
-      props.$userType === "농업인"
-        ? GreenColor
-        : props.$userType === "드론조종사"
+    props.$userType === "농업인"
+      ? GreenColor
+      : props.$userType === "드론조종사"
         ? blueColor
         : redColor};
     font-family: var(--font-Pretendard-Medium);
@@ -77,8 +77,8 @@ const Menu = styled.div`
 
 const SideMenuBar = (props) => {
   const Navigate = useNavigate();
-  const { User_info } = useUser();
-  const userType = User_info.userType;
+  const { User_Credential } = useUser();
+  const userType = User_Credential.userType;
 
   const mainmenu = props.mainmenu || ""; // 큰 메뉴
   const submenu = props.submenu || ""; // 작은 메뉴
@@ -146,8 +146,8 @@ const SideMenuBar = (props) => {
               ? userType === "농업인"
                 ? require("../../img/icon_profile_green.png")
                 : userType === "드론조종사"
-                ? require("../../img/icon_profile_blue.png")
-                : require("../../img/icon_profile_red.png")
+                  ? require("../../img/icon_profile_blue.png")
+                  : require("../../img/icon_profile_red.png")
               : require("../../img/icon_profile_gray.png")
           }
         />
