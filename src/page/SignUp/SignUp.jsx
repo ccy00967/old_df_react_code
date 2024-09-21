@@ -14,6 +14,7 @@ import {
 } from "../../Component/common_style";
 import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
 import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
+import AddressModal from "../Menu/Farmer/Modal/AddressModal";
 
 const LoginBox = styled(CenterView)`
   width: 100%;
@@ -150,9 +151,14 @@ const SignUp = () => {
   const [addr, setAddr] = useState(Address);
   const [addrDetail, setAddrDetail] = useState("");
 
+  // 네이버 지도 팝업 모달창
+  const [addrmodalOpen, setAddrModalOpen] = useState(false);
+  const closeAddrModal = () => { setAddrModalOpen(false) };
+
   // 임시 나이스 본인인증 - 모달창을 띄워서 필요정보 직접입력
   const [modalOpen, setModalOpen] = useState(false);
   const closeModal = () => { setModalOpen(false) }
+
   // 임시 본인인증 데이터 - 나이스에서는 토큰으로 넘어올 예정
   const [niceData, setNicepass] = useState({});
 
@@ -279,7 +285,10 @@ const SignUp = () => {
 
   /** 주소 찾기 API */
   const search_addr_API = () => {
-    setAddr("API 연결");
+
+    setAddrModalOpen(true);
+    console.log(addrmodalOpen);
+   // setAddr("API 연결");
   };
 
   /** 가입하기 버튼 - 로직은 수정 바랍니다. */
@@ -444,6 +453,11 @@ const SignUp = () => {
       {
         modalOpen &&
         <TmpNicepassModal isOpen={modalOpen} closeModal={closeModal} setNicepass={setNicepass}></TmpNicepassModal>
+      }
+
+      {
+        addrmodalOpen &&
+        <AddressModal isOpen={addrmodalOpen}></AddressModal>
       }
     </Common_Layout>
 
