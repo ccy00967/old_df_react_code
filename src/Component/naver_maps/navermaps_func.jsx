@@ -302,7 +302,7 @@ const initMap = async () => {
     );
 
     // HTML을 설정할 때 JSX를 사용하여 React 컴포넌트에 주입
-    const root = createRoot(document.getElementById('map'))
+    const root = createRoot(document.getElementById('search'))
     root.render(addressInput);
     //ReactDOM.render(addressInput, document.getElementById('search'));
 };
