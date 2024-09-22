@@ -446,8 +446,6 @@ const SignUp = () => {
             style={{ marginTop: "0.7rem" }}
           />
         </RowView>
-
-         <NaverMaps />
         
         <Btn className="signUp" onClick={go_nextPage}>
           가입하기
