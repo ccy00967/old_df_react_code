@@ -447,6 +447,8 @@ const SignUp = () => {
           />
         </RowView>
 
+         <NaverMaps />
+        
         <Btn className="signUp" onClick={go_nextPage}>
           가입하기
         </Btn>
@@ -458,7 +460,7 @@ const SignUp = () => {
 
       {
         addrmodalOpen &&
-        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal}/>
+        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal} />
       }
     </Common_Layout>
 
