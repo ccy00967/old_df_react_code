@@ -15,6 +15,7 @@ import {
 import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
 import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
 import AddressModal from "../Menu/Farmer/Modal/AddressModal";
+import { NaverMaps } from "../../Component/naver_maps/NaverMaps";
 
 const LoginBox = styled(CenterView)`
   width: 100%;
@@ -286,9 +287,9 @@ const SignUp = () => {
   /** 주소 찾기 API */
   const search_addr_API = () => {
 
-    setAddrModalOpen(true);
     console.log(addrmodalOpen);
-   // setAddr("API 연결");
+    setAddrModalOpen(true);
+    // setAddr("API 연결");
   };
 
   /** 가입하기 버튼 - 로직은 수정 바랍니다. */
@@ -457,7 +458,7 @@ const SignUp = () => {
 
       {
         addrmodalOpen &&
-        <AddressModal isOpen={addrmodalOpen}></AddressModal>
+        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal}/>
       }
     </Common_Layout>
 

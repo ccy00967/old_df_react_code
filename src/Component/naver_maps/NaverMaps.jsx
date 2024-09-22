@@ -2,15 +2,16 @@ import React, { useEffect, useState, } from 'react';
 import ReactDOM from 'react-dom';
 //import { TextField, Button, Grid, Box, Stack } from '@mui/material';
 import { createRoot } from 'react-dom/client';
-import { useSelector, useDispatch } from 'react-redux';
+//import { useSelector, useDispatch } from 'react-redux';
 import initMap from './navermaps_func';
 
 
 export function NaverMaps() {
 
-  const addressInfo = useSelector((state) => state.address);
+  //const addressInfo = useSelector((state) => state.address);
 
   useEffect(() => {
+    console.log('111');
     // 네이버 지도 API 스크립트가 로드된 후에 initMap 함수 호출
     if (window.naver) {
       initMap();
@@ -31,12 +32,14 @@ export function NaverMaps() {
 
   }, []); // [] 안에 있는 변수가 변할 때마다 useEffect가 호출됨
 
+
   return (
     <div>
-      <Grid container spacing={2} alignItems="center">
+      <div id="map" style={{ width: '100%', height: '400px' }} />
+
+      {/* <Grid container spacing={2} alignItems="center">
 
         <Grid xs={6}>
-          <div id="map" style={{ width: '100%', height: '400px' }}></div>
         </Grid>
 
         <Grid xs={0.5}>
@@ -60,7 +63,7 @@ export function NaverMaps() {
             />
           </Stack>
         </Grid>
-      </Grid>
+      </Grid> */}
     </div>
   );
 }; // 검색한 주소 지번주소로 자동 입력

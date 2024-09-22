@@ -2,7 +2,55 @@
 //import store from '../../state/store';
 //import { TextField, Button, Grid, Box, Stack } from '@mui/material';
 import { createRoot } from 'react-dom/client';
+import {
+    blueColor,
+    CenterView,
+    GreenColor,
+    hoverGreen,
+    Icon,
+    lightGreenColor,
+    redColor,
+    RowView,
+} from "../../Component/common_style";
+import styled from "styled-components";
 
+
+const InputBox = styled.input`
+  flex: 1;
+  padding: 1rem;
+  font-size: 16px;
+  outline: 0;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  &:focus {
+    border: 1px solid ${GreenColor};
+  }
+  &.no {
+    border: 1px solid ${redColor};
+  }
+`;
+
+
+const Btn = styled.span`
+  width: 9rem;
+  padding: 1rem 0rem;
+  margin-left: 1rem;
+  font-family: var(--font-Pretendard-SemiBold);
+  text-align: center;
+  color: white;
+  background-color: ${GreenColor};
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: ${hoverGreen};
+  }
+  &.signUp {
+    width: 100%;
+    max-width: 40rem;
+    margin: 3rem 0rem;
+  }
+`;
 
 const initMap = async () => {
     const { naver } = window; // 네이버 지도 객체
@@ -213,8 +261,24 @@ const initMap = async () => {
     };
 
     const addressInput = (
-        <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center' }}>
-          <TextField
+        <div >
+            <RowView>
+                <InputBox
+                    id="address"
+                    name="address"
+                    autoComplete='address'
+                    type="text"
+                    placeholder='주소를 입력해 주세요'
+                    onKeyDown={handleKeyDown}
+                />
+                <Btn
+                    id='submit'
+                    onClick={handleSubmit}
+                >
+                    주소 찾기</Btn>
+            </RowView>
+            {
+          /* <TextField
             margin="normal"
             required
             fullWidth
@@ -233,14 +297,14 @@ const initMap = async () => {
             onClick={handleSubmit}
           >
             주소 찾기
-          </Button>
+          </Button> */}
         </div>
-      );
-    
-      // HTML을 설정할 때 JSX를 사용하여 React 컴포넌트에 주입
-      const root = createRoot(document.getElementById('search'))
-      root.render(addressInput);
-      //ReactDOM.render(addressInput, document.getElementById('search'));
+    );
+
+    // HTML을 설정할 때 JSX를 사용하여 React 컴포넌트에 주입
+    const root = createRoot(document.getElementById('map'))
+    root.render(addressInput);
+    //ReactDOM.render(addressInput, document.getElementById('search'));
 };
 
 export default initMap;

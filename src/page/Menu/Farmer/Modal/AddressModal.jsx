@@ -104,14 +104,14 @@ const InputBox = styled.input`
   }
 `;
 
-const AddressModal = ({isOpen, closeModal}) => {
+const AddressModal = ({isOpen, closeAddrModal}) => {
   //네이버 지도 정보 들어올것들 입력하기
 
   noScroll(isOpen);
 
   const info_push = () =>{
     //넘어갈 정보들 입력
-    closeModal()
+    closeAddrModal()
   };
   return (
       <BackgroundArea style={isOpen ? {} : { display: "none" }}>
@@ -119,8 +119,7 @@ const AddressModal = ({isOpen, closeModal}) => {
           <RowView2 className="end">
             <Icon
               className="pointer"
-              onClick={closeModal}
-              
+              onClick={closeAddrModal}
               src={require("../../../../img/icon_close.png")}
             />
           </RowView2>
@@ -128,6 +127,7 @@ const AddressModal = ({isOpen, closeModal}) => {
           <CenterView>
             <TextSemiBold className="title" $fontsize={22}>
               네이버 지도 API
+              <NaverMaps/>
             </TextSemiBold>
           </CenterView>
 
@@ -137,4 +137,4 @@ const AddressModal = ({isOpen, closeModal}) => {
   );
 };
 
-export default AddressModal;
+export default AddressModal
