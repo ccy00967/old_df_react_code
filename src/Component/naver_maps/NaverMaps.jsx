@@ -34,7 +34,7 @@ const NaverMaps = () => {
 
   return (
     <div>
-      <div id="map" style={{ width: '400px', height: '400px' }} ></div>
+      <div id="map" style={{ width: '300px', height: '300px' }} ></div>
       <div id="search" style={{ width: '400px'}} ></div>
 
       {/* <Grid container spacing={2} alignItems="center">

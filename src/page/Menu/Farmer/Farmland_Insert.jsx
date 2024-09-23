@@ -98,7 +98,8 @@ const Farmland_Insert = () => {
 
   // 주소 찾기
   const search_addr_API = () => {
-    setFarmlandAddr("입력");
+    setFarmlandAddr("입력");    
+
   };
   // 농지 등록
   const insert_API = () => {
@@ -173,7 +174,7 @@ const Farmland_Insert = () => {
             </InputDiv>
           </RowView2>
           <RowView2>
-            <InputDiv className="smallText" style={{ marginRight: "1rem" }}>
+            <InputDiv id="size" className="smallText" style={{ marginRight: "1rem" }}>
               평수를 입력해주세요.
             </InputDiv>
             <InputDiv className="smallText">m²평수를 입력해주세요.</InputDiv>
