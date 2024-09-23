@@ -8,6 +8,7 @@ import {
   RowView2
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
+import NaverMap from "../../../Component/naver_maps/NaverMaps";
 
 const InsertBox = styled.div`
   flex: 1;
@@ -143,7 +144,7 @@ const Farmland_Insert = () => {
               value={farmlandAddr}
               onChange={(e) => setFarmlandAddr(e.target.value)}
             />
-            <Btn className="small" onClick={search_addr_API}>
+            <Btn className="small">
               주소 찾기
             </Btn>
           </RowView2>

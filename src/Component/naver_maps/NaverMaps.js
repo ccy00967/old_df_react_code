@@ -98,7 +98,7 @@ const NaverMap = () => {
     });
 
     // 초기 주소 검색
-    searchAddressToCoordinate('정자동 178-1');
+    searchAddressToCoordinate('화정로179번길 41-5');
 
     // 주소를 변환하는 함수
     function makeAddress(item) {
