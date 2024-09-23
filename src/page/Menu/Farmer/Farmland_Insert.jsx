@@ -96,6 +96,25 @@ const Farmland_Insert = () => {
   const setting_plant = (e) => setPlant(e.target.value);
   const setting_check = () => setCheck(!check);
 
+
+  //농지 주소 -> PNU 정보 변환
+  const get_pnu_api = async () => {
+
+    const digitalTwin = "https://api.vworld.kr/req/search?key=6C934ED4-5978-324D-B7DE-AC3A0DDC3B38"
+
+    const res = await fetch(digitalTwin + "&request=search" + "&query=전라남도 나주시 토계동 25-5" + "&type=address" + "&category=parcel", {
+      method: 'GET',
+      //headers: [["Content-Type", 'application/json']],
+      //credentials: "include",
+      //body: JSON.stringify({}),
+    })
+      .then((res) => res.json())
+      .then((data) => data)
+
+    console.log(res)
+
+  };
+
   // 주소 찾기
   const search_addr_API = () => {
     setFarmlandAddr("입력");
@@ -129,6 +148,11 @@ const Farmland_Insert = () => {
       <Component_mapList mainmenu={"마이페이지"} submenu={"농지등록"}>
         <InsertBox>
           <div className="title">농지등록</div>
+
+          <Btn className="small" onClick={get_pnu_api}>
+            주소 찾기
+          </Btn>
+
           <div className="subtitle">농지 별명</div>
           <InputBox
             placeholder="농지 별명을 입력해주세요."

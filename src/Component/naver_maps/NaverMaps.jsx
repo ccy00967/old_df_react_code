@@ -16,9 +16,10 @@ const NaverMaps = () => {
       initMap();
     } else {
       const script = document.createElement('script');
+      script.type = 'text/javascript';
       script.src = 'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=jqfupb67n5'; // 여기에 클라이언트 ID를 넣어주세요.
-      script.async = true;
-      script.onload = initMap;
+      //script.async = true;
+      script.onload = initMap();
       document.head.appendChild(script);
     }
 
@@ -35,35 +36,7 @@ const NaverMaps = () => {
   return (
     <div>
       <div id="map" style={{ width: '400px', height: '400px' }} ></div>
-      <div id="search" style={{ width: '400px', height: '400px' }} ></div>
-
-      {/* <Grid container spacing={2} alignItems="center">
-
-        <Grid xs={6}>
-        </Grid>
-
-        <Grid xs={0.5}>
-        </Grid>
-
-        <Grid xs={5.5} >
-          <Stack spacing={3}>
-            <div id="search"></div>
-            <TextField
-              disabled
-              fullWidth
-              id="jibunAddress"
-              label="지번 주소"
-              value={addressInfo.jibunAddress}
-            />
-            <TextField
-              fullWidth
-              id="DetailAddress"
-              label="상세 주소"
-              placeholder='상세 주소를 입력해주세요.'
-            />
-          </Stack>
-        </Grid>
-      </Grid> */}
+      <div id="search" style={{ width: '400px' }} ></div>
     </div>
   );
 }; // 검색한 주소 지번주소로 자동 입력
