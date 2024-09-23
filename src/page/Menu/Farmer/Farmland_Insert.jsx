@@ -141,7 +141,7 @@ const Farmland_Insert = () => {
             <InputBox
               placeholder="보유하신 농지 주소를 입력해주세요."
               value={farmlandAddr}
-              readOnly
+              onChange={(e) => setFarmlandAddr(e.target.value)}
             />
             <Btn className="small" onClick={search_addr_API}>
               주소 찾기

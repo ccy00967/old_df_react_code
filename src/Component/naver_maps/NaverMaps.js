@@ -1,47 +1,134 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from 'react';
 
-const NaverMap = ({ center = { lat: 37.3595316, lng: 127.1052133 }, zoom = 15 }) => {
-  const mapRef = useRef(null);
-
+const NaverMap = () => {
   useEffect(() => {
     const { naver } = window;
 
-    if (!naver || !mapRef.current) return;
-
-    const map = new naver.maps.Map(mapRef.current, {
-      center: new naver.maps.LatLng(center.lat, center.lng),
-      zoom,
+    // 지도 생성
+    const map = new naver.maps.Map('map', {
+      center: new naver.maps.LatLng(37.3595316, 127.1052133),
+      zoom: 15,
       mapTypeControl: true,
     });
 
-    // 지도 클릭 이벤트 추가
-    naver.maps.Event.addListener(map, 'click', function(e) {
-      const latlng = e.coord;
+    const infoWindow = new naver.maps.InfoWindow({
+      anchorSkew: true,
+    });
 
-      if (naver.maps.Service) {
-        // reverseGeocode 호출
-        naver.maps.Service.reverseGeocode({
+    // 좌표를 주소로 변환
+    function searchCoordinateToAddress(latlng) {
+      infoWindow.close();
+
+      naver.maps.Service.reverseGeocode(
+        {
           coords: latlng,
           orders: [
             naver.maps.Service.OrderType.ADDR,
-            naver.maps.Service.OrderType.ROAD_ADDR
-          ].join(',')
-        }, function(status, response) {
+            naver.maps.Service.OrderType.ROAD_ADDR,
+          ].join(','),
+        },
+        (status, response) => {
           if (status === naver.maps.Service.Status.ERROR) {
-            return alert('Something went wrong!');
+            return alert('Something Wrong!');
           }
 
           const items = response.v2.results;
-          const address = items.length > 0 ? items[0].name : 'No address found';
-          alert(`Address: ${address}`);
-        });
-      } else {
-        alert('Geocoding service is not available.');
-      }
-    });
-  }, [center, zoom]);
+          const htmlAddresses = items.map((item, index) => {
+            const address = makeAddress(item);
+            const addrType =
+              item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
+            return `${index + 1}. ${addrType} ${address}`;
+          });
 
-  return <div ref={mapRef} style={{ width: "100%", height: "100%" }} />;
+          infoWindow.setContent(
+            `
+              <div style="padding:10px;min-width:200px;line-height:150%;">
+                <h4 style="margin-top:5px;">검색 좌표</h4><br />
+                ${htmlAddresses.join('<br />')}
+              </div>
+            `
+          );
+
+          infoWindow.open(map, latlng);
+        }
+      );
+    }
+
+    // 주소를 좌표로 변환
+    function searchAddressToCoordinate(address) {
+      naver.maps.Service.geocode(
+        {
+          query: address,
+        },
+        (status, response) => {
+          if (status === naver.maps.Service.Status.ERROR) {
+            return alert('Something Wrong!');
+          }
+
+          if (response.v2.meta.totalCount === 0) {
+            return alert('totalCount' + response.v2.meta.totalCount);
+          }
+
+          const item = response.v2.addresses[0];
+          const point = new naver.maps.Point(item.x, item.y);
+
+          const htmlAddresses = [];
+          if (item.roadAddress) htmlAddresses.push(`[도로명 주소] ${item.roadAddress}`);
+          if (item.jibunAddress) htmlAddresses.push(`[지번 주소] ${item.jibunAddress}`);
+          if (item.englishAddress) htmlAddresses.push(`[영문명 주소] ${item.englishAddress}`);
+
+          infoWindow.setContent(
+            `
+              <div style="padding:10px;min-width:200px;line-height:150%;">
+                <h4 style="margin-top:5px;">검색 주소 : ${address}</h4><br />
+                ${htmlAddresses.join('<br />')}
+              </div>
+            `
+          );
+
+          map.setCenter(point);
+          infoWindow.open(map, point);
+        }
+      );
+    }
+
+    // 지도 클릭 이벤트 설정
+    map.addListener('click', (e) => {
+      searchCoordinateToAddress(e.coord);
+    });
+
+    // 초기 주소 검색
+    searchAddressToCoordinate('정자동 178-1');
+
+    // 주소를 변환하는 함수
+    function makeAddress(item) {
+      if (!item) return '';
+
+      const { region, land, name } = item;
+      const isRoadAddress = name === 'roadaddr';
+
+      let sido = region.area1?.name || '';
+      let sigugun = region.area2?.name || '';
+      let dongmyun = region.area3?.name || '';
+      let ri = region.area4?.name || '';
+      let rest = '';
+
+      if (land) {
+        if (land.type === '2') rest += '산';
+        rest += land.number1;
+        if (land.number2) rest += `-${land.number2}`;
+        if (isRoadAddress) {
+          if (dongmyun.endsWith('면')) ri = land.name;
+          else dongmyun = land.name;
+          if (land.addition0) rest += ` ${land.addition0.value}`;
+        }
+      }
+
+      return [sido, sigugun, dongmyun, ri, rest].join(' ');
+    }
+  }, []); // 빈 배열로 설정하여 컴포넌트가 처음 렌더링될 때만 실행
+
+  return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
 };
 
 export default NaverMap;

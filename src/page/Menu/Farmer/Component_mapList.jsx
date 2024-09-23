@@ -132,7 +132,7 @@ const Component_mapList = (props) => {
           {children}
 
           <MapArea>
-            <NaverMap center={{ lat: 37.3595316, lng: 127.1052133 }} zoom={15} />
+            <NaverMap />
           </MapArea>
         </RowView>
 
