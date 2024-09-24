@@ -134,7 +134,7 @@ const Login = (props) => {
     };
 
     try {
-      const response = await fetch('https://junradodronefield.com:1337/user/login/', {
+      const response = await fetch('https://192.168.0.28/user/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -166,7 +166,7 @@ const Login = (props) => {
 
   const fetchUserInfo = async (uuid, accessToken) => {
     try {
-      const response = await fetch(`https://junradodronefield.com:1337/user/userinfo/${uuid}/`, {
+      const response = await fetch(`https://192.168.0.28/user/userinfo/${uuid}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

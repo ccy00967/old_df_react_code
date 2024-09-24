@@ -35,12 +35,18 @@ const NaverMap = () => {
           }
 
           const items = response.v2.results;
+
           const htmlAddresses = items.map((item, index) => {
             const address = makeAddress(item);
             const addrType =
               item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
             return `${index + 1}. ${addrType} ${address}`;
           });
+
+          // Log the addresses and latlng in the console
+          
+          console.log('주소:', htmlAddresses);
+          console.log('좌표:', latlng);
 
           infoWindow.setContent(
             `
@@ -79,6 +85,14 @@ const NaverMap = () => {
           if (item.jibunAddress) htmlAddresses.push(`[지번 주소] ${item.jibunAddress}`);
           if (item.englishAddress) htmlAddresses.push(`[영문명 주소] ${item.englishAddress}`);
 
+          console.log('주소 검색 결과값:', {
+            roadAddress: item.roadAddress,
+            jibunAddress: item.jibunAddress,
+            englishAddress: item.englishAddress,
+            x: item.x,
+            y: item.y,
+          });
+
           infoWindow.setContent(
             `
               <div style="padding:10px;min-width:200px;line-height:150%;">
@@ -105,35 +119,35 @@ const NaverMap = () => {
     // 초기 주소 검색
     searchAddressToCoordinate('조선대길 146');
 
-  // 주소를 변환하는 함수
-  function makeAddress(item) {
-    if (!item) return '';
+    // 주소를 변환하는 함수
+    function makeAddress(item) {
+      if (!item) return '';
 
-    const { region, land, name } = item;
-    const isRoadAddress = name === 'roadaddr';
+      const { region, land, name } = item;
+      const isRoadAddress = name === 'roadaddr';
 
-    let sido = region.area1?.name || '';
-    let sigugun = region.area2?.name || '';
-    let dongmyun = region.area3?.name || '';
-    let ri = region.area4?.name || '';
-    let rest = '';
+      let sido = region.area1?.name || '';
+      let sigugun = region.area2?.name || '';
+      let dongmyun = region.area3?.name || '';
+      let ri = region.area4?.name || '';
+      let rest = '';
 
-    if (land) {
-      if (land.type === '2') rest += '산';
-      rest += land.number1;
-      if (land.number2) rest += `-${land.number2}`;
-      if (isRoadAddress) {
-        if (dongmyun.endsWith('면')) ri = land.name;
-        else dongmyun = land.name;
-        if (land.addition0) rest += ` ${land.addition0.value}`;
+      if (land) {
+        if (land.type === '2') rest += '산';
+        rest += land.number1;
+        if (land.number2) rest += `-${land.number2}`;
+        if (isRoadAddress) {
+          if (dongmyun.endsWith('면')) ri = land.name;
+          else dongmyun = land.name;
+          if (land.addition0) rest += ` ${land.addition0.value}`;
+        }
       }
+
+      return [sido, sigugun, dongmyun, ri, rest].join(' ');
     }
+  }, []); // 빈 배열로 설정하여 컴포넌트가 처음 렌더링될 때만 실행
 
-    return [sido, sigugun, dongmyun, ri, rest].join(' ');
-  }
-}, []); // 빈 배열로 설정하여 컴포넌트가 처음 렌더링될 때만 실행
-
-return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
+  return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
 };
 
 export default NaverMap;

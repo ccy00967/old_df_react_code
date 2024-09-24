@@ -98,21 +98,44 @@ const Component_mapList = (props) => {
 
   // 농지 데이터 load
   const [dataList, setDataList] = useState([]);
-  // 이건 테스트 데이터
-  const testData = Array(parseInt(perPage)).fill({
-    name: "김가네벼",
-    addr: "전북특별자치도 김제시 백산읍 공덕 2길",
-    area: "2000평/66,112342m²",
-    plant: "옥수수",
-  });
-  const load_API = () => {
+  // 이건 테스트 데이터 
+  // const testData = Array(parseInt(perPage)).fill({
+  //   name: "김가네벼",
+  //   addr: "전북특별자치도 김제시 백산읍 공덕 2길",
+  //   area: "2000평/66,112342m²",
+  //   plant: "옥수수",
+  // });
+  const load_API = async () => {
+    console.log("aaaaa")
     // 호출 성공시
     setCnt(960);
-    setDataList(testData);
+    //setDataList(testData);
+
+    // 여기다가 패치로 농지 정보들 가져오기
+    const userInfo = JSON.parse(localStorage.getItem('User_info'));
+    const accessToken = userInfo?.access;
+
+    const res = await fetch("https://192.168.0.28/customer/lands/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        //setDataList(res);
+        return res;
+      })
+
+    setDataList(res);
   };
+
   useEffect(() => {
     load_API();
   }, [currentPage, perPage]);
+
 
   // 방재신청 > 농지선택
   const selectFarmland = (name, addr) => {
@@ -154,10 +177,10 @@ const Component_mapList = (props) => {
         {dataList.map((data, idx) => {
           return (
             <TableList key={idx} className={(idx + 1) % 2 === 0 ? "x2" : ""}>
-              <div>{data.name}</div>
-              <div className="addr"> {data.addr}</div>
-              <div>{data.area}</div>
-              <div>{data.plant}</div>
+              <div>{data.landNickName}</div>
+              <div className="addr"> {data.address.jibunAddress}</div>
+              <div>{data.lndpclAr}</div>
+              <div>{data.cropsInfo}</div>
 
               {delete_API && (
                 <MiniBtn
