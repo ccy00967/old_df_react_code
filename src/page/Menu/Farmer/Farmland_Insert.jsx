@@ -152,6 +152,11 @@ const Farmland_Insert = () => {
               placeholder="보유하신 농지 주소를 입력해주세요."
               value={farmlandAddr}
               onChange={(e) => setFarmlandAddr(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  search_addr_API();
+                }
+              }}
             />
             <Btn className="small" onClick={search_addr_API}>
               주소 찾기

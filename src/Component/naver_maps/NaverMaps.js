@@ -68,7 +68,7 @@ const NaverMap = () => {
           }
 
           if (response.v2.meta.totalCount === 0) {
-            return alert('totalCount' + response.v2.meta.totalCount);
+            return alert('주소가 올바르지 않습니다.');
           }
 
           const item = response.v2.addresses[0];
@@ -99,9 +99,11 @@ const NaverMap = () => {
       searchCoordinateToAddress(e.coord);
     });
 
-    // 전역 변수에 searchAddressToCoordinate 함수 할당
+    // 전역 변수에 searchAddressToCoordinate 함수 할당하여 주소검색 활성화
     globalSearchAddressToCoordinate = searchAddressToCoordinate;
 
+    // 초기 주소 검색
+    searchAddressToCoordinate('조선대길 146');
 
   // 주소를 변환하는 함수
   function makeAddress(item) {
