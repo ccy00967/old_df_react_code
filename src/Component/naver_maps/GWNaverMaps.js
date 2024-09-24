@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 export let globalSearchAddressToCoordinate;
 
-const NaverMap = () => {
+const GWNaverMap = () => {
   useEffect(() => {
     const { naver } = window;
 
@@ -150,4 +150,4 @@ const NaverMap = () => {
   return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
 };
 
-export default NaverMap;
+export default GWNaverMap;

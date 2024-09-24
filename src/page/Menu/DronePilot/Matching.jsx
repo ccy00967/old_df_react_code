@@ -193,7 +193,7 @@ const Matching = () => {
   // 단계별 주소찾기 accessToken
   const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
 
-  
+
 
   const getfarmrequest = async () => {
     let length = 0;
@@ -217,20 +217,30 @@ const Matching = () => {
     //console.log(res.endDate)
   }
 
-  const getfarmdetail = async () => {
 
-    const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
-      method: 'GET',
-      headers: {
-        'Content-Type': "application/json",
-        'authorization': "Bearer " + ""
-      },
-    })
-      // .then((res) => res.json())
-      // .then((data) =>{
+  useEffect(() => {
+    getfarmrequest();
+  }, []);
 
-      // })
-  }
+  // const getfarmdetail = async () => {
+
+  //   const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': "application/json",
+  //       'authorization': "Bearer " + ""
+  //     },
+  //   })
+  //     // .then((res) => res.json())
+  //     // .then((data) =>{
+
+  //     // })
+  // }
+
+
+
+
+
   // 단계별 주소 찾기 AccessToken 발급받기버튼
   const sgisapiAccessTokenFunc = async () => {
     const res = await fetch("https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json?consumer_key=a3d30c1dbf844d2596f6&consumer_secret=be8aac1489a6442ea2c4", {
@@ -313,7 +323,6 @@ const Matching = () => {
 
         <ContentArea>
           <TextSemiBold $size={28}>거래매칭</TextSemiBold>
-          <Btn onClick={getfarmrequest}>페이지 시작 시 정보 가져오기</Btn>
           <Btn onClick={sgisapiAccessTokenFunc}>단계별 주소조회 AccessToken 발급받기</Btn>
           <FilterBox>
             <select>
@@ -430,7 +439,7 @@ const Matching = () => {
                   <DataRow>
                     <TextMedium>사용농약</TextMedium>
                     <RowView2 className="wrap top" style={{ flex: 1 }}>
-                      <div className="gray_w">튼튼농약</div>
+                      <div className="gray_w"></div>
                     </RowView2>
                   </DataRow>
 

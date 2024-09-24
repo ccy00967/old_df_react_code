@@ -8,7 +8,7 @@ import {
   RowView2
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
-import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/NaverMaps";
+import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
 import $ from 'jquery';
 
 
