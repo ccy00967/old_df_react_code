@@ -8,6 +8,7 @@ import {
   RowView2
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
+import $ from 'jquery';
 
 const InsertBox = styled.div`
   flex: 1;
@@ -102,16 +103,32 @@ const Farmland_Insert = () => {
 
     const digitalTwin = "https://api.vworld.kr/req/search?key=6C934ED4-5978-324D-B7DE-AC3A0DDC3B38"
 
-    const res = await fetch(digitalTwin + "&request=search" + "&query=전라남도 나주시 토계동 25-5" + "&type=address" + "&category=parcel", {
-      method: 'GET',
-      //headers: [["Content-Type", 'application/json']],
-      //credentials: "include",
-      //body: JSON.stringify({}),
-    })
-      .then((res) => res.json())
-      .then((data) => data)
-
-    console.log(res)
+    $.ajax(
+      {
+        type: "GET",
+        url: digitalTwin + "&request=search" + "&query=전라남도 나주시 토계동 25-5" + "&type=address" + "&category=parcel" + "&format=json",
+        dataType: "jsonp",
+        success: function (res) {
+          //const data = res.json()
+          //console.log(data)
+          //console.log(res)
+          console.log(res.response.result.items)
+          console.log(res.response.result.items[0].id)
+        },
+        error: function (e) {
+          alert(e.responseText);
+        }
+      });
+    // const res = await fetch(digitalTwin + "&request=search" + "&query=전라남도 나주시 토계동 25-5" + "&type=address" + "&category=parcel" + "&format=json", {
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   //dataType: 'jsonp',
+    // })
+    // // .then((res) => res.json())
+    // // .then((data) => { res = data })
+    //console.log(res)
 
   };
 
