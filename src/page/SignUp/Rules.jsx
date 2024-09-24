@@ -124,12 +124,24 @@ const Rules = () => {
     );
   const oepn_check4 = () =>
     window.open(
-      "tos/드론평야_맞춤_정보_수진_동의",
+      "tos/드론평야_맞춤_정보_수집_동의",
       "_blank",
       "width=500,height=500"
     );
 
-  const signUpAPI = () => {
+  const signUpAPI = async () => {
+    console.log(state)
+
+    // 회원가입 요청 보내기
+    const res = await fetch('https://192.168.0.28:443/user/register/', {
+      method: 'POST',
+      headers: [["Content-Type", 'application/json']],
+      credentials: "include",
+      body: JSON.stringify(state),
+    });
+
+    console.log(res);
+
     if (true) {
       // 회원가입 성공
       return true;
@@ -219,7 +231,7 @@ const Rules = () => {
             처음으로
           </div>
           <div className="green" onClick={goNext}>
-            다음
+            회원가입 완료
           </div>
         </BtnArea>
       </LoginBox>

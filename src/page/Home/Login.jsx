@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 import {
   GreenColor,
   hoverGreen,
@@ -104,16 +105,39 @@ const Text = styled.div`
   }
 `;
 
+const UserInfoData = {
+  "name": "비정상 로그인",
+  "birth": "2000-11-11",
+  "gender": "1",
+  "nationalinfo": "0",
+  "mobileco": null,
+  "phone_number": "10100010001",
+  "email": "ccy09671324@gmail.com",
+  "role": 3,
+  "address": {
+    "id": 1,
+    "roadaddress": "도로명 주소 넣기",
+    "jibunAddress": "지번 주소 넣기",
+    "englishAddress": "영어 주소 넣기",
+    "navermapsx": "1234",
+    "navermapsy": "1234",
+    "detailAddress": ""
+  }
+}
+
 const Login = (props) => {
   const Navigate = useNavigate();
-  const { isLogin, User_info, setUser_info } = useUser();
+  const { isLogin, User_Credential, setUser_info } = useUser();
   // 회원가입 버튼 보여줄지 말지
   const signUpNone = props.signUpNone;
 
   const [userType, setUserType] = useState("농업인");
-  const [emaill, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
+
+  // 유저 정보
+  const [userInfo, setUserInfo] = useState(UserInfoData)
 
   const setting_type1 = () => setUserType("농업인");
   const setting_type2 = () => setUserType("드론조종사");
@@ -126,67 +150,78 @@ const Login = (props) => {
     return "";
   };
 
+  const Set_User_info = async () => {
+    console.log(User_Credential.uuid)
+    const res = await fetch('https://192.168.0.28:443/user/userinfo/' + User_Credential.uuid + '/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: "Bearer " + User_Credential.access_token,
+      },
+      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
+      credentials: "include",
+    })
+      .then((res) => { return res.json(); })
+      .then((data) => {
+        return data
+      });
+
+
+    setUserInfo(res)
+  }
+
   const Login_API = async () => {
-    // Prepare the data to be sent
-    const data = {
-      email: emaill,
-      password: password,
+
+    // 로그인 API
+    const res = await fetch('https://192.168.0.28:443/user/login/', {
+      method: 'POST',
+      headers: [["Content-Type", 'application/json'],
+      ],
+      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
+      credentials: "include",
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((res) => { return res.json(); })
+      .then((data) => {
+        return data
+      });
+
+    console.log(res)
+    // User_info 저장
+    const userCredential = {
+      userType: userType,
+      access_token: res.access,
+      refresh_token: res.refresh,
+      uuid: res.uuid,
+      //...res
     };
+    setUser_info(userCredential);
+    localStorage.setItem("User_Credential", JSON.stringify(userCredential));
 
-    try {
-      const response = await fetch('https://192.168.0.28/user/login/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(data),
-        credentials: 'include',
+    // 유저 정보 가져오기
+    console.log(userCredential.uuid)
+    const resUserinfo = await fetch('https://192.168.0.28:443/user/userinfo/' + userCredential.uuid + '/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: "Bearer " + userCredential.access_token,
+      },
+      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
+      credentials: "include",
+    })
+      .then((res) => { return res.json(); })
+      .then((data) => {
+        return data
       });
 
-      if (response.ok) {
-        const resData = await response.json();
-        const userinfo = {
-          access: resData.access,
-          refresh: resData.refresh,
-          uuid: resData.uuid,
-          userType: userType,
-        };
-        setUser_info(userinfo);
-        localStorage.setItem("User_info", JSON.stringify(userinfo));
-
-        // 로그인 후 사용자 정보 가져오기
-        fetchUserInfo(resData.uuid, resData.access);
-      } else {
-        console.error('Login failed');
-      }
-    } catch (error) {
-      console.error('Network error', error);
-    }
+    setUserInfo(resUserinfo)
   };
 
-  const fetchUserInfo = async (uuid, accessToken) => {
-    try {
-      const response = await fetch(`https://192.168.0.28/user/userinfo/${uuid}/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUserName(data.name);
-      } else {
-        console.error('Error fetching user info:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error fetching user info:', error);
-    }
-  };
-
-
+  // 엔터 시 로그인 실행
+  
   const enterPress = (e) => {
     if (e.key === "Enter") {
       Login_API();
@@ -203,8 +238,8 @@ const Login = (props) => {
       {isLogin ? (
         <>
           <Text>
-            <span>{userName} </span>
-            {User_info.userType}님,
+            <span> {userInfo.name} </span>
+            {User_Credential.userType}님,
             <br />
             안녕하세요!
           </Text>
@@ -238,7 +273,7 @@ const Login = (props) => {
           <div className="label">아이디</div>
           <InputBox
             placeholder="이메일을 입력해주세요."
-            value={emaill}
+            value={email}
             onChange={setting_email}
             onKeyPress={(e) => enterPress(e)}
           />
