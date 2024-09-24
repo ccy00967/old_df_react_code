@@ -105,8 +105,8 @@ const Btn = styled(CenterView)`
 `;
 
 const MyInfo = () => {
-  const { User_info } = useUser();
-  const userType = User_info.userType;
+  const { User_Credential } = useUser();
+  const userType = User_Credential.userType;
   const themeColor = () => {
     if (userType === "농업인") return "green";
     if (userType === "드론조종사") return "blue";

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 import {
   GreenColor,
   hoverGreen,
@@ -104,15 +105,38 @@ const Text = styled.div`
   }
 `;
 
+const UserInfoData = {
+  "name": "비정상 로그인",
+  "birth": "2000-11-11",
+  "gender": "1",
+  "nationalinfo": "0",
+  "mobileco": null,
+  "phone_number": "10100010001",
+  "email": "ccy09671324@gmail.com",
+  "role": 3,
+  "address": {
+    "id": 1,
+    "roadaddress": "도로명 주소 넣기",
+    "jibunAddress": "지번 주소 넣기",
+    "englishAddress": "영어 주소 넣기",
+    "navermapsx": "1234",
+    "navermapsy": "1234",
+    "detailAddress": ""
+  }
+}
+
 const Login = (props) => {
   const Navigate = useNavigate();
-  const { isLogin, User_info, setUser_info } = useUser();
+  const { isLogin, User_Credential, setUser_info } = useUser();
   // 회원가입 버튼 보여줄지 말지
   const signUpNone = props.signUpNone;
 
   const [userType, setUserType] = useState("농업인");
-  const [emaill, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // 유저 정보
+  const [userInfo, setUserInfo] = useState(UserInfoData)
 
   const setting_type1 = () => setUserType("농업인");
   const setting_type2 = () => setUserType("드론조종사");
@@ -125,36 +149,76 @@ const Login = (props) => {
     return "";
   };
 
-  const Login_API = () => {
-    // User_info 저장
-    const userinfo = {
-      access_token: "",
-      refresh_token: "",
-      userType: userType,
-    };
-    setUser_info(userinfo);
-    localStorage.setItem("User_info", JSON.stringify(userinfo));
+  const Set_User_info = async () => {
+    console.log(User_Credential.uuid)
+    const res = await fetch('https://192.168.0.28:443/user/userinfo/' + User_Credential.uuid + '/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: "Bearer " + User_Credential.access_token,
+      },
+      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
+      credentials: "include",
+    })
+      .then((res) => { return res.json(); })
+      .then((data) => {
+        return data
+      });
 
-    // axios
-    //   .post(
-    //     "https://junradodronefield.com:1337/swagger/user/login",
-    //     {
-    //       email: emaill,
-    //       password: password,
-    //     },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/x-www-form-urlencoded"
-    //       },
-    //     }
-    //   )
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
+
+    setUserInfo(res)
+  }
+
+  const Login_API = async () => {
+
+    // 로그인 API
+    const res = await fetch('https://192.168.0.28:443/user/login/', {
+      method: 'POST',
+      headers: [["Content-Type", 'application/json'],
+      ],
+      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
+      credentials: "include",
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((res) => { return res.json(); })
+      .then((data) => {
+        return data
+      });
+
+    console.log(res)
+    // User_info 저장
+    const userCredential = {
+      userType: userType,
+      access_token: res.access,
+      refresh_token: res.refresh,
+      uuid: res.uuid,
+      //...res
+    };
+    setUser_info(userCredential);
+    localStorage.setItem("User_Credential", JSON.stringify(userCredential));
+
+    // 유저 정보 가져오기
+    console.log(userCredential.uuid)
+    const resUserinfo = await fetch('https://192.168.0.28:443/user/userinfo/' + userCredential.uuid + '/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: "Bearer " + userCredential.access_token,
+      },
+      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
+      credentials: "include",
+    })
+      .then((res) => { return res.json(); })
+      .then((data) => {
+        return data
+      });
+
+    setUserInfo(resUserinfo)
   };
+
   // 엔터 시 로그인 실행
   const enterPress = (e) => {
     if (e.key === "Enter") {
@@ -172,8 +236,8 @@ const Login = (props) => {
       {isLogin ? (
         <>
           <Text>
-            <span>홍길동 </span>
-            {User_info.userType}님,
+            <span> {userInfo.name} </span>
+            {User_Credential.userType}님,
             <br />
             안녕하세요!
           </Text>
@@ -207,7 +271,7 @@ const Login = (props) => {
           <div className="label">아이디</div>
           <InputBox
             placeholder="이메일을 입력해주세요."
-            value={emaill}
+            value={email}
             onChange={setting_email}
             onKeyPress={(e) => enterPress(e)}
           />

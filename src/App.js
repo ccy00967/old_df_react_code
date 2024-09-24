@@ -35,8 +35,8 @@ import WorkStatus2 from "./page/Menu/PesticideDealer/WorkStatus";
 import Adjustment2 from "./page/Menu/PesticideDealer/Adjustment";
 
 function App() {
-  const { isLogin, User_info } = useUser();
-  const userType = User_info.userType;
+  const { isLogin, User_Credential } = useUser();
+  const userType = User_Credential.userType;
   const accessType1 = userType === "농업인";
   const accessType2 = userType === "드론조종사";
   const accessType3 = userType === "농약상";
