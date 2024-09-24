@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 
+export let globalSearchAddressToCoordinate;
+
 const NaverMap = () => {
   useEffect(() => {
     const { naver } = window;
@@ -97,38 +99,39 @@ const NaverMap = () => {
       searchCoordinateToAddress(e.coord);
     });
 
-    // 초기 주소 검색
-    searchAddressToCoordinate('화정로179번길 41-5');
+    // 전역 변수에 searchAddressToCoordinate 함수 할당
+    globalSearchAddressToCoordinate = searchAddressToCoordinate;
 
-    // 주소를 변환하는 함수
-    function makeAddress(item) {
-      if (!item) return '';
 
-      const { region, land, name } = item;
-      const isRoadAddress = name === 'roadaddr';
+  // 주소를 변환하는 함수
+  function makeAddress(item) {
+    if (!item) return '';
 
-      let sido = region.area1?.name || '';
-      let sigugun = region.area2?.name || '';
-      let dongmyun = region.area3?.name || '';
-      let ri = region.area4?.name || '';
-      let rest = '';
+    const { region, land, name } = item;
+    const isRoadAddress = name === 'roadaddr';
 
-      if (land) {
-        if (land.type === '2') rest += '산';
-        rest += land.number1;
-        if (land.number2) rest += `-${land.number2}`;
-        if (isRoadAddress) {
-          if (dongmyun.endsWith('면')) ri = land.name;
-          else dongmyun = land.name;
-          if (land.addition0) rest += ` ${land.addition0.value}`;
-        }
+    let sido = region.area1?.name || '';
+    let sigugun = region.area2?.name || '';
+    let dongmyun = region.area3?.name || '';
+    let ri = region.area4?.name || '';
+    let rest = '';
+
+    if (land) {
+      if (land.type === '2') rest += '산';
+      rest += land.number1;
+      if (land.number2) rest += `-${land.number2}`;
+      if (isRoadAddress) {
+        if (dongmyun.endsWith('면')) ri = land.name;
+        else dongmyun = land.name;
+        if (land.addition0) rest += ` ${land.addition0.value}`;
       }
-
-      return [sido, sigugun, dongmyun, ri, rest].join(' ');
     }
-  }, []); // 빈 배열로 설정하여 컴포넌트가 처음 렌더링될 때만 실행
 
-  return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
+    return [sido, sigugun, dongmyun, ri, rest].join(' ');
+  }
+}, []); // 빈 배열로 설정하여 컴포넌트가 처음 렌더링될 때만 실행
+
+return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
 };
 
 export default NaverMap;

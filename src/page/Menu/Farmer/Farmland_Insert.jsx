@@ -8,7 +8,7 @@ import {
   RowView2
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
-import NaverMap from "../../../Component/naver_maps/NaverMaps";
+import {globalSearchAddressToCoordinate} from "../../../Component/naver_maps/NaverMaps";
 
 const InsertBox = styled.div`
   flex: 1;
@@ -99,8 +99,17 @@ const Farmland_Insert = () => {
 
   // 주소 찾기
   const search_addr_API = () => {
-    setFarmlandAddr("입력");
+    if (!farmlandAddr) {
+      return alert("농지 주소를 입력하세요.");
+    }
+
+    if (globalSearchAddressToCoordinate) {
+      globalSearchAddressToCoordinate(farmlandAddr); // Naver Map API를 통해 주소 검색
+    } else {
+      alert("지도가 아직 로드되지 않았습니다.");
+    }
   };
+
   // 농지 등록
   const insert_API = () => {
     if (!check) {
@@ -144,7 +153,7 @@ const Farmland_Insert = () => {
               value={farmlandAddr}
               onChange={(e) => setFarmlandAddr(e.target.value)}
             />
-            <Btn className="small">
+            <Btn className="small" onClick={search_addr_API}>
               주소 찾기
             </Btn>
           </RowView2>
