@@ -98,7 +98,7 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
   const [serviceAmount, setServiceAmount] = useState(10000);
   // -
   const [company, setCompany] = useState("홍길동 방제");
-  const [company_tel, setCompany_tel] = useState("010-1010-1010");
+  const [company_tel, setCompany_tel] = useState("011-1010-1010");
 
   // 닫기
   const closeModal = () => {

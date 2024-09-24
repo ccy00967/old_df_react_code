@@ -259,7 +259,7 @@ const Farmland_Insert = () => {
             </InputDiv>
           </RowView2>
           <RowView2>
-            <InputDiv className="smallText" style={{ marginRight: "1rem" }}>
+            <InputDiv id="size" className="smallText" style={{ marginRight: "1rem" }}>
               평수를 입력해주세요.
             </InputDiv>
             <InputDiv className="smallText">m²평수를 입력해주세요.</InputDiv>

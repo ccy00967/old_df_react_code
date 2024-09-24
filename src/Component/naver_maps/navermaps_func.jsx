@@ -13,6 +13,8 @@ import {
     RowView,
 } from "../../Component/common_style";
 import styled from "styled-components";
+import ReactDOM from 'react-dom';
+
 
 
 const InputBox = styled.input`
@@ -268,7 +270,7 @@ const initMap = async () => {
                     name="address"
                     autoComplete='address'
                     type="text"
-                    placeholder='주소를 입력해 주세요'
+                    placeholder='주소를 입력해주세요'
                     onKeyDown={handleKeyDown}
                 />
                 <Btn
@@ -307,4 +309,4 @@ const initMap = async () => {
     //ReactDOM.render(addressInput, document.getElementById('search'));
 };
 
-export default initMap;
+export default initMap; 
