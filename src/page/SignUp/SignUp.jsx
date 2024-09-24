@@ -259,13 +259,34 @@ const SignUp = () => {
       });
 
       setAlert_id("ok");
+      try {
+        const response = await fetch('https://junradodronefield.com:1337/user/emailsend/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: id }),
+          credentials: 'include',
+        });
+  
+        if (response.ok) {
+          setAlert_type("ok");
+          // Handle success (e.g., show a success message)
+        } else {
+          setAlert_type("no");
+          // Handle error (e.g., show an error message)
+        }
+      } catch (error) {
+        setAlert_type("no");
+        // Handle network error
+      }
     }
   };
   const click_otp_check = async () => {
     if (otp === "") {
       setAlert_otp("no");
     } else {
-
+      
       const res = await fetch('https://192.168.0.28:443/user/validatekeycheck/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json']],

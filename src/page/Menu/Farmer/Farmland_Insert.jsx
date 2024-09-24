@@ -8,6 +8,9 @@ import {
   RowView2
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
+import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/NaverMaps";
+import $ from 'jquery';
+
 
 const InsertBox = styled.div`
   flex: 1;
@@ -82,6 +85,7 @@ const Btn = styled.div`
   }
 `;
 
+
 const Farmland_Insert = () => {
   const [farmlandName, setFarmlandname] = useState("");
   const [farmlandAddr, setFarmlandAddr] = useState("");
@@ -97,43 +101,95 @@ const Farmland_Insert = () => {
   const setting_check = () => setCheck(!check);
 
 
+  const postData = {
+    address: {
+      roadaddress: farmlandAddr,
+      jibunAddress: "더미 지번 주소",
+      englishAddress: "더미 영문 주소",
+      navermapsx: "123.456",
+      navermapsy: "78.910",
+      detailAddress: "더미 상세 주소",
+    },
+    pnu: "더미 Pnu",
+    idCodeNm: "더미",
+    mnnmSlno: "더미",
+    regstrSeCodeNm: "더미",
+    lndpclAr: "더미",
+    posesnSeCodeNm: "더미",
+    cnrsPsnCo: "더미",
+    lastUpdtDt: "더미",
+    landNickName: farmlandName,
+    cropsInfo: plant,
+    landOwner: "더미",
+    anotherPhoneNum: "더미",
+  };
+
+
   //농지 주소 -> PNU 정보 변환
   const get_pnu_api = async () => {
 
     const digitalTwin = "https://api.vworld.kr/req/search?key=6C934ED4-5978-324D-B7DE-AC3A0DDC3B38"
 
-    const res = await fetch(digitalTwin + "&request=search" + "&query=전라남도 나주시 토계동 25-5" + "&type=address" + "&category=parcel", {
-      method: 'GET',
-      //headers: [["Content-Type", 'application/json']],
-      //credentials: "include",
-      //body: JSON.stringify({}),
-    })
-      .then((res) => res.json())
-      .then((data) => data)
-
-    console.log(res)
+    $.ajax(
+      {
+        type: "GET",
+        url: digitalTwin + "&request=search" + "&query=전라남도 나주시 토계동 25-5" + "&type=address" + "&category=parcel" + "&format=json",
+        dataType: "jsonp",
+        success: function (res) {
+          //const data = res.json()
+          //console.log(data)
+          //console.log(res)
+          console.log(res.response.result.items)
+          console.log(res.response.result.items[0].id)
+        },
+        error: function (e) {
+          alert(e.responseText);
+        }
+      });
+    // const res = await fetch(digitalTwin + "&request=search" + "&query=전라남도 나주시 토계동 25-5" + "&type=address" + "&category=parcel" + "&format=json", {
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   //dataType: 'jsonp',
+    // })
+    // // .then((res) => res.json())
+    // // .then((data) => { res = data })
+    //console.log(res)
 
   };
 
   // 주소 찾기
   const search_addr_API = () => {
-    setFarmlandAddr("입력");    
-
-  };
-  // 농지 등록
-  const insert_API = () => {
-    if (!check) {
-      return alert("동의해주세요.");
+    if (!farmlandAddr) {
+      return alert("농지 주소를 입력하세요.");
     }
 
-    console.log({
-      농지_별명: farmlandName,
-      농지_주소: farmlandAddr,
-      면적_평: farmlandArea,
-      면적_m2: farmlandm2,
-      작물: setPlant,
-      동의여부: check,
+    if (globalSearchAddressToCoordinate) {
+      globalSearchAddressToCoordinate(farmlandAddr); // Naver Map API를 통해 주소 검색
+    } else {
+      alert("지도가 아직 로드되지 않았습니다.");
+    }
+  };
+
+  // 농지 등록
+  const insert_API = async () => {
+    const userInfo = JSON.parse(localStorage.getItem('User_info'));
+    const accessToken = userInfo?.access;
+
+    const res = await fetch("https://192.168.0.28/customer/lands/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(postData),
     });
+
+
+    const result = await res.json();
+    console.log("Success:", result);
+
   };
 
   // 면적 div태그 css
@@ -166,7 +222,12 @@ const Farmland_Insert = () => {
             <InputBox
               placeholder="보유하신 농지 주소를 입력해주세요."
               value={farmlandAddr}
-              readOnly
+              onChange={(e) => setFarmlandAddr(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  search_addr_API();
+                }
+              }}
             />
             <Btn className="small" onClick={search_addr_API}>
               주소 찾기
