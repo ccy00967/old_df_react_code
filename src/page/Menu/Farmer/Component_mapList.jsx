@@ -131,8 +131,8 @@ const Component_mapList = (props) => {
         <RowView className="top">
           {children}
 
-          <MapArea >
-            <NaverMaps id="map"/>
+          <MapArea id="map">
+            
           </MapArea>
         </RowView>
 
