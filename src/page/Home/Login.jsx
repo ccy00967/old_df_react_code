@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -134,6 +134,7 @@ const Login = (props) => {
   const [userType, setUserType] = useState("농업인");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
 
   // 유저 정보
   const [userInfo, setUserInfo] = useState(UserInfoData)
@@ -220,6 +221,7 @@ const Login = (props) => {
   };
 
   // 엔터 시 로그인 실행
+  
   const enterPress = (e) => {
     if (e.key === "Enter") {
       Login_API();

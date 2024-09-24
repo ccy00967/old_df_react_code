@@ -8,7 +8,9 @@ import {
   RowView2
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
+import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/NaverMaps";
 import $ from 'jquery';
+
 
 const InsertBox = styled.div`
   flex: 1;
@@ -83,6 +85,7 @@ const Btn = styled.div`
   }
 `;
 
+
 const Farmland_Insert = () => {
   const [farmlandName, setFarmlandname] = useState("");
   const [farmlandAddr, setFarmlandAddr] = useState("");
@@ -96,6 +99,30 @@ const Farmland_Insert = () => {
   const setting_m2 = (e) => setFarmlandm2(e.target.value);
   const setting_plant = (e) => setPlant(e.target.value);
   const setting_check = () => setCheck(!check);
+
+
+  const postData = {
+    address: {
+      roadaddress: farmlandAddr,
+      jibunAddress: "더미 지번 주소",
+      englishAddress: "더미 영문 주소",
+      navermapsx: "123.456",
+      navermapsy: "78.910",
+      detailAddress: "더미 상세 주소",
+    },
+    pnu: "더미 Pnu",
+    idCodeNm: "더미",
+    mnnmSlno: "더미",
+    regstrSeCodeNm: "더미",
+    lndpclAr: "더미",
+    posesnSeCodeNm: "더미",
+    cnrsPsnCo: "더미",
+    lastUpdtDt: "더미",
+    landNickName: farmlandName,
+    cropsInfo: plant,
+    landOwner: "더미",
+    anotherPhoneNum: "더미",
+  };
 
 
   //농지 주소 -> PNU 정보 변환
@@ -134,22 +161,35 @@ const Farmland_Insert = () => {
 
   // 주소 찾기
   const search_addr_API = () => {
-    setFarmlandAddr("입력");
-  };
-  // 농지 등록
-  const insert_API = () => {
-    if (!check) {
-      return alert("동의해주세요.");
+    if (!farmlandAddr) {
+      return alert("농지 주소를 입력하세요.");
     }
 
-    console.log({
-      농지_별명: farmlandName,
-      농지_주소: farmlandAddr,
-      면적_평: farmlandArea,
-      면적_m2: farmlandm2,
-      작물: setPlant,
-      동의여부: check,
+    if (globalSearchAddressToCoordinate) {
+      globalSearchAddressToCoordinate(farmlandAddr); // Naver Map API를 통해 주소 검색
+    } else {
+      alert("지도가 아직 로드되지 않았습니다.");
+    }
+  };
+
+  // 농지 등록
+  const insert_API = async () => {
+    const userInfo = JSON.parse(localStorage.getItem('User_info'));
+    const accessToken = userInfo?.access;
+
+    const res = await fetch("https://192.168.0.28/customer/lands/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(postData),
     });
+
+
+    const result = await res.json();
+    console.log("Success:", result);
+
   };
 
   // 면적 div태그 css
@@ -182,7 +222,12 @@ const Farmland_Insert = () => {
             <InputBox
               placeholder="보유하신 농지 주소를 입력해주세요."
               value={farmlandAddr}
-              readOnly
+              onChange={(e) => setFarmlandAddr(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  search_addr_API();
+                }
+              }}
             />
             <Btn className="small" onClick={search_addr_API}>
               주소 찾기

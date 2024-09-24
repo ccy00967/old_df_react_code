@@ -103,11 +103,13 @@ const PestControl_apply = () => {
   const [selectFarmland, setSelectFarmland] = useState("");
   const [price, setPrice] = useState("");
   const [pesticidesUsed, setPesticidesUsed] = useState("");
+  const [startDate, setStartDate] = useState("");
 
   const setting_General = () => setTransaction("일반거래");
   const setting_personal = () => setTransaction("개인거래");
   const setting_price = (e) => setPrice(e.target.value);
   const setting_pesticides = (e) => setPesticidesUsed(e.target.value);
+  const setting_startDate = (date) => setStartDate(date);
 
   const transactionType = (menu) => {
     if (transaction === menu) {
@@ -115,17 +117,29 @@ const PestControl_apply = () => {
     }
     return "";
   };
+  const postData = {
+    dealmothod: transaction === "일반거래" ? 0 : 1,
+    startDate: '2021-08-30',
+    endDate: '2021-09-03',
+    pesticide: '살충제',
+  };
 
   // 방제 신청
   const applyRef = useRef();
-  const apply = () => {
-    applyRef.current.visible({
-      거래방식: transaction,
-      농지선택: selectFarmland,
-      평단가: price,
-      사용농약: pesticidesUsed,
+  const apply = async () => {
+    const userInfo = JSON.parse(localStorage.getItem('User_info'));
+    const accessToken = userInfo?.access;
+
+    const res = await fetch(`https://192.168.0.28/farmrequest/send/6b38b718-3d2c-4c84-a88a-90b9e5e4b995/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(postData),
     });
   };
+
 
   return (
     <Common_Layout>
@@ -180,13 +194,13 @@ const PestControl_apply = () => {
             onChange={setting_price}
           />
 
-          <div className="subtitle">마감일</div>
+          <div className="subtitle">시작일</div>
           <RowView>
-            <DateBox>8/30</DateBox>
-            <DateBox>9/6</DateBox>
-            <DateBox>9/13</DateBox>
+            <DateBox onClick={() => setting_startDate('2024-08-30')}>8/30</DateBox>
+            <DateBox onClick={() => setting_startDate('2024-09-06')}>9/6</DateBox>
+            <DateBox onClick={() => setting_startDate('2024-09-13')}>9/13</DateBox>
           </RowView>
-          <span>신청일 기준 익주 금요일이 마감입니다.</span>
+          <span>신청일 기준 2주 후 마감입니다.</span>
 
           <div className="subtitle">사용 농약</div>
           <InputBox
