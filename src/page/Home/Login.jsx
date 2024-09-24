@@ -217,6 +217,7 @@ const Login = (props) => {
         return data
       });
 
+    console.log(resUserinfo);
     setUserInfo(resUserinfo)
   };
 
