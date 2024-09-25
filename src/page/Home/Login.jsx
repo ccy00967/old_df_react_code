@@ -203,7 +203,7 @@ const Login = (props) => {
 
     // 유저 정보 가져오기
     console.log(userCredential.uuid)
-    const resUserinfo = await fetch('https://192.168.0.28:443/user/userinfo/' + userCredential.uuid + '/', {
+    const resUserinfo = await fetch('https://192.168.0.28/user/userinfo/' + userCredential.uuid + '/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

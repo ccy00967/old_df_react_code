@@ -15,7 +15,6 @@ import {
 import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
 import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
 import AddressModal from "../Menu/Farmer/Modal/AddressModal";
-import { NaverMaps } from "../../Component/naver_maps/NaverMaps";
 
 const LoginBox = styled(CenterView)`
   width: 100%;
@@ -249,10 +248,6 @@ const SignUp = () => {
     if (id === "") {
       setAlert_id("no");
     } else {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
       await fetch('https://192.168.0.28:443/user/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
@@ -261,10 +256,7 @@ const SignUp = () => {
         body: JSON.stringify({ email: id }),
       });
 
->>>>>>> c868cce9c51360f293f5899238da30f80f4c1023
       setAlert_id("ok");
-=======
->>>>>>> main
       try {
         const response = await fetch('https://junradodronefield.com:1337/user/emailsend/', {
           method: 'POST',
@@ -272,21 +264,7 @@ const SignUp = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email: id }),
-<<<<<<< HEAD
           credentials: 'include',
-        });
-  
-        if (response.ok) {
-          setAlert_type("ok");
-          // Handle success (e.g., show a success message)
-        } else {
-          setAlert_type("no");
-          // Handle error (e.g., show an error message)
-        }
-      } catch (error) {
-        setAlert_type("no");
-        // Handle network error
-=======
         });
   
         if (response.ok) {
@@ -295,9 +273,8 @@ const SignUp = () => {
           setAlert_id("no");
         }
       } catch (error) {
-        console.error('Error sending OTP:', error);
-        setAlert_id("no");
->>>>>>> main
+        setAlert_type("no");
+        // Handle network error
       }
     }
   };
@@ -305,52 +282,6 @@ const SignUp = () => {
     if (otp === "") {
       setAlert_otp("no");
     } else {
-<<<<<<< HEAD
-<<<<<<< HEAD
-      setAlert_otp("ok");
-      try {
-        const response = await fetch('https://junradodronefield.com:1337/user/validatekeycheck/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ validatekey: otp }),
-          credentials: 'include',
-        });
-  
-        if (response.ok) {
-          // Handle success (e.g., show a success message)
-          setAlert_otp("ok");
-        } else {
-          // Handle error (e.g., show an error message)
-          setAlert_otp("no");
-        }
-      } catch (error) {
-        // Handle network error
-=======
-      try {
-        const response = await fetch('https://junradodronefield.com:1337/user/validatekeycheck/', {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: new URLSearchParams({ validatekey: otp }),
-        });
-  
-        if (response.ok) {
-          alert('이메일 인증에 성공했습니다.');
-          setAlert_otp("ok");
-        } else {
-          console.error('Error verifying email:', response.statusText);
-          alert('인증번호가 일치하지 않습니다.');
-          setAlert_otp("no");
-        }
-      } catch (error) {
-        console.error('Error verifying email:', error);
-        alert('인증번호가 일치하지 않습니다.');
->>>>>>> main
-=======
       
       const res = await fetch('https://192.168.0.28:443/user/validatekeycheck/', {
         method: 'POST',
@@ -365,7 +296,6 @@ const SignUp = () => {
         setAlert_otp("ok");
       }
       else {
->>>>>>> c868cce9c51360f293f5899238da30f80f4c1023
         setAlert_otp("no");
       }
     }
@@ -520,7 +450,7 @@ const SignUp = () => {
         <RowView>
           <InputBox
             placeholder="집 주소를 입력해주세요."
-            value={addr.jibunAddress}
+            value={window.addressInfo.jibunAddress}
             readOnly
           />
           <Btn onClick={search_addr_API}>주소 찾기</Btn>
@@ -533,7 +463,7 @@ const SignUp = () => {
             style={{ marginTop: "0.7rem" }}
           />
         </RowView>
-        
+
         <Btn className="signUp" onClick={go_nextPage}>
           가입하기
         </Btn>
@@ -545,7 +475,7 @@ const SignUp = () => {
 
       {
         addrmodalOpen &&
-        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal} />
+        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal}/>
       }
     </Common_Layout>
 
