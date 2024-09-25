@@ -2,7 +2,15 @@ import React, { useEffect } from 'react';
 
 export let globalSearchAddressToCoordinate;
 
-const NaverMap = () => {
+window.addressInfo = {
+  roadAddress: '',
+  jibunAddress: '',
+  englishAddress: '',
+  x: '',
+  y: ''
+};
+
+const GWNaverMap = () => {
   useEffect(() => {
     const { naver } = window;
 
@@ -93,6 +101,14 @@ const NaverMap = () => {
             y: item.y,
           });
 
+          window.addressInfo = {
+            roadAddress: item.roadAddress,
+            jibunAddress: item.jibunAddress,
+            englishAddress: item.englishAddress,
+            x: item.x,
+            y: item.y
+          };
+
           infoWindow.setContent(
             `
               <div style="padding:10px;min-width:200px;line-height:150%;">
@@ -150,4 +166,4 @@ const NaverMap = () => {
   return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
 };
 
-export default NaverMap;
+export default GWNaverMap;

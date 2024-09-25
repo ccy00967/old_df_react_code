@@ -14,7 +14,8 @@ import { ScrollToTop_smooth } from "../../../Component/function/ScrollTop";
 import PagingControl from "../../../Component/UI/PagingControl";
 import PerPageControl from "../../../Component/UI/PerPageControl";
 import SideMenuBar from "../SideMenuBar";
-import NaverMap from "../../../Component/naver_maps/NaverMaps";
+import GWNaverMap from "../../../Component/naver_maps/GWNaverMaps";
+import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
 
 const ContentArea = styled.div`
   flex: 1;
@@ -106,7 +107,6 @@ const Component_mapList = (props) => {
   //   plant: "옥수수",
   // });
   const load_API = async () => {
-    console.log("aaaaa")
     // 호출 성공시
     setCnt(960);
     //setDataList(testData);
@@ -138,11 +138,13 @@ const Component_mapList = (props) => {
 
 
   // 방재신청 > 농지선택
-  const selectFarmland = (name, addr) => {
+  const selectFarmland = (data) => {
     if (setSelectFarmland) {
-      const farmland = `${name}(${addr})`;
-      setSelectFarmland(farmland);
+      console.log(data);
+      const farmland = `${data.landNickName}(${data.address.jibunAddress})`;
+      setSelectFarmland(data);
       ScrollToTop_smooth();
+      globalSearchAddressToCoordinate(data.address.jibunAddress);
     }
   };
 
@@ -155,7 +157,7 @@ const Component_mapList = (props) => {
           {children}
 
           <MapArea>
-            <NaverMap />
+            <GWNaverMap />
           </MapArea>
         </RowView>
 
@@ -175,17 +177,19 @@ const Component_mapList = (props) => {
         </TableHeader>
 
         {dataList.map((data, idx) => {
+          const areaInPyeong = data.lndpclAr;
+          const areaInSquareMeters = (areaInPyeong * 3.3058).toFixed(4);
           return (
             <TableList key={idx} className={(idx + 1) % 2 === 0 ? "x2" : ""}>
               <div>{data.landNickName}</div>
               <div className="addr"> {data.address.jibunAddress}</div>
-              <div>{data.lndpclAr}</div>
+              <div>{`${areaInPyeong}평/${areaInSquareMeters}㎡`}</div>
               <div>{data.cropsInfo}</div>
 
               {delete_API && (
                 <MiniBtn
                   className="delete"
-                  onClick={() => delete_API(load_API)}
+                  onClick={() => delete_API(data.uuid, load_API)}
                 >
                   삭제
                 </MiniBtn>
@@ -193,7 +197,7 @@ const Component_mapList = (props) => {
               {setSelectFarmland && (
                 <MiniBtn
                   className="select"
-                  onClick={() => selectFarmland(data.name, data.addr)}
+                  onClick={() => selectFarmland(data)}
                 >
                   선택
                 </MiniBtn>

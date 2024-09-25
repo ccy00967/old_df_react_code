@@ -8,7 +8,7 @@ import {
   RowView2
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
-import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/NaverMaps";
+import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
 
 const InsertBox = styled.div`
   flex: 1;
@@ -100,18 +100,18 @@ const Farmland_Insert = () => {
 
   const postData = {
     address: {
-      roadaddress: farmlandAddr,
-      jibunAddress: "더미 지번 주소",
-      englishAddress: "더미 영문 주소",
-      navermapsx: "123.456",
-      navermapsy: "78.910",
+      roadaddress: window.addressInfo.roadAddress,
+      jibunAddress: window.addressInfo.jibunAddress,
+      englishAddress: window.addressInfo.englishAddress,
+      navermapsx: window.addressInfo.x,
+      navermapsy: window.addressInfo.y,
       detailAddress: "더미 상세 주소",
     },
     pnu: "더미 Pnu",
     idCodeNm: "더미",
     mnnmSlno: "더미",
     regstrSeCodeNm: "더미",
-    lndpclAr: "더미",
+    lndpclAr: farmlandArea,
     posesnSeCodeNm: "더미",
     cnrsPsnCo: "더미",
     lastUpdtDt: "더미",

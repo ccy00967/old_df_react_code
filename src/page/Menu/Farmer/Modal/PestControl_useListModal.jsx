@@ -76,20 +76,20 @@ const PestControl_useListModal = forwardRef((props, ref) => {
   // 모달 open시 스크롤방지F
   noScroll(modalOpen);
 
-  const [name, setName] = useState("홍길동");
-  const [phonenum, setPhoneNum] = useState("101-1010-1010");
+  const name = data.owner?.name || "이름 없음";
+  const phonenum = data.owner?.phone_number || "번호 없음";
   // -
-  const [transaction, setTransaction] = useState("일반거래");
-  const [farmland, setFarmland] = useState("김가네벼");
+  const transaction = data.dealmothod === 0 ? "일반거래" : "개인거래";
+  const farmland = data.landInfo?.address.jibunAddress || "농지 없음";
   const [date, setDate] = useState("8/19");
   const [price, setPrice] = useState("직접입력");
-  const [pesticidesUsed, setPesticidesUsed] = useState("튼튼농약");
+  const pesticidesUsed = data.pesticide || "농약 없음";
   // -
   const [amount, setAmount] = useState(10000);
   const [serviceAmount, setServiceAmount] = useState(10000);
   // -
-  const [company, setCompany] = useState("홍길동 방제");
-  const [company_tel, setCompany_tel] = useState("010-1010-1010");
+  const company = data.exterminatorinfo?.name || "업체 없음";
+  const company_tel = data.exterminatorinfo?.phone_number || "번호 없음";
 
   // 닫기
   const closeModal = () => {

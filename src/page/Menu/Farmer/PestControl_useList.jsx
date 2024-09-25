@@ -144,19 +144,36 @@ const PestControl_useList = () => {
   // 농지 데이터 load
   const [dataList, setDataList] = useState([]);
   // 이건 테스트 데이터
-  const testData = Array(parseInt(perPage)).fill({
-    name: "김가네벼",
-    date: "2024.12.12",
-    company: "홍길동 방제",
-    addr: "전북특별자치도 김제시 백산읍 공덕 2길",
-    tel: "010-1010-1010",
-    state: "매칭중", // 매칭중/작업대기중/작업중/작업확인
-    state_btn: "최종 확인", //최종 확인 / 확인 완료
-  });
-  const load_API = () => {
-    // 호출 성공시
-    setCnt(960);
-    setDataList(testData);
+  // const testData = Array(parseInt(perPage)).fill({
+  //   name: "김가네벼",
+  //   date: "2024.12.12",
+  //   company: "홍길동 방제",
+  //   addr: "전북특별자치도 김제시 백산읍 공덕 2길",
+  //   tel: "010-1010-1010",
+  //   state: "매칭중", // 매칭중/작업대기중/작업중/작업확인
+  //   state_btn: "최종 확인", //최종 확인 / 확인 완료
+  // });
+  // const load_API = () => {
+  //   // 호출 성공시
+  //   setCnt(960);
+  //   setDataList(testData);
+  // };
+  const load_API = async () => {
+    const userInfo = JSON.parse(localStorage.getItem("User_info"));
+    const accessToken = userInfo?.access;
+
+    const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const data = await res.json();
+    setCnt(data.length); // 전체 게시글 수 설정
+    setDataList(data); // 데이터 목록 설정
+    console.log(data);
   };
   useEffect(() => {
     load_API();
@@ -172,10 +189,11 @@ const PestControl_useList = () => {
     alert("최종 확인 되었습니다.");
   };
 
-  // 더블클릭시 열리는 모달
+  // 클릭시 열리는 모달
   const ModalRef = useRef();
   const openModal = (data) => {
     ModalRef.current.visible(data);
+    console.log(data);
   };
 
   return (
@@ -255,14 +273,14 @@ const PestControl_useList = () => {
               <TableList
                 key={idx}
                 className={(idx + 1) % 2 === 0 ? "x2" : ""}
-                onDoubleClick={() => openModal(data)}
+                onClick={() => openModal(data)}
               >
-                <div>{data.name}</div>
-                <div>{data.date}</div>
+                <div>{data.landInfo.landNickName}</div>
+                <div>{data.landInfo.lastUpdtDt}</div>
                 <div>{data.company}</div>
                 <div>{data.tel}</div>
-                <div className="addr">{data.addr}</div>
-                <div>{testState}</div>
+                <div className="addr">{data.landInfo.address.jibunAddress}</div>
+                <div>{data.isHavePesticide}</div>
 
                 {isBtnShow && (
                   <BtnArea>

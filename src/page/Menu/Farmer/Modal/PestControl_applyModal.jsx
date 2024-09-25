@@ -101,7 +101,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
   // 모달 open시 스크롤방지F
   noScroll(modalOpen);
 
-  const [name, setName] = useState("홍길동");
+  const name = data?.owner || "이름 없음";
   const [phonenum, setPhoneNum] = useState("101-1010-1010");
   const [amount, setAmount] = useState(10000);
   const [serviceAmount, setServiceAmount] = useState(10000);
