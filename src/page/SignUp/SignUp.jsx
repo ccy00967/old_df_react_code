@@ -207,7 +207,10 @@ const SignUp = () => {
     if (id === "") {
       setAlert_id("no");
     } else {
+<<<<<<< HEAD
       setAlert_id("ok");
+=======
+>>>>>>> main
       try {
         const response = await fetch('https://junradodronefield.com:1337/user/emailsend/', {
           method: 'POST',
@@ -215,6 +218,7 @@ const SignUp = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email: id }),
+<<<<<<< HEAD
           credentials: 'include',
         });
   
@@ -228,6 +232,18 @@ const SignUp = () => {
       } catch (error) {
         setAlert_type("no");
         // Handle network error
+=======
+        });
+  
+        if (response.ok) {
+          setAlert_id("ok");
+        } else {
+          setAlert_id("no");
+        }
+      } catch (error) {
+        console.error('Error sending OTP:', error);
+        setAlert_id("no");
+>>>>>>> main
       }
     }
   };
@@ -235,6 +251,7 @@ const SignUp = () => {
     if (otp === "") {
       setAlert_otp("no");
     } else {
+<<<<<<< HEAD
       setAlert_otp("ok");
       try {
         const response = await fetch('https://junradodronefield.com:1337/user/validatekeycheck/', {
@@ -255,6 +272,29 @@ const SignUp = () => {
         }
       } catch (error) {
         // Handle network error
+=======
+      try {
+        const response = await fetch('https://junradodronefield.com:1337/user/validatekeycheck/', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: new URLSearchParams({ validatekey: otp }),
+        });
+  
+        if (response.ok) {
+          alert('이메일 인증에 성공했습니다.');
+          setAlert_otp("ok");
+        } else {
+          console.error('Error verifying email:', response.statusText);
+          alert('인증번호가 일치하지 않습니다.');
+          setAlert_otp("no");
+        }
+      } catch (error) {
+        console.error('Error verifying email:', error);
+        alert('인증번호가 일치하지 않습니다.');
+>>>>>>> main
         setAlert_otp("no");
       }
     }
