@@ -69,8 +69,8 @@ const IconBox = styled(CenterView)`
 
 const MainMenu = () => {
   const Navigate = useNavigate();
-  const { User_info } = useUser();
-  const userType = User_info.userType;
+  const { User_Credential } = useUser();
+  const userType = User_Credential.userType;
   const pageName = {
     농업인: "마이페이지",
     드론조종사: "방제/농지분석",
