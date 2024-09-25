@@ -184,6 +184,7 @@ const Btn = styled.div`
   cursor: pointer;
 `;
 
+
 const Matching = () => {
   const [cnt, setCnt] = useState(0);
   const [perPage, setPerPage] = useState(10);
@@ -191,6 +192,54 @@ const Matching = () => {
 
   // 단계별 주소찾기 accessToken
   const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
+
+
+
+  const getfarmrequest = async () => {
+    let length = 0;
+
+    const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+      //const res = await fetch("https://192.168.0.28/customer/lands/", {
+      method: 'GET',
+      headers: {
+        'Content-Type': "application/json",
+        'authorization': "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI3MTk0NjYzLCJpYXQiOjE3MjcxNzY2NjMsImp0aSI6Ijg3YTFmZjFkYjNjYjRiYmFiYmVlZGIyN2UyNzRiNzk5IiwidXNlcl9pZCI6MiwidXVpZCI6ImIyY2YyYzQyLWFlMjYtNGQyMy1iMGFlLWM3MTY0ODQ2ZDQzNSIsIm5hbWUiOiJcdWM3NzRcdWMyYjlcdWM2MDEiLCJlbWFpbCI6InRtZGR1ZDAwMEBuYXZlci5jb20iLCJyb2xlIjo0fQ.qjYLVZU6m2xGG5kVPn39IKDTAdmGct5NfxRycX9VHbU",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        length = data.length;
+        //console.log(length);
+        console.log(data)
+        setDataList(data)
+        //return data
+      });
+    //console.log(res.endDate)
+  }
+
+
+  useEffect(() => {
+    getfarmrequest();
+  }, []);
+
+  // const getfarmdetail = async () => {
+
+  //   const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': "application/json",
+  //       'authorization': "Bearer " + ""
+  //     },
+  //   })
+  //     // .then((res) => res.json())
+  //     // .then((data) =>{
+
+  //     // })
+  // }
+
+
+
+
 
   // 단계별 주소 찾기 AccessToken 발급받기버튼
   const sgisapiAccessTokenFunc = async () => {
@@ -216,20 +265,20 @@ const Matching = () => {
   // 농지 데이터 load
   const [dataList, setDataList] = useState([]);
   // 이건 테스트 데이터
-  const testData = Array(parseInt(perPage)).fill({
-    name: "김가네벼",
-    addr: "전북특별자치도 김제시 백산읍 공덕 2길",
-    area: "20,000평/44,233.092m²",
-    plant: "옥수수",
-    pesticide: "튼튼농약",
-  });
+  // const testData = Array(parseInt(perPage)).fill({
+  //   name: "김가네벼",
+  //   addr: "전북특별자치도 김제시 백산읍 공덕 2길",
+  //   area: "20,000평/44,233.092m²",
+  //   plant: "옥수수",
+  //   pesticide: "튼튼농약",
+  // });
   const load_API = () => {
     // 호출 성공시
     setCnt(960);
-    setDataList(testData);
+    //setDataList(testData);
   };
   useEffect(() => {
-    load_API();
+    //load_API();
   }, [currentPage, perPage]);
 
   // 선택 게시글
@@ -330,10 +379,10 @@ const Matching = () => {
                       $color={"#555555"}
                       onClick={() => selectSeq(idx)}
                     />
-                    <div>{data.name}</div>
-                    <div className="long">{data.addr}</div>
-                    <div className="long">{data.area}</div>
-                    <div>{data.plant}</div>
+                    <div>{data.landInfo.landNickName}</div>
+                    <div className="long">{data.landInfo.address.jibunAddress}</div>
+                    <div className="long">{data.landInfo.lndpclAr}</div>
+                    <div>{data.landInfo.cropsInfo}</div>
                     <div>{data.pesticide}</div>
                   </TableList>
                 );
@@ -390,7 +439,7 @@ const Matching = () => {
                   <DataRow>
                     <TextMedium>사용농약</TextMedium>
                     <RowView2 className="wrap top" style={{ flex: 1 }}>
-                      <div className="gray_w">튼튼농약</div>
+                      <div className="gray_w"></div>
                     </RowView2>
                   </DataRow>
 
