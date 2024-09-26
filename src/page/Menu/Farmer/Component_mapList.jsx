@@ -109,14 +109,15 @@ const Component_mapList = (props) => {
   //
   const load_API = async () => {
     // 호출 성공시
-    setCnt(960);
+    // setCnt(960);
     //setDataList(testData);
 
     // 여기다가 패치로 농지 정보들 가져오기
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo?.access_token;
 
-    const res = await fetch("https://192.168.0.28/customer/lands/", {
+
+    const res = await fetch("https://192.168.0.28:443/customer/lands/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

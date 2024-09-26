@@ -49,30 +49,32 @@ const Farmland_All = () => {
   const [count, setCount] = useState(0);
 
   // 농지 전체보기 로드
-  const load_API = () => {
-    setTotalArea("100,000평 / 330578.5m");
-    setPlantRate("벼 70% / 콩 20% / 고추 10%");
-    setCount(2);
-  };
-  useEffect(() => {
-    load_API();
-  }, []);
+  // const load_API = () => {
+  //   setTotalArea("100,000평 / 330578.5m");
+  //   setPlantRate("벼 70% / 콩 20% / 고추 10%");
+  //   setCount(2);
+  // };
+  // useEffect(() => {
+  //   load_API();
+  // }, []);
 
-  const delete_API = (uuid, loadAPI) => {
+  const delete_API = async (uuid, loadAPI) => {
     if (window.confirm("삭제하시겠습니까?")) {
       alert("삭제가 완료되었습니다.");
 
-      const userInfo = JSON.parse(localStorage.getItem('User_info'));
-      const accessToken = userInfo?.access;
 
-      fetch(`https://192.168.0.28/customer/landinfo/${uuid}/`, {
+      const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+      const accessToken = userInfo.access_token;
+
+      await fetch(`https://192.168.0.28/customer/landinfo/${uuid}/`, {
+
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       }).then(() => {
-        // 삭제 후 Component_mapList 에서 load_API를 호출
+        // 삭제 후 Component_mapList 에서 load_API를 호출하는 삼수
         loadAPI();
       });
     }

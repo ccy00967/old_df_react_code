@@ -159,8 +159,8 @@ const PestControl_useList = () => {
   //   setDataList(testData);
   // };
   const load_API = async () => {
-    const userInfo = JSON.parse(localStorage.getItem("User_info"));
-    const accessToken = userInfo?.access;
+    const userInfo = JSON.parse(localStorage.getItem("User_Credential"));
+    const accessToken = userInfo?.access_token;
 
     const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
       method: "GET",
@@ -193,7 +193,6 @@ const PestControl_useList = () => {
   const ModalRef = useRef();
   const openModal = (data) => {
     ModalRef.current.visible(data);
-    console.log(data);
   };
 
   return (

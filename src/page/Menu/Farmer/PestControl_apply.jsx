@@ -135,8 +135,8 @@ const PestControl_apply = () => {
 
   // 방제 신청
   const apply = async () => {
-    const userInfo = JSON.parse(localStorage.getItem('User_info'));
-    const accessToken = userInfo?.access;
+    const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+    const accessToken = userInfo.access_token;
 
     openModal()
 
