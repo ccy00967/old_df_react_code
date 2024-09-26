@@ -2,16 +2,26 @@ import React, { useEffect } from 'react';
 
 export let globalSearchAddressToCoordinate;
 
+window.addressInfo = {
+  roadAddress: '',
+  jibunAddress: '',
+  englishAddress: '',
+  x: '',
+  y: ''
+};
+
 const GWNaverMap = () => {
   useEffect(() => {
     const { naver } = window;
 
     // 지도 생성
-    const map = new naver.maps.Map('map', {
+    const mapOptions = new naver.maps.Map('map', {
       center: new naver.maps.LatLng(37.3595316, 127.1052133),
       zoom: 15,
       mapTypeControl: true,
     });
+    const map = new naver.maps.Map('map', mapOptions);
+    
 
     const infoWindow = new naver.maps.InfoWindow({
       anchorSkew: true,
@@ -92,6 +102,14 @@ const GWNaverMap = () => {
             x: item.x,
             y: item.y,
           });
+
+          window.addressInfo = {
+            roadAddress: item.roadAddress,
+            jibunAddress: item.jibunAddress,
+            englishAddress: item.englishAddress,
+            x: item.x,
+            y: item.y
+          };
 
           infoWindow.setContent(
             `

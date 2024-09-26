@@ -58,11 +58,23 @@ const Farmland_All = () => {
     load_API();
   }, []);
 
-  const delete_API = (loadAPI) => {
+  const delete_API = (uuid, loadAPI) => {
     if (window.confirm("삭제하시겠습니까?")) {
-      alert("삭제");
-      // 삭제 후 Component_mapList 에서 load_API를 호출
-      loadAPI();
+      alert("삭제가 완료되었습니다.");
+
+      const userInfo = JSON.parse(localStorage.getItem('User_info'));
+      const accessToken = userInfo?.access;
+      
+      fetch(`https://192.168.0.28/customer/landinfo/${uuid}/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then(() => {
+        // 삭제 후 Component_mapList 에서 load_API를 호출
+        loadAPI();
+      });
     }
   };
 

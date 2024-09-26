@@ -15,7 +15,6 @@ import {
 import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
 import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
 import AddressModal from "../Menu/Farmer/Modal/AddressModal";
-import { NaverMaps } from "../../Component/naver_maps/NaverMaps";
 
 const LoginBox = styled(CenterView)`
   width: 100%;
@@ -249,7 +248,6 @@ const SignUp = () => {
     if (id === "") {
       setAlert_id("no");
     } else {
-
       await fetch('https://192.168.0.28:443/user/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
@@ -270,11 +268,9 @@ const SignUp = () => {
         });
   
         if (response.ok) {
-          setAlert_type("ok");
-          // Handle success (e.g., show a success message)
+          setAlert_id("ok");
         } else {
-          setAlert_type("no");
-          // Handle error (e.g., show an error message)
+          setAlert_id("no");
         }
       } catch (error) {
         setAlert_type("no");
@@ -454,7 +450,7 @@ const SignUp = () => {
         <RowView>
           <InputBox
             placeholder="집 주소를 입력해주세요."
-            value={addr.jibunAddress}
+            value={window.addressInfo.jibunAddress}
             readOnly
           />
           <Btn onClick={search_addr_API}>주소 찾기</Btn>
@@ -467,7 +463,7 @@ const SignUp = () => {
             style={{ marginTop: "0.7rem" }}
           />
         </RowView>
-        
+
         <Btn className="signUp" onClick={go_nextPage}>
           가입하기
         </Btn>
@@ -479,7 +475,7 @@ const SignUp = () => {
 
       {
         addrmodalOpen &&
-        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal} />
+        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal}/>
       }
     </Common_Layout>
 
