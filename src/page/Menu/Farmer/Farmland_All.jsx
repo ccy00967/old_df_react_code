@@ -64,7 +64,7 @@ const Farmland_All = () => {
 
       const userInfo = JSON.parse(localStorage.getItem('User_info'));
       const accessToken = userInfo?.access;
-      
+
       fetch(`https://192.168.0.28/customer/landinfo/${uuid}/`, {
         method: "DELETE",
         headers: {
