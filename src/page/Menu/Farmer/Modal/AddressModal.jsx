@@ -12,11 +12,17 @@ import {
 } from "../../../../Component/common_style";
 import noScroll from "../../../../Component/function/noScroll";
 import useEscapeKey from "../../../../Component/function/useEscapeKey";
-import NaverMaps from "../../../../Component/naver_maps/NaverMaps";
+import GWNaverMap from "../../../../Component/naver_maps/GWNaverMaps";
+import { globalSearchAddressToCoordinate } from "../../../../Component/naver_maps/GWNaverMaps";
 
 
 
-
+const GWNaverMaps = styled.div`
+  width: 400px;
+  height: 400px;
+  margin-top: 1rem;
+  border: 1px solid #f0f0f0;
+  `;
 
 const ModalBox = styled.div`
   box-sizing: border-box;
@@ -108,6 +114,19 @@ const InputBox = styled.input`
 `;
 
 const AddressModal = ({ isOpen, closeAddrModal }) => {
+  const [farmlandAddr, setHomeAddr] = useState("");
+  const search_addr_API = () => {
+    if (!farmlandAddr) {
+      return alert("농지 주소를 입력하세요.");
+    }
+
+    if (globalSearchAddressToCoordinate) {
+      globalSearchAddressToCoordinate(farmlandAddr);
+       // Naver Map API를 통해 주소 검색
+    } else {
+      alert("지도가 아직 로드되지 않았습니다.");
+    }
+  };
   //네이버 지도 정보 들어올것들 입력하기
 
   noScroll(isOpen);
@@ -130,7 +149,16 @@ const AddressModal = ({ isOpen, closeAddrModal }) => {
         <CenterView>
           <TextSemiBold className="title" $fontsize={22}>
             네이버 지도 API
-            <NaverMaps />
+            <GWNaverMaps>
+              <GWNaverMap />
+            </GWNaverMaps>
+              <InputBox
+                style={{ width: "100%", margin: "2rem 0 1rem 0", padding: '1rem 0rem', textAlign: 'left' }}
+                placeholder="자택 주소를 입력하세요."
+                value={farmlandAddr}
+                onChange={(e) => setHomeAddr(e.target.value)}
+              />
+              <Btn onClick={search_addr_API}>주소 검색</Btn>
           </TextSemiBold>
         </CenterView>
 
