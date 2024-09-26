@@ -62,10 +62,12 @@ const Farmland_All = () => {
     if (window.confirm("삭제하시겠습니까?")) {
       alert("삭제가 완료되었습니다.");
 
+
       const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
       const accessToken = userInfo.access_token;
 
       await fetch(`https://192.168.0.28/customer/landinfo/${uuid}/`, {
+
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

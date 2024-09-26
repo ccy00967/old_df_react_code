@@ -106,14 +106,16 @@ const Component_mapList = (props) => {
   //   area: "2000평/66,112342m²",
   //   plant: "옥수수",
   // });
+  //
   const load_API = async () => {
     // 호출 성공시
     // setCnt(960);
     //setDataList(testData);
 
     // 여기다가 패치로 농지 정보들 가져오기
-    const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-    const accessToken = User_Credential?.access_token    ;
+    const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+    const accessToken = userInfo?.access_token;
+
 
     const res = await fetch("https://192.168.0.28:443/customer/lands/", {
       method: "GET",

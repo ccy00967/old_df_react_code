@@ -15,6 +15,7 @@ import {
 import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
 import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
 import AddressModal from "../Menu/Farmer/Modal/AddressModal";
+import NicepassModal from "../Menu/Farmer/Modal/NicepassModal";
 
 const LoginBox = styled(CenterView)`
   width: 100%;
@@ -155,9 +156,13 @@ const SignUp = () => {
   const [addrmodalOpen, setAddrModalOpen] = useState(false);
   const closeAddrModal = () => { setAddrModalOpen(false) };
 
-  // 임시 나이스 본인인증 - 모달창을 띄워서 필요정보 직접입력
+  // 나이스 본인인증 모달창 띄우기
   const [modalOpen, setModalOpen] = useState(false);
   const closeModal = () => { setModalOpen(false) }
+
+  // 임시 나이스 본인인증 - 모달창을 띄워서 필요정보 직접입력
+  const [tmpmodalOpen, setTmpModalOpen] = useState(false);
+  const tmpcloseModal = () => { setTmpModalOpen(false) }
 
   // 임시 본인인증 데이터 - 나이스에서는 토큰으로 넘어올 예정
   const [niceData, setNicepass] = useState({});
@@ -240,7 +245,14 @@ const SignUp = () => {
   const click_PASS = () => {
     // 모달창 열기
     setModalOpen(true);
-    console.log(modalOpen);
+    //console.log(modalOpen);
+    setAlert_pass("ok"); // no 혹은 ok
+  };
+
+  const test_tmp_click_PASS = () => {
+    // 모달창 열기
+    setTmpModalOpen(true);
+    //console.log(tmpmodalOpen);
     setAlert_pass("ok"); // no 혹은 ok
   };
 
@@ -266,7 +278,7 @@ const SignUp = () => {
           body: JSON.stringify({ email: id }),
           credentials: 'include',
         });
-  
+
         if (response.ok) {
           setAlert_id("ok");
         } else {
@@ -282,7 +294,7 @@ const SignUp = () => {
     if (otp === "") {
       setAlert_otp("no");
     } else {
-      
+
       const res = await fetch('https://192.168.0.28:443/user/validatekeycheck/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json']],
@@ -382,7 +394,10 @@ const SignUp = () => {
         )}
 
         <div className="title">본인인증</div>
-        <PASSBtn onClick={click_PASS}>PASS로 본인인증하기</PASSBtn>
+        <RowView>
+          <PASSBtn onClick={click_PASS}>PASS로 본인인증하기</PASSBtn>
+          <PASSBtn onClick={test_tmp_click_PASS}>임시 본인인증 버튼</PASSBtn>
+        </RowView>
         <AlertText className={alert_pass}>
           {alert_pass_message[alert_pass] || alert_pass_message.default}
         </AlertText>
@@ -470,12 +485,17 @@ const SignUp = () => {
       </LoginBox>
       {
         modalOpen &&
-        <TmpNicepassModal isOpen={modalOpen} closeModal={closeModal} setNicepass={setNicepass}></TmpNicepassModal>
+        <NicepassModal isOpen={modalOpen} closeModal={closeModal} setNicepass={setNicepass}></NicepassModal>
+      }
+
+      {
+        tmpmodalOpen &&
+        <TmpNicepassModal isOpen={modalOpen} closeModal={tmpcloseModal} setNicepass={setNicepass}></TmpNicepassModal>
       }
 
       {
         addrmodalOpen &&
-        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal}/>
+        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal} />
       }
     </Common_Layout>
 
