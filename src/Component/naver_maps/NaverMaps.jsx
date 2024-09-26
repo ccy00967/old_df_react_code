@@ -18,7 +18,7 @@ const NaverMaps = () => {
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = 'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=jqfupb67n5'; // 여기에 클라이언트 ID를 넣어주세요.
-      //script.async = true;
+      script.async = true;
       script.onload = initMap();
       document.head.appendChild(script);
     }

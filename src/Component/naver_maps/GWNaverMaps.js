@@ -44,7 +44,7 @@ const GWNaverMap = () => {
           });
 
           // Log the addresses and latlng in the console
-          
+
           console.log('주소:', htmlAddresses);
           console.log('좌표:', latlng);
 
