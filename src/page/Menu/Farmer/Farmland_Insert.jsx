@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Common_Layout from "../../../Component/common_Layout";
 import {
@@ -9,6 +9,7 @@ import {
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
 import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
+import { globalSearchCoordinateToAddress } from "../../../Component/naver_maps/GWNaverMaps";
 import $ from 'jquery';
 
 
@@ -88,7 +89,8 @@ const Btn = styled.div`
 
 const Farmland_Insert = () => {
   const [farmlandName, setFarmlandname] = useState("");
-  const [farmlandAddr, setFarmlandAddr] = useState("");
+  const [farmlandAddr, setFarmlandAddr] = useState(""); // 사용자가 입력한 지번 주소
+  //const [naverMapsJibunAddr, setNaverMapsJibunAddr] = useState(""); // 네이버에서 가져온 지번 주소
   const [farmlandArea, setFarmlandArea] = useState("");
   const [farmlandm2, setFarmlandm2] = useState("");
   const [plant, setPlant] = useState("");
@@ -155,7 +157,7 @@ const Farmland_Insert = () => {
     $.ajax(
       {
         type: "POST",
-        url: area_search + `&pnu=${adpnu}` +"&format=json",
+        url: area_search + `&pnu=${adpnu}` + "&format=json",
         dataType: "jsonp",
         success: function (respnu) {
           //const data = res.json()
@@ -184,7 +186,7 @@ const Farmland_Insert = () => {
   }
   // 발급받은 토큰으로 주소검색하여 cd값 받기
   const get_cd_api = async (cdAccesstoken) => {
-    const cdval = await fetch(`https://sgisapi.kostat.go.kr/OpenAPI3/addr/geocode.json?address=${farmlandAddr}&accessToken=${cdAccesstoken}`, {
+    const cdval = await fetch(`https://sgisapi.kostat.go.kr/OpenAPI3/addr/geocode.json?address=${window.addressInfo.jibunAddress}&accessToken=${cdAccesstoken}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -193,17 +195,20 @@ const Farmland_Insert = () => {
     const cdres = await cdval.json();
     const addcd = cdres.result.resultdata[0].adm_cd;
     setJibunCd(addcd);
+    console.log('cd값', addcd);
   };
-  
+
 
   // 주소 찾기
-  const search_addr_API = async() => {
+  const search_addr_API = async () => {
     if (!farmlandAddr) {
       return alert("농지 주소를 입력하세요.");
     }
 
     if (globalSearchAddressToCoordinate) {
-      globalSearchAddressToCoordinate(farmlandAddr); // Naver Map API를 통해 주소 검색
+      const res = globalSearchAddressToCoordinate(farmlandAddr); // Naver Map API를 통해 주소 검색
+      // htmlAddresses[0]이 넘어옴
+      setFarmlandAddr(res)
     }
   };
 
@@ -231,12 +236,17 @@ const Farmland_Insert = () => {
     if (!farmlandAddr) {
       return alert("농지 주소를 입력하세요.");
     }
-      await search_addr_API();
-      const token = await cd_for_accessToken();
-      await get_cd_api(token);
-      await get_pnu_api();
-      await search_area_api();
+
+    // 네이버에서 지번 가져오기
+    await search_addr_API();
+    const token = await cd_for_accessToken();
+    await get_cd_api(token);
+    await get_pnu_api();
+    await search_area_api();
+
+    console.log('지번 :', window.addressInfo.jibunAddress);
   };
+
 
   // 면적 div태그 css
   const [isfocuse_area, setIsfocuse_area] = useState("off");
@@ -245,6 +255,7 @@ const Farmland_Insert = () => {
   const offFocus = () => setIsfocuse_area("off");
   const onFocus_m2 = () => setIsfocuse_m2("on");
   const offFocus_m2 = () => setIsfocuse_m2("off");
+
 
   return (
     <Common_Layout>
@@ -255,14 +266,14 @@ const Farmland_Insert = () => {
           <Btn className="small" onClick={cd_for_accessToken}>
             cd for accessToken
           </Btn>
-          <Btn className="small" onClick={get_cd_api}>
+          <Btn className="small" onClick={get_cd_api} >
             cd값 가져오기
           </Btn>
           <Btn className="small" onClick={get_pnu_api}>
             vworld PNU로 토지임야 주소, 평수 찾기
           </Btn>
           <Btn className="small" onClick={search_area_api}>
-           네이버 주소 찾기
+            네이버 주소 찾기
           </Btn>
 
           <div className="subtitle">농지 별명</div>
@@ -338,6 +349,10 @@ const Farmland_Insert = () => {
           </RowView2>
 
           <Btn onClick={insert_API}>농지등록</Btn>
+
+          <Btn onClick={() => {
+            console.log(window.addressInfo.jibunAddress)
+          }}>네이버 변수 확인 window.address</Btn>
         </InsertBox>
       </Component_mapList>
     </Common_Layout>

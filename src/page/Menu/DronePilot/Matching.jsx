@@ -371,6 +371,9 @@ const Matching = () => {
               </TableHeader>
 
               {dataList.map((data, idx) => {
+                //  if (!data || data.length === 0) {
+                //   return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
+                // }
                 return (
                   <TableList
                     key={idx}
