@@ -263,11 +263,11 @@ const SignUp = () => {
         setAlert_id("ok");
       }
     };
-
-    const click_otp_check = async () => {
-      if (otp === "") {
-        setAlert_otp("no");
-      } else {
+  }
+  const click_otp_check = async () => {
+    if (otp === "") {
+      setAlert_otp("no");
+    } else {
 
         const res = await fetch('https://192.168.0.28:443/validation/validatekeycheck/', {
           method: 'POST',
@@ -468,7 +468,8 @@ const SignUp = () => {
         }
       </Common_Layout>
 
-    );
-  };
-}
+  );
+};
+
+
 export default SignUp;
