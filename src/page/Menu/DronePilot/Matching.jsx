@@ -221,9 +221,6 @@ const Matching = () => {
   }
 
 
-  useEffect(() => {
-    getfarmrequest();
-  }, []);
 
   // const getfarmdetail = async () => {
 
@@ -258,12 +255,27 @@ const Matching = () => {
       .then((res) => { return res.json(); })
       .then((data) => {
         return data
-      });
+      }
+      );
+    // console.log(res)
 
-    console.log(res)
     setSgisapiAccessToken(res.accessToken)
   }
-  //매칭중인 정보만 가져오는 필터
+
+  // const fetchLocation =async() => {
+  //   const res = await fetch(`https://sgisapi.kostat.go.kr/OpenAPI3/addr/geocode.json${sgisapiAccessToken}`)
+    
+  // }
+
+
+
+
+  useEffect(() => {
+    getfarmrequest();
+    sgisapiAccessTokenFunc();
+    //fetchLocation();
+
+  }, []);
 
 
 
@@ -397,7 +409,7 @@ const Matching = () => {
               </TableHeader>
 
               {dataList.map((data, idx) => {
-                if (data.exterminateSate == 0) {
+                if (data.exterminateState == 0) {
                   if (!data || data.length === 0) {
                     return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
                   }
@@ -409,8 +421,8 @@ const Matching = () => {
                       <CheckBox
                         type={"checkbox"}
                         $color={"#555555"}
-                        onClick={(e) => { selectSeq(idx);  }}
-                        // getCheckboxData(data.orderid);
+                        onClick={(e) => { selectSeq(idx); }}
+                      // getCheckboxData(data.orderid);
                       />
                       <div>{data.landInfo.landNickName}</div>
                       <div className="long">{data.landInfo.address.jibunAddress}</div>

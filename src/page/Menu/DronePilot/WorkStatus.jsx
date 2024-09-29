@@ -163,7 +163,7 @@ const WorkStatus = () => {
       .then((data) => {
         length = data.length;
         //console.log(length);
-        //console.log(data)
+        console.log(data)
         setDataList(data)
         //return data
       });
