@@ -3,11 +3,13 @@ import styled from "styled-components";
 import Common_Layout from "../../../Component/common_Layout";
 import {
   blueColor,
+  grayColor,
   GreenColor,
   Icon,
   lightGreenColor,
   RowView,
   RowView2,
+  yellowColor,
 } from "../../../Component/common_style";
 import PagingControl from "../../../Component/UI/PagingControl";
 import PerPageControl from "../../../Component/UI/PerPageControl";
@@ -104,13 +106,21 @@ const BtnArea = styled.span`
     padding: 0.4rem 1rem;
     border-radius: 4px;
   }
-  span.gray {
-    background-color: #8e8e8e;
+   span.green {
+    background-color: ${GreenColor};
     cursor: pointer;
   }
   span.blue {
     background-color: ${blueColor};
     cursor: pointer;
+  }
+  span.gray {
+    background-color: ${grayColor};
+    cursor: pointer;
+  }
+  span.yellow {
+  background-color: ${yellowColor};
+  cursor: pointer;}
   }
 `;
 
@@ -119,16 +129,16 @@ const PestControl_useList = () => {
   const [perPage, setPerPage] = useState(20); // 페이지당 게시글 갯수 (디폴트:20)
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
-  const [count_매칭중, setCount_매칭중] = useState(12);
-  const [count_작업대기중, setCount_작업대기중] = useState(3);
-  const [count_작업중, setCount_작업중] = useState(3);
-  const [count_작업확인, setCount_작업확인] = useState(13);
+  // const [count_매칭중, setCount_매칭중] = useState(12);
+  // const [count_작업대기중, setCount_작업대기중] = useState(3);
+  // const [count_작업중, setCount_작업중] = useState(3);
+  // const [count_작업확인, setCount_작업확인] = useState(13);
   const [filter, setFilter] = useState("");
   const setting_reset = () => setFilter("");
-  const setting_매칭중 = () => setFilter("매칭중");
-  const setting_작업대기중 = () => setFilter("작업대기중");
-  const setting_작업중 = () => setFilter("작업중");
-  const setting_작업확인 = () => setFilter("작업확인");
+  // const setting_매칭중 = () => setFilter("매칭중");
+  // const setting_작업대기중 = () => setFilter("작업대기중");
+  // const setting_작업중 = () => setFilter("작업중");
+  // const setting_작업확인 = () => setFilter("작업확인");
 
   // 필터 선택 판별 className
   const isSelect = (menu) => {
@@ -179,6 +189,43 @@ const PestControl_useList = () => {
     load_API();
   }, [currentPage, perPage]);
 
+  //필터 로직
+  const filterData = () => {
+    if (!dataList || dataList.length === 0) {
+      return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
+    }
+    if (filter === 0) {
+      return dataList.filter(item => item.exterminateSate === 0);
+    }
+    else if (filter === 1) {
+      return dataList.filter(item => item.exterminateSate === 1);
+    } else if (filter === 2) {
+      return dataList.filter(item => item.exterminateSate === 2);
+    }
+    else if (filter === 3) {
+      return dataList.filter(item => item.exterminateSate === 3);
+    }
+    else {
+      return dataList;
+    }
+  };
+
+  // 필터 후 카운트 로직
+  const getcountlength = (filterType) => {
+    if (filterType === 0) {
+      return dataList.filter(item => item.exterminateSate === 0).length;
+    }
+    else if (filterType === 1) {
+      return dataList.filter(item => item.exterminateSate === 1).length;
+    } else if (filterType === 2) {
+      return dataList.filter(item => item.exterminateSate === 2).length;
+    } else if (filterType === 3) {
+      return dataList.filter(item => item.exterminateSate === 3).length;
+    }
+    return dataList.length;
+  };
+
+
   const refund_API = () => {
     alert("환불되었습니다.");
   };
@@ -210,23 +257,21 @@ const PestControl_useList = () => {
           </RowView2>
 
           <FilterBox>
-            <div className={isSelect("매칭중")} onClick={setting_매칭중}>
-              매칭중 ({count_매칭중})
+            <div className={isSelect("매칭중")} onClick={() => setFilter(0)}>
+              매칭중 ({getcountlength(0)})
             </div>
             <span>▶︎</span>
             <div
-              className={isSelect("작업대기중")}
-              onClick={setting_작업대기중}
-            >
-              작업대기중({count_작업대기중})
+              className={isSelect("작업대기중")} onClick={() => setFilter(1)}>
+              작업대기중({getcountlength(1)})
             </div>
             <span>▶︎</span>
-            <div className={isSelect("작업중")} onClick={setting_작업중}>
-              작업중({count_작업중})
+            <div className={isSelect("작업중")} onClick={() => setFilter(2)}>
+              작업중({getcountlength(2)})
             </div>
             <span>▶︎</span>
-            <div className={isSelect("작업확인")} onClick={setting_작업확인}>
-              작업확인({count_작업확인})
+            <div className={isSelect("작업확인")} onClick={() => setFilter(3)}>
+              작업확인({getcountlength(3)})
             </div>
           </FilterBox>
 
@@ -249,24 +294,24 @@ const PestControl_useList = () => {
             <div>업체전화번호</div>
             <div className="addr">농지주소</div>
             <div>상태</div>
-            {filter !== "작업대기중" && filter !== "작업중" && <span />}
+            {/* {filter !== "작업대기중" && filter !== "작업중" && <span />} */}
           </TableHeader>
 
-          {dataList.map((data, idx) => {
+          {filterData().map((data, idx) => {
             // 테스트용 state
-            const testState =
-              filter !== ""
-                ? filter
-                : (idx + 1) % 3 === 0
-                ? "매칭중"
-                : (idx + 1) % 2 === 0
-                ? "작업대기중"
-                : "작업확인";
-            const testState_btn =
-              idx === 0 || idx === 1 ? "확인 완료" : "최종 확인";
+            // const testState =
+            //   filter !== ""
+            //     ? filter
+            //     : (idx + 1) % 3 === 0
+            //       ? "매칭중"
+            //       : (idx + 1) % 2 === 0
+            //         ? "작업대기중"
+            //         : "작업확인";
+            // const testState_btn =
+            //   idx === 0 || idx === 1 ? "확인 완료" : "최종 확인";
 
             // 필터가 작업대기중도, 작업중도 아니라면 버튼 보여줌
-            const isBtnShow = filter !== "작업대기중" && filter !== "작업중";
+            // const isBtnShow = filter !== "작업대기중" && filter !== "작업중";
 
             return (
               <TableList
@@ -276,29 +321,37 @@ const PestControl_useList = () => {
               >
                 <div>{data.landInfo.landNickName}</div>
                 <div>{data.landInfo.lastUpdtDt}</div>
-                <div>{data.company}</div>
-                <div>{data.tel}</div>
+                <div>{data.exterminatorinfo != null ? data.exterminatorinfo.name : ""}</div>
+                <div>{data.exterminatorinfo != null ? data.exterminatorinfo.phone_number : ""}</div>
                 <div className="addr">{data.landInfo.address.jibunAddress}</div>
-                <div>{data.isHavePesticide}</div>
+                <div>{data.exterminateSate}</div>
 
-                {isBtnShow && (
-                  <BtnArea>
-                    {testState === "매칭중" ? (
-                      <span className="gray" onClick={refund_API}>
-                        환불
+
+                <BtnArea>
+                  {data.exterminateSate === 0 ? (
+                    <span className="yellow">
+                      매칭 중
+                    </span>
+                  ) : (
+                    data.exterminateSate === 1 ? (
+                      <span className="green" >
+                        작업 대기
                       </span>
                     ) : (
-                      testState === "작업확인" && (
-                        <span
-                          className={isFinalCheck(testState_btn)}
-                          onClick={() => final_check_API(testState_btn)}
-                        >
-                          {testState_btn}
+                      data.exterminateSate === 2 ? (
+                        <span className="blue" >
+                          작업 중
                         </span>
+                      ) : (
+                        data.exterminateSate === 3 && (
+                          <span className="gray">
+                            작업 완료
+                          </span>
+                        )
                       )
-                    )}
-                  </BtnArea>
-                )}
+                    ))}
+                </BtnArea>
+
               </TableList>
             );
           })}

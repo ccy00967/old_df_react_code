@@ -188,7 +188,8 @@ const Matching = () => {
   const [cnt, setCnt] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [seqList, setSeqList] = useState([]);
+  const [checkboxData, setCheckboxData] = useState([]);
   // 단계별 주소찾기 accessToken
   const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
 
@@ -262,6 +263,8 @@ const Matching = () => {
     console.log(res)
     setSgisapiAccessToken(res.accessToken)
   }
+  //매칭중인 정보만 가져오는 필터
+
 
 
   // 농지 데이터 load
@@ -284,7 +287,6 @@ const Matching = () => {
   }, [currentPage, perPage]);
 
   // 선택 게시글
-  const [seqList, setSeqList] = useState([]);
   const selectSeq = (seq) => {
     if (seqList.includes(seq)) {
       setSeqList(seqList.filter((item) => item !== seq));
@@ -293,7 +295,31 @@ const Matching = () => {
         setSeqList([...seqList, seq]);
       }
     }
+
   };
+
+  //체크박스 데이터 가져오기
+  // const getCheckboxData = async (e) => {
+  //   let length = 0;
+  //   const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
+  //   const accessToken = User_Credential?.access_token;
+
+  //   const res = await fetch(`https://192.168.0.28/farmrequest/${e}/`, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': "application/json",
+  //       'authorization': `Bearer ${accessToken}`,
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       length = data.length;
+  //       console.log(data)
+  //       setCheckboxData(data)
+  //     });
+  //   console.log(e)
+
+  // }
   const all_selectSeq = () => {
     alert("api 연결먼저");
     return;
@@ -371,26 +397,29 @@ const Matching = () => {
               </TableHeader>
 
               {dataList.map((data, idx) => {
-                //  if (!data || data.length === 0) {
-                //   return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
-                // }
-                return (
-                  <TableList
-                    key={idx}
-                    className={(idx + 1) % 2 === 0 ? "x2" : ""}
-                  >
-                    <CheckBox
-                      type={"checkbox"}
-                      $color={"#555555"}
-                      onClick={() => selectSeq(idx)}
-                    />
-                    <div>{data.landInfo.landNickName}</div>
-                    <div className="long">{data.landInfo.address.jibunAddress}</div>
-                    <div className="long">{data.landInfo.lndpclAr}</div>
-                    <div>{data.landInfo.cropsInfo}</div>
-                    <div>{data.pesticide}</div>
-                  </TableList>
-                );
+                if (data.exterminateSate == 0) {
+                  if (!data || data.length === 0) {
+                    return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
+                  }
+                  return (
+                    <TableList
+                      key={idx}
+                      className={(idx + 1) % 2 === 0 ? "x2" : ""}
+                    >
+                      <CheckBox
+                        type={"checkbox"}
+                        $color={"#555555"}
+                        onClick={(e) => { selectSeq(idx);  }}
+                        // getCheckboxData(data.orderid);
+                      />
+                      <div>{data.landInfo.landNickName}</div>
+                      <div className="long">{data.landInfo.address.jibunAddress}</div>
+                      <div className="long">{data.landInfo.lndpclAr}</div>
+                      <div>{data.landInfo.cropsInfo}</div>
+                      <div>{data.pesticide}</div>
+                    </TableList>
+                  );
+                }
               })}
 
               <PagingControl

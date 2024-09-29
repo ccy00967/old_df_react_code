@@ -260,7 +260,7 @@ const SignUp = () => {
     if (id === "") {
       setAlert_id("no");
     } else {
-      await fetch('https://192.168.0.28:443/user/emailsend/', {
+      await fetch('https://192.168.0.28:443/validation/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
         ],
@@ -269,25 +269,6 @@ const SignUp = () => {
       });
 
       setAlert_id("ok");
-      try {
-        const response = await fetch('https://junradodronefield.com:1337/user/emailsend/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: id }),
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          setAlert_id("ok");
-        } else {
-          setAlert_id("no");
-        }
-      } catch (error) {
-        setAlert_type("no");
-        // Handle network error
-      }
     }
   };
   const click_otp_check = async () => {
@@ -295,7 +276,7 @@ const SignUp = () => {
       setAlert_otp("no");
     } else {
 
-      const res = await fetch('https://192.168.0.28:443/user/validatekeycheck/', {
+      const res = await fetch('https://192.168.0.28:443/validation/validatekeycheck/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json']],
         credentials: "include",
@@ -380,12 +361,12 @@ const SignUp = () => {
               <Icon src={require("../../img/icon_check.png")} />
             )}
           </TypeBox>
-          <TypeBox className={typeClassName("농약상")} onClick={setting_type3}>
+          {/* <TypeBox className={typeClassName("농약상")} onClick={setting_type3}>
             농약상
             {userType === "농약상" && (
               <Icon src={require("../../img/icon_check.png")} />
             )}
-          </TypeBox>
+          </TypeBox> */}
         </RowView>
         {userType === "" && (
           <AlertText className={alert_type}>
