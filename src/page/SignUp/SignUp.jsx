@@ -262,8 +262,8 @@ const SignUp = () => {
       if (res.ok) {
         setAlert_id("ok");
       }
-  };
-
+    };
+  }
   const click_otp_check = async () => {
     if (otp === "") {
       setAlert_otp("no");
@@ -470,5 +470,6 @@ const SignUp = () => {
 
   );
 };
+
 
 export default SignUp;
