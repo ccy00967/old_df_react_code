@@ -15,7 +15,8 @@ import {
 import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
 import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
 import AddressModal from "../Menu/Farmer/Modal/AddressModal";
-import NicepassModal from "../Menu/Farmer/Modal/NicepassModal";
+import NicePassBtn from "../Menu/Farmer/Modal/NicePassBtn";
+
 
 const LoginBox = styled(CenterView)`
   width: 100%;
@@ -83,7 +84,7 @@ const InputBox = styled.input`
     border: 1px solid ${redColor};
   }
 `;
-const PASSBtn = styled.div`
+const TmpPASSBtn = styled.div`
   padding: 1rem 0rem;
   text-align: center;
   font-family: var(--font-Pretendard-SemiBold);
@@ -155,10 +156,6 @@ const SignUp = () => {
   // 네이버 지도 팝업 모달창
   const [addrmodalOpen, setAddrModalOpen] = useState(false);
   const closeAddrModal = () => { setAddrModalOpen(false) };
-
-  // 나이스 본인인증 모달창 띄우기
-  const [modalOpen, setModalOpen] = useState(false);
-  const closeModal = () => { setModalOpen(false) }
 
   // 임시 나이스 본인인증 - 모달창을 띄워서 필요정보 직접입력
   const [tmpmodalOpen, setTmpModalOpen] = useState(false);
@@ -242,17 +239,10 @@ const SignUp = () => {
     default: "",
   };
 
-  const click_PASS = () => {
-    // 모달창 열기
-    setModalOpen(true);
-    //console.log(modalOpen);
-    setAlert_pass("ok"); // no 혹은 ok
-  };
-
   const test_tmp_click_PASS = () => {
     // 모달창 열기
     setTmpModalOpen(true);
-    //console.log(tmpmodalOpen);
+    console.log(tmpmodalOpen);
     setAlert_pass("ok"); // no 혹은 ok
   };
 
@@ -260,42 +250,25 @@ const SignUp = () => {
     if (id === "") {
       setAlert_id("no");
     } else {
-      await fetch('https://192.168.0.28:443/user/emailsend/', {
+      const res = await fetch('https://192.168.0.28:443/validation/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
         ],
         credentials: "include",
         body: JSON.stringify({ email: id }),
       });
-
-      setAlert_id("ok");
-      try {
-        const response = await fetch('https://junradodronefield.com:1337/user/emailsend/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: id }),
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          setAlert_id("ok");
-        } else {
-          setAlert_id("no");
-        }
-      } catch (error) {
-        setAlert_type("no");
-        // Handle network error
+      if (res.ok) {
+        setAlert_id("ok");
       }
     }
   };
+
   const click_otp_check = async () => {
     if (otp === "") {
       setAlert_otp("no");
     } else {
 
-      const res = await fetch('https://192.168.0.28:443/user/validatekeycheck/', {
+      const res = await fetch('https://192.168.0.28:443/validation/validatekeycheck/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json']],
         credentials: "include",
@@ -395,8 +368,8 @@ const SignUp = () => {
 
         <div className="title">본인인증</div>
         <RowView>
-          <PASSBtn onClick={click_PASS}>PASS로 본인인증하기</PASSBtn>
-          <PASSBtn onClick={test_tmp_click_PASS}>임시 본인인증 버튼</PASSBtn>
+          <NicePassBtn />
+          <TmpPASSBtn onClick={test_tmp_click_PASS}>임시 본인인증 버튼</TmpPASSBtn>
         </RowView>
         <AlertText className={alert_pass}>
           {alert_pass_message[alert_pass] || alert_pass_message.default}
@@ -484,13 +457,8 @@ const SignUp = () => {
         </Btn>
       </LoginBox>
       {
-        modalOpen &&
-        <NicepassModal isOpen={modalOpen} closeModal={closeModal} setNicepass={setNicepass}></NicepassModal>
-      }
-
-      {
         tmpmodalOpen &&
-        <TmpNicepassModal isOpen={modalOpen} closeModal={tmpcloseModal} setNicepass={setNicepass}></TmpNicepassModal>
+        <TmpNicepassModal isOpen={tmpmodalOpen} closeModal={tmpcloseModal} setNicepass={setNicepass}></TmpNicepassModal>
       }
 
       {
