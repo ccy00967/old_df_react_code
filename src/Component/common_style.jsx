@@ -7,7 +7,9 @@ export const redColor = "#eb003b";
 export const lightRedColor = "#FFE7EC";
 export const hoverRed = "#ECC2CD";
 export const blueColor = "#2768FF";
+export const grayColor = "#E2E2E2";
 export const lightBlueColor = "#DEE8FF";
+export const yellowColor = "#FFD400";
 
 /** 정중앙 배치 컴포넌트  */
 export const CenterView = styled.div`

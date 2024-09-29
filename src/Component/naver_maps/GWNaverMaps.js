@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-export let globalSearchAddressToCoordinate;
+
 
 window.addressInfo = {
   roadAddress: '',
@@ -10,7 +10,7 @@ window.addressInfo = {
   y: ''
 };
 
-const GWNaverMap = () => {
+const GWNaverMap = ({ }) => {
   useEffect(() => {
     const { naver } = window;
 
@@ -21,7 +21,7 @@ const GWNaverMap = () => {
       mapTypeControl: true,
     });
     const map = new naver.maps.Map('map', mapOptions);
-    
+
 
     const infoWindow = new naver.maps.InfoWindow({
       anchorSkew: true,
@@ -48,29 +48,22 @@ const GWNaverMap = () => {
 
           const htmlAddresses = items.map((item, index) => {
             const address = makeAddress(item);
-            const addrType =
-              item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
-            return `${index + 1}. ${addrType} ${address}`;
+            const addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
+            return `${address}`;
           });
 
-          // Log the addresses and latlng in the console
+          console.log('좌주',htmlAddresses)
 
-          console.log('주소:', htmlAddresses);
-          console.log('좌표:', latlng);
-
-          infoWindow.setContent(
-            `
-              <div style="padding:10px;min-width:200px;line-height:150%;">
-                <h4 style="margin-top:5px;">검색 좌표</h4><br />
-                ${htmlAddresses.join('<br />')}
-              </div>
-            `
-          );
-
+          showInfoWindowTextBox(htmlAddresses)
+          
           infoWindow.open(map, latlng);
+
+          return htmlAddresses[0]
         }
       );
+
     }
+
 
     // 주소를 좌표로 변환
     function searchAddressToCoordinate(address) {
@@ -90,39 +83,32 @@ const GWNaverMap = () => {
           const item = response.v2.addresses[0];
           const point = new naver.maps.Point(item.x, item.y);
 
+          // 주소입력 -> 주소를 받음
           const htmlAddresses = [];
-          if (item.roadAddress) htmlAddresses.push(`[도로명 주소] ${item.roadAddress}`);
-          if (item.jibunAddress) htmlAddresses.push(`[지번 주소] ${item.jibunAddress}`);
-          if (item.englishAddress) htmlAddresses.push(`[영문명 주소] ${item.englishAddress}`);
+          //if (item.roadAddress) htmlAddresses.push(`[도로명 주소] ${item.roadAddress}`);
+          if (item.jibunAddress) htmlAddresses.push(item.jibunAddress);
+         // if (item.englishAddress) htmlAddresses.push(`[영문명 주소] ${item.englishAddress}`);
 
-          console.log('주소 검색 결과값:', {
-            roadAddress: item.roadAddress,
-            jibunAddress: item.jibunAddress,
-            englishAddress: item.englishAddress,
-            x: item.x,
-            y: item.y,
-          });
+          console.log('주좌',htmlAddresses)
 
-          window.addressInfo = {
-            roadAddress: item.roadAddress,
-            jibunAddress: item.jibunAddress,
-            englishAddress: item.englishAddress,
-            x: item.x,
-            y: item.y
-          };
-
-          infoWindow.setContent(
-            `
-              <div style="padding:10px;min-width:200px;line-height:150%;">
-                <h4 style="margin-top:5px;">검색 주소 : ${address}</h4><br />
-                ${htmlAddresses.join('<br />')}
-              </div>
-            `
-          );
+          showInfoWindowTextBox(htmlAddresses)
 
           map.setCenter(point);
           infoWindow.open(map, point);
+
+          return htmlAddresses[0]
         }
+      );
+    }
+
+    function showInfoWindowTextBox(htmlAddresses) {
+      infoWindow.setContent(
+        `
+          <div style="padding:10px;min-width:200px;line-height:150%;">
+            <h4 style="margin-top:5px;">검색 주소</h4><br />
+            ${htmlAddresses.join('<br />')}
+          </div>
+        `
       );
     }
 
@@ -133,6 +119,7 @@ const GWNaverMap = () => {
 
     // 전역 변수에 searchAddressToCoordinate 함수 할당하여 주소검색 활성화
     globalSearchAddressToCoordinate = searchAddressToCoordinate;
+    globalSearchCoordinateToAddress = searchCoordinateToAddress;
 
     // 초기 주소 검색
     searchAddressToCoordinate('조선대길 146');
@@ -169,3 +156,5 @@ const GWNaverMap = () => {
 };
 
 export default GWNaverMap;
+export let globalSearchAddressToCoordinate
+export let globalSearchCoordinateToAddress

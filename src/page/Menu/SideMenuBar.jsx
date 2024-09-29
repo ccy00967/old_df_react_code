@@ -234,7 +234,7 @@ const UserMenu_농업인 = (props) => {
           </Menu>
         </SubMenuBox>
       </div>
-      <div>
+      {/* <div>
         <MainMenuBox
           className={selectMain("농지분석")}
           onClick={() => setSelectMenu("농지분석")}
@@ -262,7 +262,7 @@ const UserMenu_농업인 = (props) => {
             ･농지분석 이용목록
           </Menu>
         </SubMenuBox>
-      </div>
+      </div> */}
     </div>
   );
 };

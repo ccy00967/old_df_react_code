@@ -98,7 +98,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
       setModalOpen(true);
     },
   }));
-  // 모달 open시 스크롤방지F
+  // 모달 open시 스크롤방지
   noScroll(modalOpen);
 
   const name = data?.owner || "이름 없음";
@@ -182,7 +182,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
 
         <Hr className="black" />
 
-        <RowView>
+        <RowView> 
           <TextSemiBold $fontsize={20}>최종결제금액</TextSemiBold>
           <TextMedium className="auto" $fontsize={20} $color={true}>
             {(amount + serviceAmount).toLocaleString("ko-KR")}원

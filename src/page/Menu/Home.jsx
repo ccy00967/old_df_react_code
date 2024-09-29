@@ -5,6 +5,7 @@ import { CenterView, Icon, RowView } from "../../Component/common_style";
 import { useUser } from "../../Component/userContext";
 import SideMenuBar from "./SideMenuBar";
 import { menu_url } from "./SideMenuBar_url";
+import { useEffect, useState } from "react";
 
 const Container = styled(RowView)`
   align-items: flex-start;
@@ -83,6 +84,32 @@ const MainMenu = () => {
     드론조종사: require("../../img/드론 조종사 기본화면 배경.png"),
     농약상: require("../../img/농약상_기본화면 배경.png"),
   };
+const [UserInfo , setUserInfo] = useState([])
+  
+  const Set_User_info = async () => {
+    console.log(User_Credential.uuid)
+    const res = await fetch('https://192.168.0.28:443/user/userinfo/' + User_Credential.uuid + '/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: "Bearer " + User_Credential.access_token,
+      },
+      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
+      credentials: "include",
+    })
+      .then((res) => { return res.json(); })
+      .then((data) => {
+        return data
+      });
+
+
+    setUserInfo(res)
+  }
+
+
+  useEffect((
+   
+  ) => {Set_User_info();},[])
 
   return (
     <Common_Layout>
@@ -93,7 +120,7 @@ const MainMenu = () => {
           <BackgroundPic src={Pic_url[userType]} />
           <div className="content">
             <TitleText>
-              홍길동 {userType}님,
+              {UserInfo.name} {userType}님,
               <br />
               안녕하세요!
             </TitleText>
@@ -121,13 +148,13 @@ const MainMenu = () => {
                     <Icon src={require("../../img/icon_menu_chart.png")} />
                     방제이용목록
                   </IconBox>
-                  <IconBox onClick={() => Navigate(menu_url["농지분석신청"])}>
+                  {/* <IconBox onClick={() => Navigate(menu_url["농지분석신청"])}> */}
+                  <IconBox onClick={() => alert("준비중입니다.")}>
                     <Icon src={require("../../img/icon_menu_graph.png")} />
                     농지분석신청
                   </IconBox>
-                  <IconBox
-                    onClick={() => Navigate(menu_url["농지분석 이용목록"])}
-                  >
+                  {/* <IconBox onClick={() => Navigate(menu_url["농지분석 이용목록"])}> */}
+                  <IconBox onClick={() =>alert("준비중입니다.")}>
                     <Icon src={require("../../img/icon_menu_plant.png")} />
                     농지분석 이용목록
                   </IconBox>

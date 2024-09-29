@@ -74,9 +74,9 @@ const TopBar = (props) => {
         <div className={isThisPage("회사소개")} onClick={goCompanyInfo}>
           회사소개
         </div>
-        <div className={isThisPage("고객센터")} onClick={goCs}>
+        {/* <div className={isThisPage("고객센터")} onClick={goCs}>
           고객센터
-        </div>
+        </div> */}
         <div
           className={isThisPage("서비스 소개 및 이용방법")}
           onClick={goServiceInfo}

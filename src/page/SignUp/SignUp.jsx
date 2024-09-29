@@ -250,6 +250,7 @@ const SignUp = () => {
     if (id === "") {
       setAlert_id("no");
     } else {
+
       const res = await fetch('https://192.168.0.28:443/validation/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
@@ -257,10 +258,10 @@ const SignUp = () => {
         credentials: "include",
         body: JSON.stringify({ email: id }),
       });
+
       if (res.ok) {
         setAlert_id("ok");
       }
-    }
   };
 
   const click_otp_check = async () => {
@@ -353,12 +354,12 @@ const SignUp = () => {
               <Icon src={require("../../img/icon_check.png")} />
             )}
           </TypeBox>
-          <TypeBox className={typeClassName("농약상")} onClick={setting_type3}>
+          {/* <TypeBox className={typeClassName("농약상")} onClick={setting_type3}>
             농약상
             {userType === "농약상" && (
               <Icon src={require("../../img/icon_check.png")} />
             )}
-          </TypeBox>
+          </TypeBox> */}
         </RowView>
         {userType === "" && (
           <AlertText className={alert_type}>

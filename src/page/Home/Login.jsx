@@ -258,17 +258,17 @@ const Login = (props) => {
               농업인
             </TypeBox>
             <TypeBox
-              className={`center ${typeCss("드론조종사")}`}
+              className={`right ${typeCss("드론조종사")}`}
               onClick={setting_type2}
             >
               드론조종사
             </TypeBox>
-            <TypeBox
+            {/* <TypeBox
               className={`right ${typeCss("농약상")}`}
               onClick={setting_type3}
             >
               농약상
-            </TypeBox>
+            </TypeBox> */}
           </RowView>
 
           <div className="label">아이디</div>
