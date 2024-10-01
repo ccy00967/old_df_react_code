@@ -368,13 +368,17 @@ const SignUp = () => {
         )}
 
         <div className="title">본인인증</div>
-        <RowView>
-          <NicePassBtn />
-          <TmpPASSBtn onClick={test_tmp_click_PASS}>임시 본인인증 버튼</TmpPASSBtn>
-        </RowView>
+        <NicePassBtn />
         <AlertText className={alert_pass}>
           {alert_pass_message[alert_pass] || alert_pass_message.default}
         </AlertText>
+
+        <div className="title">임시용 본인인증</div>
+        <TmpPASSBtn onClick={test_tmp_click_PASS}>임시 본인인증 버튼</TmpPASSBtn>
+        <AlertText className={alert_pass}>
+          {alert_pass_message[alert_pass] || alert_pass_message.default}
+        </AlertText>
+
 
         <div className="title">아이디</div>
         <RowView>
