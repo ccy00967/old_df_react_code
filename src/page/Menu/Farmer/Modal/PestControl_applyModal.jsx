@@ -91,6 +91,7 @@ const Btn = styled.div`
 const PestControl_applyModal = forwardRef((props, ref) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [data, setData] = useState({});
+  console.log(data);
 
   useImperativeHandle(ref, () => ({
     visible: (data) => {
@@ -101,9 +102,9 @@ const PestControl_applyModal = forwardRef((props, ref) => {
   // 모달 open시 스크롤방지
   noScroll(modalOpen);
 
-  const name = data?.owner || "이름 없음";
-  const [phonenum, setPhoneNum] = useState("101-1010-1010");
-  const [amount, setAmount] = useState(10000);
+  const name = data.owner?.name || "이름 없음";
+  const phonenum = data.owner?.mobileno || "번호 없음";
+  const amount = data.lndpclAr * data.price
   const [serviceAmount, setServiceAmount] = useState(10000);
 
   // 결제하기
@@ -147,24 +148,24 @@ const PestControl_applyModal = forwardRef((props, ref) => {
 
         <DataRow>
           <TextMedium>거래방식</TextMedium>
-          <div className="gray">{data.거래방식 || ""}</div>
+          <div className="gray">{data.dealmothod === 0 ? "일반거래" : data.dealmothod === 1 ? "개인거래" : ""}</div>
         </DataRow>
         <DataRow>
           <TextMedium>농ㅤㅤ지</TextMedium>
-          <div className="gray">{data.농지선택 || "(선택안함)"}</div>
+          <div className="gray">{data.landName || "(선택안함)"}</div>
         </DataRow>
         <DataRow>
           <TextMedium className="letter">평단가</TextMedium>
-          <div className="gray">{data.평단가 || "-"}</div>
+          <div className="gray">{data.price + "원" || "-"}</div>
         </DataRow>
         <DataRow>
           <TextMedium className="letter">마감일</TextMedium>
-          <div className="gray">{data.마감일 || "-"}</div>
+          <div className="gray">{data.endDate || "-"}</div>
         </DataRow>
         <DataRow>
           <TextMedium>사용농약</TextMedium>
           <RowView2 className="wrap top" style={{ flex: 1 }}>
-            <div className="gray_w">{data.사용농약 || "-"}</div>
+            <div className="gray_w">{data.pesticide || "-"}</div>
             <div className="bold">농약을 준비해주세요!</div>
           </RowView2>
         </DataRow>

@@ -77,7 +77,7 @@ const PestControl_useListModal = forwardRef((props, ref) => {
   noScroll(modalOpen);
 
   const name = data.owner?.name || "이름 없음";
-  const phonenum = data.owner?.phone_number || "번호 없음";
+  const phonenum = data.owner?.mobileno || "번호 없음";
   // -
   const transaction = data.dealmothod === 0 ? "일반거래" : "개인거래";
   const farmland = data.landInfo?.address.jibunAddress || "농지 없음";
