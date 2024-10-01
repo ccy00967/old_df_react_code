@@ -367,100 +367,105 @@ const SignUp = () => {
             </AlertText>
           )}
 
-          <div className="title">본인인증</div>
-          <RowView>
-            <NicePassBtn />
-            <TmpPASSBtn onClick={test_tmp_click_PASS}>임시 본인인증 버튼</TmpPASSBtn>
-          </RowView>
-          <AlertText className={alert_pass}>
-            {alert_pass_message[alert_pass] || alert_pass_message.default}
-          </AlertText>
+        <div className="title">본인인증</div>
+        <NicePassBtn />
+        <AlertText className={alert_pass}>
+          {alert_pass_message[alert_pass] || alert_pass_message.default}
+        </AlertText>
 
-          <div className="title">아이디</div>
-          <RowView>
-            <InputBox
-              placeholder="이메일을 입력해주세요."
-              value={id}
-              onChange={setting_id}
-              className={alert_id}
-            />
-            <Btn onClick={click_otp_send}>인증번호 발송</Btn>
-          </RowView>
-          <AlertText className={alert_id}>
-            {alert_id_message[alert_id] || alert_id_message.default}
-          </AlertText>
+        <div className="title">임시용 본인인증</div>
+        <TmpPASSBtn onClick={test_tmp_click_PASS}>임시 본인인증 버튼</TmpPASSBtn>
+        <AlertText className={alert_pass}>
+          {alert_pass_message[alert_pass] || alert_pass_message.default}
+        </AlertText>
 
-          <div className="title">인증번호</div>
-          <RowView>
-            <InputBox
-              //type={"password"}
-              placeholder="인증번호를 입력해주세요.(유효시간 5분)"
-              value={otp}
-              onChange={setting_otp}
-              className={alert_otp}
-            />
-            <Btn onClick={click_otp_check}>확인</Btn>
-          </RowView>
-          <AlertText className={alert_otp}>
-            {alert_otp_message[alert_otp] || alert_otp_message.default}
-          </AlertText>
 
-          <div className="title">비밀번호</div>
-          <RowView>
-            <InputBox
-              className={alert_pw}
-              type={"password"}
-              placeholder="비밀번호를 입력해주세요."
-              maxLength={16}
-              value={pw}
-              onChange={setting_pw}
-            />
-          </RowView>
-          <AlertText className={alert_pw}>
-            {alert_pw_message[alert_pw] || alert_pw_message.default}
-          </AlertText>
+        <div className="title">아이디</div>
+        <RowView>
+          <InputBox
+            placeholder="이메일을 입력해주세요."
+            value={id}
+            onChange={setting_id}
+            className={alert_id}
+          />
+          <Btn onClick={click_otp_send}>인증번호 발송</Btn>
+        </RowView>
+        <AlertText className={alert_id}>
+          {alert_id_message[alert_id] || alert_id_message.default}
+        </AlertText>
 
-          <div className="title">비밀번호 확인</div>
-          <RowView>
-            <InputBox
-              type={"password"}
-              placeholder="비밀번호를 입력해주세요."
-              maxLength={16}
-              value={pwCheck}
-              onChange={setting_pwCheck}
-            />
-          </RowView>
-          <AlertText className={alert_pwCheck}>
-            {alert_pwCheck_message[alert_pwCheck] ||
-              alert_pwCheck_message.default}
-          </AlertText>
+        <div className="title">인증번호</div>
+        <RowView>
+          <InputBox
+            //type={"password"}
+            placeholder="인증번호를 입력해주세요.(유효시간 5분)"
+            value={otp}
+            onChange={setting_otp}
+            className={alert_otp}
+          />
+          <Btn onClick={click_otp_check}>확인</Btn>
+        </RowView>
+        <AlertText className={alert_otp}>
+          {alert_otp_message[alert_otp] || alert_otp_message.default}
+        </AlertText>
 
-          <div className="title">집 주소</div>
-          <RowView>
-            <InputBox
-              placeholder="집 주소를 입력해주세요."
-              value={window.addressInfo.jibunAddress}
-              readOnly
-            />
-            <Btn onClick={search_addr_API}>주소 찾기</Btn>
-          </RowView>
-          <RowView>
-            <InputBox
-              placeholder="상세 주소를 입력해주세요."
-              value={addrDetail}
-              onChange={setting_addrDetail}
-              style={{ marginTop: "0.7rem" }}
-            />
-          </RowView>
+        <div className="title">비밀번호</div>
+        <RowView>
+          <InputBox
+            className={alert_pw}
+            type={"password"}
+            placeholder="비밀번호를 입력해주세요."
+            maxLength={16}
+            value={pw}
+            onChange={setting_pw}
+          />
+        </RowView>
+        <AlertText className={alert_pw}>
+          {alert_pw_message[alert_pw] || alert_pw_message.default}
+        </AlertText>
 
-          <Btn className="signUp" onClick={go_nextPage}>
-            가입하기
-          </Btn>
-        </LoginBox>
-        {
-          tmpmodalOpen &&
-          <TmpNicepassModal isOpen={tmpmodalOpen} closeModal={tmpcloseModal} setNicepass={setNicepass}></TmpNicepassModal>
-        }
+        <div className="title">비밀번호 확인</div>
+        <RowView>
+          <InputBox
+            type={"password"}
+            placeholder="비밀번호를 입력해주세요."
+            maxLength={16}
+            value={pwCheck}
+            onChange={setting_pwCheck}
+          />
+        </RowView>
+        <AlertText className={alert_pwCheck}>
+          {alert_pwCheck_message[alert_pwCheck] ||
+            alert_pwCheck_message.default}
+        </AlertText>
+
+        <div className="title">집 주소</div>
+        <RowView>
+          <InputBox
+            placeholder="집 주소를 입력해주세요."
+            value={window.addressInfo.jibunAddress}
+            readOnly
+          />
+          <Btn onClick={search_addr_API}>주소 찾기</Btn>
+        </RowView>
+        <RowView>
+          <InputBox
+            placeholder="상세 주소를 입력해주세요."
+            value={addrDetail}
+            onChange={setting_addrDetail}
+            style={{ marginTop: "0.7rem" }}
+          />
+        </RowView>
+
+        <Btn className="signUp" onClick={go_nextPage}>
+          가입하기
+        </Btn>
+      </LoginBox>
+      {
+        tmpmodalOpen &&
+        <TmpNicepassModal isOpen={tmpmodalOpen} closeModal={tmpcloseModal} setNicepass={setNicepass}></TmpNicepassModal>
+      }
+
 
         {
           addrmodalOpen &&

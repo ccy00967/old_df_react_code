@@ -92,6 +92,9 @@ const Component_mapList = (props) => {
   const delete_API = props.delete_API || null;
   // 방제신청 > 농지선택 함수
   const setSelectFarmland = props.setSelectFarmland || null;
+  const setSearchAddr = props.setSearchAddr || null;
+
+  //const [searchAddr, setSearchAddr] = useState([]); // 주소변수를 받는곳
 
   const [cnt, setCnt] = useState(0); // 전체 개시글 갯수
   const [perPage, setPerPage] = useState(20); // 페이지당 게시글 갯수 (디폴트:20)
@@ -159,7 +162,7 @@ const Component_mapList = (props) => {
           {children}
 
           <MapArea>
-            <GWNaverMap />
+            <GWNaverMap setValue={setSearchAddr} />
           </MapArea>
         </RowView>
 

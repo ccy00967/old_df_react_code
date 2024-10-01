@@ -10,7 +10,7 @@ window.addressInfo = {
   y: ''
 };
 
-const GWNaverMap = ({ }) => {
+const GWNaverMap = ({ setValue }) => {
   useEffect(() => {
     const { naver } = window;
 
@@ -21,7 +21,6 @@ const GWNaverMap = ({ }) => {
       mapTypeControl: true,
     });
     const map = new naver.maps.Map('map', mapOptions);
-
 
     const infoWindow = new naver.maps.InfoWindow({
       anchorSkew: true,
@@ -48,17 +47,18 @@ const GWNaverMap = ({ }) => {
 
           const htmlAddresses = items.map((item, index) => {
             const address = makeAddress(item);
-            const addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
+            //const addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
             return `${address}`;
           });
 
-          console.log('좌주',htmlAddresses)
+          console.log('좌주', htmlAddresses)
 
           showInfoWindowTextBox(htmlAddresses)
-          
+
           infoWindow.open(map, latlng);
 
-          return htmlAddresses[0]
+          //return htmlAddresses[0]
+          setValue(htmlAddresses[0])
         }
       );
 
@@ -85,18 +85,22 @@ const GWNaverMap = ({ }) => {
 
           // 주소입력 -> 주소를 받음
           const htmlAddresses = [];
-          //if (item.roadAddress) htmlAddresses.push(`[도로명 주소] ${item.roadAddress}`);
-          if (item.jibunAddress) htmlAddresses.push(item.jibunAddress);
-         // if (item.englishAddress) htmlAddresses.push(`[영문명 주소] ${item.englishAddress}`);
+          // if (item.jibunAddress) htmlAddresses.push(item.jibunAddress);
+          // if (item.roadAddress) htmlAddresses.push(item.roadAddress);
+          // if (item.englishAddress) htmlAddresses.push(`[영문명 주소] ${item.englishAddress}`);
 
-          console.log('주좌',htmlAddresses)
+          item.jibunAddress != null ? htmlAddresses.push(item.jibunAddress) : htmlAddresses.push("")
+          item.roadAddress != null ? htmlAddresses.push(item.roadAddress) : htmlAddresses.push("")
+
+          console.log('주좌', htmlAddresses)
 
           showInfoWindowTextBox(htmlAddresses)
 
           map.setCenter(point);
           infoWindow.open(map, point);
 
-          return htmlAddresses[0]
+          //return htmlAddresses[0]
+          setValue(htmlAddresses[0])
         }
       );
     }
@@ -144,10 +148,10 @@ const GWNaverMap = ({ }) => {
         if (isRoadAddress) {
           if (dongmyun.endsWith('면')) ri = land.name;
           else dongmyun = land.name;
-          if (land.addition0) rest += ` ${land.addition0.value}`;
+          if (land.addition0) rest += `${land.addition0.value}`;
         }
       }
-
+      console.log(ri) // ri값이 없으면 한칸이 띄워짐 주의!
       return [sido, sigugun, dongmyun, ri, rest].join(' ');
     }
   }, []); // 빈 배열로 설정하여 컴포넌트가 처음 렌더링될 때만 실행
