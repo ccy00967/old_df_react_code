@@ -195,13 +195,15 @@ const Adjustment = () => {
   };
 
   const getcountlength = (filterType) => {
-    if (filterType === 1) {
-      return dataList.filter(item => item.calculation === 1).length;
-    } else if (filterType === 2) {
-      return dataList.filter(item => item.calculation === 2).length;
+    if (dataList.exterminateState === 3) {
+      if (filterType === 1) {
+        return dataList.filter(item => item.calculation === 1).length;
+      } else if (filterType === 2) {
+        return dataList.filter(item => item.calculation === 2).length;
+      }
+      return dataList.length;
     }
-    return dataList.length;
-
+    return [0];
 
   };
 
@@ -269,35 +271,42 @@ const Adjustment = () => {
           </TableHeader>
 
           {filterData().map((data, idx) => {
-            // 테스트용 state
-
-            // 필터가 미정산이 아니라면 버튼 보여줌
-            const isBtnShow = filter !== "정산완료";
-
-            return (
-              <TableList key={idx} className={(idx + 1) % 2 === 0 ? "x2" : ""}>
-                <div>{data.landInfo.landNickName}</div>
-                <div>{data.startDate}</div>
-                <div>{data.owner.name}</div>
-                <div>{data.owner.phone_number}</div>
-                <div className="addr">{data.owner.address.jibunAddress}</div>
-                <div>{data.calculation}</div>
+            if (data.exterminateState === 3) {
+              if (!data || data.length === 0) {
+                return [];
+              }
 
 
-                <BtnArea>
-                  {data.calculation === 0 ? (
-                    <span className="green" onClick={Str_API}>
-                      정산대기
-                    </span>
-                  ) : (data.calculation === 1 && (
-                    <span className="blue" onClick={Fin_API}>
-                      정산완료
-                    </span>
-                  ))}
-                </BtnArea>
+              // 테스트용 state
 
-              </TableList>
-            );
+              // 필터가 미정산이 아니라면 버튼 보여줌
+              //const isBtnShow = filter !== "정산완료";
+
+              return (
+                <TableList key={idx} className={(idx + 1) % 2 === 0 ? "x2" : ""}>
+                  <div>{data.landInfo.landNickName}</div>
+                  <div>{data.startDate}</div>
+                  <div>{data.owner.name}</div>
+                  <div>{data.owner.phone_number}</div>
+                  <div className="addr">{data.owner.address.jibunAddress}</div>
+                  <div>{data.calculation}</div>
+
+
+                  <BtnArea>
+                    {data.calculation === 0 ? (
+                      <span className="green" onClick={Str_API}>
+                        정산대기
+                      </span>
+                    ) : (data.calculation === 1 && (
+                      <span className="blue" onClick={Fin_API}>
+                        정산완료
+                      </span>
+                    ))}
+                  </BtnArea>
+
+                </TableList>
+              );
+            }
           })}
 
           <PagingControl

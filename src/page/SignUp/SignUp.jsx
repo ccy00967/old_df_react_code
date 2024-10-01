@@ -269,103 +269,103 @@ const SignUp = () => {
       setAlert_otp("no");
     } else {
 
-      const res = await fetch('https://192.168.0.28:443/validation/validatekeycheck/', {
-        method: 'POST',
-        headers: [["Content-Type", 'application/json']],
-        credentials: "include",
-        body: JSON.stringify({ validatekey: otp }),
+        const res = await fetch('https://192.168.0.28:443/validation/validatekeycheck/', {
+          method: 'POST',
+          headers: [["Content-Type", 'application/json']],
+          credentials: "include",
+          body: JSON.stringify({ validatekey: otp }),
+        });
+
+        console.log(res)
+
+        if (res.ok) {
+          setAlert_otp("ok");
+        }
+        else {
+          setAlert_otp("no");
+        }
+      }
+    };
+
+    /** 주소 찾기 API */
+    const search_addr_API = () => {
+
+      console.log(addrmodalOpen);
+      setAddrModalOpen(true);
+      // setAddr("API 연결");
+    };
+
+    /** 가입하기 버튼 - 로직은 수정 바랍니다. */
+    const go_nextPage = () => {
+      if (userType === "") {
+        // 회원선택을 선택하지 않았다면 no
+        ScrollToTop_smooth();
+        return setAlert_type("no");
+      }
+      if (alert_pass === "") {
+        // PASS 본인인증을 하지 않았다면 no
+        ScrollToTop_smooth();
+        return setAlert_pass("no");
+      }
+      if (id === "") {
+        // 아이디가 없으면 no
+        ScrollToTop_smooth();
+        return setAlert_id("no");
+      }
+      if (alert_pw === "no" || alert_pwCheck === "no") {
+        return;
+      }
+
+      // 약관 동의로 이동
+      Navigate("rules", {
+        state: {
+          name: niceData.name,
+          birth: niceData.birth,
+          gender: niceData.gender,
+          nationalinfo: niceData.nationalinfo,
+          mobileco: niceData.mobileco,
+          phone_number: niceData.phone_number,
+          //email: id,
+          password: pw,
+          //role: userType,
+          address: addr,
+        }
       });
+    };
 
-      console.log(res)
-
-      if (res.ok) {
-        setAlert_otp("ok");
-      }
-      else {
-        setAlert_otp("no");
-      }
-    }
-  };
-
-  /** 주소 찾기 API */
-  const search_addr_API = () => {
-
-    console.log(addrmodalOpen);
-    setAddrModalOpen(true);
-    // setAddr("API 연결");
-  };
-
-  /** 가입하기 버튼 - 로직은 수정 바랍니다. */
-  const go_nextPage = () => {
-    if (userType === "") {
-      // 회원선택을 선택하지 않았다면 no
-      ScrollToTop_smooth();
-      return setAlert_type("no");
-    }
-    if (alert_pass === "") {
-      // PASS 본인인증을 하지 않았다면 no
-      ScrollToTop_smooth();
-      return setAlert_pass("no");
-    }
-    if (id === "") {
-      // 아이디가 없으면 no
-      ScrollToTop_smooth();
-      return setAlert_id("no");
-    }
-    if (alert_pw === "no" || alert_pwCheck === "no") {
-      return;
-    }
-
-    // 약관 동의로 이동
-    Navigate("rules", {
-      state: {
-        name: niceData.name,
-        birth: niceData.birth,
-        gender: niceData.gender,
-        nationalinfo: niceData.nationalinfo,
-        mobileco: niceData.mobileco,
-        phone_number: niceData.phone_number,
-        //email: id,
-        password: pw,
-        //role: userType,
-        address: addr,
-      }
-    });
-  };
-
-  return (
-    <Common_Layout minWidth={1}>
-      <LoginBox className="col">
-        <div className="pageName">기본정보입력</div>
-        <div className="title">회원선택</div>
-        <RowView>
-          <TypeBox className={typeClassName("농업인")} onClick={setting_type1}>
-            농업인
-            {userType === "농업인" && (
-              <Icon src={require("../../img/icon_check.png")} />
-            )}
-          </TypeBox>
-          <TypeBox
-            className={`center ${typeClassName("드론조종사")}`}
-            onClick={setting_type2}
-          >
-            드론조종사
-            {userType === "드론조종사" && (
-              <Icon src={require("../../img/icon_check.png")} />
-            )}
-          </TypeBox>
-          {/* <TypeBox className={typeClassName("농약상")} onClick={setting_type3}>
+    return (
+      <Common_Layout minWidth={1}>
+        <LoginBox className="col">
+          <div className="pageName">기본정보입력</div>
+          <div className="title">회원선택</div>
+          <RowView>
+            <TypeBox className={typeClassName("농업인")} onClick={setting_type1}>
+              농업인
+              {userType === "농업인" && (
+                <Icon src={require("../../img/icon_check.png")} />
+              )}
+            </TypeBox>
+            <TypeBox
+              className={`center ${typeClassName("드론조종사")}`}
+              onClick={setting_type2}
+            >
+              드론조종사
+              {userType === "드론조종사" && (
+                <Icon src={require("../../img/icon_check.png")} />
+              )}
+            </TypeBox>
+            {/* <TypeBox className={typeClassName("농약상")} onClick={setting_type3}>
             농약상
             {userType === "농약상" && (
               <Icon src={require("../../img/icon_check.png")} />
             )}
           </TypeBox> */}
-        </RowView>
-        {userType === "" && (
-          <AlertText className={alert_type}>
-            {alert_type_message[alert_type] || alert_type_message.default}
-          </AlertText>
-        )}
+          </RowView>
+          {userType === "" && (
+            <AlertText className={alert_type}>
+              {alert_type_message[alert_type] || alert_type_message.default}
+            </AlertText>
+          )}
 
         <div className="title">본인인증</div>
         <NicePassBtn />
@@ -466,11 +466,12 @@ const SignUp = () => {
         <TmpNicepassModal isOpen={tmpmodalOpen} closeModal={tmpcloseModal} setNicepass={setNicepass}></TmpNicepassModal>
       }
 
-      {
-        addrmodalOpen &&
-        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal} />
-      }
-    </Common_Layout>
+
+        {
+          addrmodalOpen &&
+          <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal} />
+        }
+      </Common_Layout>
 
   );
 };
