@@ -156,6 +156,7 @@ const PestControl_apply = () => {
       <Component_mapList
         mainmenu={"방제"}
         submenu={"방제신청"}
+        setSearchAddr={setSelectFarmland}
         setSelectFarmland={(data) => {
           const farmland = `${data.landNickName}(${data.address.jibunAddress})`;
           setSelectFarmland(farmland); // 선택된 농지 이름

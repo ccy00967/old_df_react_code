@@ -93,6 +93,7 @@ const Component_mapList = (props) => {
   // 방제신청 > 농지선택 함수
   const setSelectFarmland = props.setSelectFarmland || null;
   const setSearchAddr = props.setSearchAddr || null;
+  const setCount = props.setCount || null;
 
   //const [searchAddr, setSearchAddr] = useState([]); // 주소변수를 받는곳
 
@@ -131,7 +132,9 @@ const Component_mapList = (props) => {
       .then((res) => {
         console.log(res);
         //setDataList(res);
+        // setCount(res.length);
         return res;
+
       })
 
     setDataList(res);
@@ -183,12 +186,12 @@ const Component_mapList = (props) => {
 
         {dataList.map((data, idx) => {
           const areaInPyeong = data.lndpclAr;
-          const areaInSquareMeters = (areaInPyeong * 3.3058).toFixed(4);
+          const areaInSquareMeters = Math.ceil(areaInPyeong / 3.3058);
           return (
             <TableList key={idx} className={(idx + 1) % 2 === 0 ? "x2" : ""}>
               <div>{data.landNickName}</div>
               <div className="addr"> {data.address.jibunAddress}</div>
-              <div>{`${areaInPyeong}평/${areaInSquareMeters}㎡`}</div>
+              <div>{`${areaInSquareMeters}평/${areaInPyeong}㎡`}</div>
               <div>{data.cropsInfo}</div>
 
               {delete_API && (

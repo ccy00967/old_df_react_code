@@ -57,6 +57,10 @@ const GWNaverMap = ({ setValue }) => {
 
           infoWindow.open(map, latlng);
 
+          window.addressInfo = {
+            jibunAddress: htmlAddresses[0],
+          };
+
           //return htmlAddresses[0]
           setValue(htmlAddresses[0])
         }
@@ -98,6 +102,14 @@ const GWNaverMap = ({ setValue }) => {
 
           map.setCenter(point);
           infoWindow.open(map, point);
+
+          window.addressInfo = {
+            roadAddress: item.roadAddress,
+            jibunAddress: item.jibunAddress,
+            englishAddress: item.englishAddress,
+            x: item.x,
+            y: item.y
+          };
 
           //return htmlAddresses[0]
           setValue(htmlAddresses[0])

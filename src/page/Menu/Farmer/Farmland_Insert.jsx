@@ -60,7 +60,7 @@ const InputDiv = styled(RowView2)`
     border: 0;
   }
   &.smallText {
-    font-size: 14px;
+    font-size: 10px;
     color: gray;
     border: 0;
     margin: 0;
@@ -87,19 +87,6 @@ const Btn = styled.div`
 `;
 
 // 농지 데이터
-const landinfo = {
-  "address": {
-    "roadaddress": "string",
-    "jibunAddress": "string",
-    "detailAddress": "string"
-  },
-  "pnu": "string",
-  "lndpclAr": "string",
-  "cd": "string",
-  "landNickName": "string",
-  "cropsInfo": "string",
-  "additionalPhoneNum": "string"
-}
 
 // 디지털트윈국토 for 토지임야정보: 개발용 KEY임 나중에 변경 필요 - 127.0.0.1이 허용됨
 const KEY = "6C934ED4-5978-324D-B7DE-AC3A0DDC3B38"
@@ -109,10 +96,10 @@ const consumer_SECRET = "a7ec04e5c1f8401594d5"
 
 // 농지를 등록하는 페이지
 const Farmland_Insert = () => {
-
+  
   const [searchAddr, setSearchAddr] = useState(""); // 사용자가 입력한 지번 주소
   const [check, setCheck] = useState(false);  // 약관동의
-
+  
   // 네이버 지도 주소 정보
   const [roadaddress, setRoadaddress] = useState("");
   const [jibunAddress, setJibunAddress] = useState("");
@@ -124,7 +111,21 @@ const Farmland_Insert = () => {
   const [landNickName, setLandNickName] = useState("");
   const [cropsInfo, setCropsInfo] = useState("");
   const [additionalPhoneNum, setAdditionalPhoneNum] = useState("");
-
+  const adlndpclArup = Math.ceil(lndpclAr / 3.3057)
+  const landinfo = {
+    "address": {
+      "roadaddress": window.addressInfo.roadAddress || "값이 없음",
+      "jibunAddress": window.addressInfo.jibunAddress || "값이 없음",
+      "detailAddress": "값이 없음"
+    },
+    "pnu": pnu || "값이 없음",
+    "lndpclAr": lndpclAr || "값이 없음",
+    "cd": cd || "값이 없음",
+    "landNickName": landNickName || "값이 없음",
+    "cropsInfo": cropsInfo || "값이 없음",
+    "additionalPhoneNum": "값이 없음"
+  };
+  
   const setting_addr = (e) => setSearchAddr(e.target.value)
   const setting_name = (e) => setLandNickName(e.target.value);
   // const setting_area = (e) => setFarmlandArea(e.target.value);
@@ -135,38 +136,48 @@ const Farmland_Insert = () => {
 
   //농지 주소 -> PNU 정보 변환
   const get_pnu_api = async () => {
-    const getPnu = "https://api.vworld.kr/req/search?key=" + KEY
-    $.ajax(
-      {
-        type: "GET",
-        url: getPnu + "&request=search" + `&query=${searchAddr}` + "&type=address" + "&category=parcel" + "&format=json",
-        dataType: "jsonp",
-        success: function (res) {
-          //console.log(res.response.result.items)
-          setPnu(res.response.result.items[0].id)
-        },
-        error: function (e) {
-          alert(e.responseText);
-        }
-      });
+    const getPnu = "https://api.vworld.kr/req/search?key=" + KEY;
+    $.ajax({
+      type: "GET",
+      url: getPnu + "&request=search" + `&query=${window.addressInfo.jibunAddress}` + "&type=address" + "&category=parcel" + "&format=json",
+      dataType: "jsonp",
+      success: function (res) {
+        const pnuValue = res.response.result.items[0].id;
+        console.log(pnuValue);
+        setPnu(pnuValue); // Update the PNU state
+      },
+      error: function (e) {
+        alert(e.responseText);
+      }
+    });
   };
+
+  useEffect(() => {
+    if (pnu) {
+      search_area_api();
+    }
+  }, [pnu]);
 
   // 주소검색으로 농지 제곱미터 받는 api
   const search_area_api = async () => {
-    const getLndpclAr = "https://api.vworld.kr/ned/data/ladfrlList?key=" + KEY
-    $.ajax(
-      {
-        type: "POST",
-        url: getLndpclAr + `&pnu=${pnu}` + "&format=json",
-        dataType: "jsonp",
-        success: function (respnu) {
-          setLndpclAr(respnu.ladfrlVOList.ladfrlVOList[0].lndpclAr)
-        },
-        error: function (e) {
-          alert(e.responseText);
-        }
-      });
+    const getLndpclAr = "https://api.vworld.kr/ned/data/ladfrlList?key=" + KEY;
+    $.ajax({
+      type: "POST",
+      url: getLndpclAr + `&pnu=${pnu}` + "&format=json",
+      dataType: "jsonp",
+      success: function (respnu) {
+        const area = respnu.ladfrlVOList.ladfrlVOList[0].lndpclAr;
+        console.log(area);
+        setLndpclAr(area);
+      },
+    });
   };
+
+  useEffect(() => {
+    if (lndpclAr) {
+      search_area_api();
+    }
+  }, [lndpclAr]);
 
   // cd값을 받기 위한 엑세스토큰 발급 API
   const cd_for_accessToken = async () => {
@@ -187,17 +198,24 @@ const Farmland_Insert = () => {
 
   // 발급받은 토큰으로 주소검색하여 cd값 받기
   const get_cd_api = async (cdAccesstoken) => {
-    const res = await fetch(`https://sgisapi.kostat.go.kr/OpenAPI3/addr/geocode.json?address=${searchAddr}&accessToken=${cdAccesstoken}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
-    const data = await res.json();
-    const cd = data.result.resultdata[0].adm_cd;
-    setCd(cd);
-    //console.log('cd값', addcd);
-  };
+    try {
+      const res = await fetch(`https://sgisapi.kostat.go.kr/OpenAPI3/addr/geocode.json?address=${window.addressInfo.jibunAddress}&accessToken=${cdAccesstoken}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      const data = await res.json();
+      if (data.result && data.result.resultdata && data.result.resultdata[0] && data.result.resultdata[0].adm_cd) {
+        const cd = data.result.resultdata[0].adm_cd;
+        setCd(cd);
+      } else {
+        console.error("CD값이 없습니다.");
+      }
+    } catch (error) {
+      console.error("Fetch 에러:", error);
+    }
+  }
 
 
   // 주소 찾기
@@ -208,16 +226,17 @@ const Farmland_Insert = () => {
     // 주소를 좌표로 변환 후 주소값 리턴
     if (globalSearchAddressToCoordinate) {
       globalSearchAddressToCoordinate(searchAddr); // Naver Map API를 통해 주소 검색
-      console.log("AAAAAAAAAAAAAA")
       console.log(searchAddr)
-      setJibunAddress(searchAddr)
+      setJibunAddress(window.addressInfo.jibunAddress)
     }
+    return searchAddr;
   };
 
   // 농지 등록
   const insert_API = async () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
+    console.log(landinfo);
 
     const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: "POST",
@@ -295,8 +314,9 @@ const Farmland_Insert = () => {
               disabled={true}
             >
               <input
-                value={lndpclAr * 0.3025}
+                value={adlndpclArup}
                 //onChange={setting_acrea}
+                readOnly
                 onFocus={onFocus}
                 onBlur={offFocus}
               //disabled={true}
@@ -306,6 +326,7 @@ const Farmland_Insert = () => {
             <InputDiv $isfocused={isfocuse_m2}>
               <input
                 value={lndpclAr}
+                readOnly
                 onChange={setting_acrea}
                 onFocus={onFocus_m2}
                 onBlur={offFocus_m2}
