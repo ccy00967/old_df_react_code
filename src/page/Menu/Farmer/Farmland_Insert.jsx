@@ -210,7 +210,7 @@ const Farmland_Insert = () => {
       globalSearchAddressToCoordinate(searchAddr); // Naver Map API를 통해 주소 검색
       console.log("AAAAAAAAAAAAAA")
       console.log(searchAddr)
-      //setJibunAddress(htmlAddresses)
+      setJibunAddress(searchAddr)
     }
   };
 
