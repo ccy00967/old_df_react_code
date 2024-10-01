@@ -12,6 +12,7 @@ import {
 } from "../../../Component/common_style";
 import PagingControl from "../../../Component/UI/PagingControl";
 import SideMenuBar from "../SideMenuBar";
+import DepthAddressInformation from "../../../Component/Cdadd/add";
 
 const TextSemiBold = styled.div`
   font-size: ${(props) => `${props.$size || 16}px`};
@@ -189,9 +190,9 @@ const Matching = () => {
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [seqList, setSeqList] = useState([]);
-  const [checkboxData, setCheckboxData] = useState([]);
+
   // 단계별 주소찾기 accessToken
-  const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
+  // const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
 
 
 
@@ -221,9 +222,6 @@ const Matching = () => {
   }
 
 
-  useEffect(() => {
-    getfarmrequest();
-  }, []);
 
   // const getfarmdetail = async () => {
 
@@ -245,25 +243,36 @@ const Matching = () => {
 
 
   // 단계별 주소 찾기 AccessToken 발급받기버튼
-  const sgisapiAccessTokenFunc = async () => {
-    const res = await fetch("https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json?consumer_key=a3d30c1dbf844d2596f6&consumer_secret=be8aac1489a6442ea2c4", {
-      method: 'GET',
-      //headers: [["Content-Type", 'application/json']],
-      //credentials: 'include',
-      // body: JSON.stringify({
-      //   consumer_key: "a3d30c1dbf844d2596f6",
-      //   consumer_secret: "be8aac1489a6442ea2c4"
-      // }),
-    })
-      .then((res) => { return res.json(); })
-      .then((data) => {
-        return data
-      });
+  // const sgisapiAccessTokenFunc = async () => {
+  //   const res = await fetch("https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json?consumer_key=a3d30c1dbf844d2596f6&consumer_secret=be8aac1489a6442ea2c4", {
+  //     method: 'GET',
+  //     //headers: [["Content-Type", 'application/json']],
+  //     //credentials: 'include',
+  //     // body: JSON.stringify({
+  //     //   consumer_key: "a3d30c1dbf844d2596f6",
+  //     //   consumer_secret: "be8aac1489a6442ea2c4"
+  //     // }),
+  //   })
+  //     .then((res) => { return res.json(); })
+  //     .then((data) => {
+  //       return data
+  //     }
+  //     );
 
-    console.log(res)
-    setSgisapiAccessToken(res.accessToken)
-  }
-  //매칭중인 정보만 가져오는 필터
+
+  //   setSgisapiAccessToken(res.result.accessToken)
+  //   console.log(res.result.accessToken)
+  // }
+
+
+
+
+  useEffect(() => {
+    getfarmrequest();
+
+    //fetchLocation();
+
+  }, []);
 
 
 
@@ -351,20 +360,10 @@ const Matching = () => {
 
         <ContentArea>
           <TextSemiBold $size={28}>거래매칭</TextSemiBold>
-          <Btn onClick={sgisapiAccessTokenFunc}>단계별 주소조회 AccessToken 발급받기</Btn>
-          <FilterBox>
-            <select>
-              <option value={"1"}>시/도</option>
-              <option value={"2"}>서울</option>
-              <option value={"3"}>도쿄</option>
-            </select>
-            <select>
-              <option value={""}>시/군/구</option>
-            </select>
-            <select>
-              <option value={""}>읍/면/동</option>
-            </select>
-          </FilterBox>
+
+          <DepthAddressInformation/>
+        
+       
 
           <SearchBox
             type={"number"}
@@ -397,7 +396,7 @@ const Matching = () => {
               </TableHeader>
 
               {dataList.map((data, idx) => {
-                if (data.exterminateSate == 0) {
+                if (data.exterminateState == 0) {
                   if (!data || data.length === 0) {
                     return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
                   }
@@ -409,8 +408,8 @@ const Matching = () => {
                       <CheckBox
                         type={"checkbox"}
                         $color={"#555555"}
-                        onClick={(e) => { selectSeq(idx);  }}
-                        // getCheckboxData(data.orderid);
+                        onClick={(e) => { selectSeq(idx); }}
+                      // getCheckboxData(data.orderid);
                       />
                       <div>{data.landInfo.landNickName}</div>
                       <div className="long">{data.landInfo.address.jibunAddress}</div>
