@@ -190,18 +190,30 @@ const Matching = () => {
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [seqList, setSeqList] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [towns, setTowns] = useState([]);
+  const [filteredData, setFilteredData] = useState(null); // 필터링된 데이터
 
   // 단계별 주소찾기 accessToken
   // const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
 
-
+  // useEffect(() => {
+  //   // 이 부분에 토큰을 받아오는 로직 및 시/도 데이터를 fetching 하는 로직 작성
+  //   const fetchData = async () => {
+  //     const token = await fetchToken(); // 토큰 받아오기
+  //     // 여기서 fetchAddressData()로 시/도 데이터 불러오기
+  //     fetchAddressData("", setProvinces, token);
+  //   };
+  //   fetchData();
+  // }, []);
 
   const getfarmrequest = async () => {
     let length = 0;
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = User_Credential?.access_token;
 
-    const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+    const res = await fetch("https://192.168.0.28/exterminator/getrequests/", {
       //const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: 'GET',
       headers: {
@@ -220,49 +232,6 @@ const Matching = () => {
       });
     //console.log(res.endDate)
   }
-
-
-
-  // const getfarmdetail = async () => {
-
-  //   const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': "application/json",
-  //       'authorization': "Bearer " + ""
-  //     },
-  //   })
-  //     // .then((res) => res.json())
-  //     // .then((data) =>{
-
-  //     // })
-  // }
-
-
-
-
-
-  // 단계별 주소 찾기 AccessToken 발급받기버튼
-  // const sgisapiAccessTokenFunc = async () => {
-  //   const res = await fetch("https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json?consumer_key=a3d30c1dbf844d2596f6&consumer_secret=be8aac1489a6442ea2c4", {
-  //     method: 'GET',
-  //     //headers: [["Content-Type", 'application/json']],
-  //     //credentials: 'include',
-  //     // body: JSON.stringify({
-  //     //   consumer_key: "a3d30c1dbf844d2596f6",
-  //     //   consumer_secret: "be8aac1489a6442ea2c4"
-  //     // }),
-  //   })
-  //     .then((res) => { return res.json(); })
-  //     .then((data) => {
-  //       return data
-  //     }
-  //     );
-
-
-  //   setSgisapiAccessToken(res.result.accessToken)
-  //   console.log(res.result.accessToken)
-  // }
 
 
 
@@ -307,28 +276,7 @@ const Matching = () => {
 
   };
 
-  //체크박스 데이터 가져오기
-  // const getCheckboxData = async (e) => {
-  //   let length = 0;
-  //   const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-  //   const accessToken = User_Credential?.access_token;
-
-  //   const res = await fetch(`https://192.168.0.28/farmrequest/${e}/`, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': "application/json",
-  //       'authorization': `Bearer ${accessToken}`,
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       length = data.length;
-  //       console.log(data)
-  //       setCheckboxData(data)
-  //     });
-  //   console.log(e)
-
-  // }
+ 
   const all_selectSeq = () => {
     alert("api 연결먼저");
     return;
@@ -339,6 +287,8 @@ const Matching = () => {
 
   // 신청정보 seq
   const [see_seq, setSee_Seq] = useState(0);
+
+
   const setting_pre = () => {
     if (see_seq !== 0) {
       setSee_Seq(see_seq - 1);
@@ -428,7 +378,7 @@ const Matching = () => {
                 perPage={perPage}
               />
             </div>
-
+            
             {seqList.length !== 0 && (
               <Bill>
                 <div className="btn" onClick={setting_pre}>
