@@ -88,7 +88,7 @@ const Farmland_All = () => {
         submenu={"농지 전체보기"}
         delete_API={delete_API}
         setSearchAddr={setSearchAddrr}
-        setCount={setCount}
+        // setCount={setCount}
       >
         <InsertBox>
           <div className="title">농지 전체보기</div>

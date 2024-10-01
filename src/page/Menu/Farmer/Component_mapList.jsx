@@ -132,7 +132,7 @@ const Component_mapList = (props) => {
       .then((res) => {
         console.log(res);
         //setDataList(res);
-        setCount(res.length);
+        // setCount(res.length);
         return res;
 
       })
