@@ -107,7 +107,6 @@ const PestControl_apply = () => {
   const [startDate, setStartDate] = useState("");
   const [uuid, setUuid] = useState("");
   const [dummy, setDummy] = useState("");
-  const [SelectArealndpclAr, setSelectArealndpclAr] = useState({});
 
   const setting_General = () => setTransaction("일반거래");
   const setting_personal = () => setTransaction("개인거래");
@@ -126,9 +125,6 @@ const PestControl_apply = () => {
     startDate: '2024-10-30',
     endDate: '2021-11-03',
     pesticide: pesticidesUsed,
-    landName: selectFarmland,
-    price: price,
-    lndpclAr: SelectArealndpclAr,
   };
 
   // 모달 열기
@@ -140,7 +136,6 @@ const PestControl_apply = () => {
 
   // 방제 신청
   const apply = async () => {
-    openModal(postData);
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
     console.log(postData);
@@ -153,7 +148,11 @@ const PestControl_apply = () => {
       },
       body: JSON.stringify(postData),
     });
-  };
+    
+    if (res.status === 201) {
+      const responseData = await res.json();
+      openModal(responseData);  
+    }};
 
 
   return (
@@ -166,7 +165,6 @@ const PestControl_apply = () => {
           const farmland = `${data.landNickName}(${data.address.jibunAddress})`;
           setSelectFarmland(farmland); // 선택된 농지 이름
           setUuid(data.uuid);
-          setSelectArealndpclAr(data.lndpclAr);
         }}
       >
         <InsertBox>
