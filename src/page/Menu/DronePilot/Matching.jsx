@@ -12,7 +12,6 @@ import {
 } from "../../../Component/common_style";
 import PagingControl from "../../../Component/UI/PagingControl";
 import SideMenuBar from "../SideMenuBar";
-import DepthAddressInformation from "../../../Component/Cdadd/add";
 
 const TextSemiBold = styled.div`
   font-size: ${(props) => `${props.$size || 16}px`};
@@ -185,18 +184,129 @@ const Btn = styled.div`
 `;
 
 
-const Matching = () => {
+const addressDepthServerModel = (json) => {
+  return {
+    code: json.cd,
+    name: json.addr_name,
+  };
+};
+
+
+const fetchToken = async () => {
+  try {
+    const response = await fetch(
+      "https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json?consumer_key=a3d30c1dbf844d2596f6&consumer_secret=be8aac1489a6442ea2c4"
+    );
+    if (response.status === 200) {
+      const data = await response.json();
+      return data.result.accessToken; // 받아온 토큰 값
+    } else {
+      throw new Error("Failed to fetch token");
+    }
+  } catch (error) {
+    console.error("Error fetching token:", error);
+    return null;
+  }
+};
+
+const Matching = ({ setCd }) => {
   const [cnt, setCnt] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [seqList, setSeqList] = useState([]);
-  const [provinces, setProvinces] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [towns, setTowns] = useState([]);
-  const [filteredData, setFilteredData] = useState(null); // 필터링된 데이터
+  const [token, setToken] = useState(null);
+  const [provinces, setProvinces] = useState([]); // 시/도 데이터
+  const [cities, setCities] = useState([]); // 시/군/구 데이터
+  const [towns, setTowns] = useState([]); // 읍/면/동 데이터
+  const [selectedProvince, setSelectedProvince] = useState(""); // 선택한 시/도
+  const [selectedCity, setSelectedCity] = useState(""); // 선택한 시/군/구
+  const [selectedTown, setSelectedTown] = useState(""); // 선택한 읍/면/동
+  const [errorMessage, setErrorMessage] = useState("");
+  const [cdInfo, setCdInfo] = useState(""); //cd값 저장
+  const [seqdata, setseqdata] = useState(""); //체크박스 선택시 가져오는 데이터
+  const [acceptOrderid, setAcceptOrderid] = useState("");
+
+
+  // 토큰을 먼저 받아오고, 받은 토큰을 사용해 데이터를 가져오는 함수
+  useEffect(() => {
+    const fetchData = async () => {
+      // 토큰을 받아오는 로직
+      const fetchedToken = await fetchToken();
+      if (!fetchedToken) {
+        setErrorMessage("Failed to fetch token");
+        return;
+      }
+
+      setToken(fetchedToken); // 토큰 상태 설정
+
+      // 시/도 데이터를 가져오는 함수 호출 (처음에는 code 없이 전체 시/도 데이터를 불러옴)
+      fetchAddressData("", setProvinces, fetchedToken);
+    };
+
+    fetchData();
+  }, []); // 최초 로드 시 호출
+
+  // 시/군/구 데이터를 가져오는 로직
+  useEffect(() => {
+    if (selectedProvince) {
+      fetchAddressData(selectedProvince, setCities, token);
+      setSelectedCity("");
+      setTowns([]);
+    }
+  }, [selectedProvince, token]);
+
+  // 읍/면/동 데이터를 가져오는 로직
+  useEffect(() => {
+    if (selectedCity) {
+      fetchAddressData(selectedCity, setTowns, token);
+    }
+  }, [selectedCity, token]);
+
+  // 주소 데이터를 가져오는 함수
+  const fetchAddressData = async (code, setData, token) => {
+    try {
+      const _code = code ? `&cd=${code}` : "";
+      const apiUrl = `https://sgisapi.kostat.go.kr/OpenAPI3/addr/stage.json?accessToken=${token}${_code}`;
+      const response = await fetch(apiUrl);
+      if (response.status === 200) {
+        const data = await response.json();
+        const result = data.result.map((item) => addressDepthServerModel(item));
+        setData(result);
+      } else {
+        setData([]);
+      }
+    } catch (error) {
+      setData([]);
+    }
+  };
+
+  // 필터박스에서 선택될 때 cd 값을 출력하는 함수
+  const handleProvinceChange = (e) => {
+    const selectedCd = e.target.value;
+    console.log(selectedCd); // 시/도 코드 출력
+    setSelectedProvince(selectedCd);
+    setCdInfo(selectedCd);
+  };
+
+  const handleCityChange = (e) => {
+    const selectedCd = e.target.value;
+    console.log(selectedCd); // 시/군/구 코드 출력
+    setSelectedCity(selectedCd);
+    setCdInfo(selectedCd);
+  };
+
+  const handleTownChange = (e) => {
+    const selectedCd = e.target.value;
+    console.log(selectedCd); // 읍/면/동 코드 출력
+    setSelectedTown(selectedCd);
+    setCdInfo(selectedCd);
+  };
+
+
+
 
   // 임시 cd값 가져오기
-  const [cd, setCd] = useState("");
+  //const [cd, setCd] = useState("");
 
   // 단계별 주소찾기 accessToken
   // const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
@@ -216,7 +326,9 @@ const Matching = () => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = User_Credential?.access_token;
 
-    const res = await fetch("https://192.168.0.28/exterminator/getrequests/" , {
+    const cdInfoURL = cdInfo == "" ? "" : cdInfo + "/"
+
+    const res = await fetch("https://192.168.0.28/exterminator/getrequests/" + cdInfoURL, {
       //const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: 'GET',
       headers: {
@@ -228,8 +340,6 @@ const Matching = () => {
       .then((data) => {
         length = data.length;
         //console.log(length);
-        console.log("123")
-        console.log(data)
         setDataList(data)
         //return data
       });
@@ -239,9 +349,27 @@ const Matching = () => {
 
 
 
+  const putfarmrequest = async () => {
+    const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
+    const accessToken = User_Credential?.access_token;
+
+    const res = await fetch(`https://192.168.0.28/exterminator/accept/${acceptOrderid}/`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => res.json())
+    .then((data) => data)
+
+    console.log(res)
+  }
+
   useEffect(() => {
     getfarmrequest();
-
+    setCnt(dataList.length);
+    console.log()
     //fetchLocation();
 
   }, []);
@@ -270,16 +398,23 @@ const Matching = () => {
   // 선택 게시글
   const selectSeq = (seq) => {
     if (seqList.includes(seq)) {
-      setSeqList(seqList.filter((item) => item !== seq));
+      {
+        setSeqList(seqList.filter((item) => item !== seq));
+
+        console.log("체크아님")
+      }
     } else {
       if (seqList.length < 10) {
         setSeqList([...seqList, seq]);
+        console.log("체크")
+        setseqdata(dataList[seq]);
+        setAcceptOrderid(dataList[seq].orderid);
+        console.log(seqdata);
       }
     }
-
   };
 
- 
+
   const all_selectSeq = () => {
     alert("api 연결먼저");
     return;
@@ -314,7 +449,47 @@ const Matching = () => {
         <ContentArea>
           <TextSemiBold $size={28}>거래매칭</TextSemiBold>
 
-          <DepthAddressInformation setCd={setCd}/>
+          <div>
+            {errorMessage && <p>Error: {errorMessage}</p>}
+
+            {/* 시/도 필터 */}
+            <FilterBox>
+              <select value={selectedProvince} onChange={handleProvinceChange}>
+                <option value="">시/도 선택</option>
+                {provinces.map((province) => (
+                  <option key={province.code} value={province.code}>
+                    {province.name}
+                  </option>
+                ))}
+              </select>
+
+              {/* 시/군/구 필터 */}
+              <select value={selectedCity} onChange={handleCityChange}>
+                <option value="">시/군/구 선택</option>
+                {cities.map((city) => (
+                  <option key={city.code} value={city.code}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+
+
+              {/* 읍/면/동 필터 */}
+              <select value={selectedTown} onChange={handleTownChange}>
+                <option value="">읍/면/동 선택</option>
+                {towns.map((town) => (
+                  <option key={town.code} value={town.code}>
+                    {town.name}
+                  </option>
+                ))}
+              </select>
+
+            </FilterBox>
+
+            <Btn onClick={() => getfarmrequest()}>
+              검색하기
+            </Btn>
+          </div>
 
           <SearchBox
             type={"number"}
@@ -379,7 +554,7 @@ const Matching = () => {
                 perPage={perPage}
               />
             </div>
-            
+
             {seqList.length !== 0 && (
               <Bill>
                 <div className="btn" onClick={setting_pre}>
@@ -395,11 +570,11 @@ const Matching = () => {
 
                   <DataRow>
                     <TextMedium>이ㅤㅤ름</TextMedium>
-                    <div className="gray">홍길동</div>
+                    <div className="gray">{seqdata.owner.name}</div>
                   </DataRow>
                   <DataRow>
                     <TextMedium>전화번호</TextMedium>
-                    <div className="gray">010-0101-1010</div>
+                    <div className="gray">{seqdata.owner.mobileno}</div>
                   </DataRow>
 
                   <Hr />
@@ -410,20 +585,20 @@ const Matching = () => {
                   </DataRow>
                   <DataRow>
                     <TextMedium>농ㅤㅤ지</TextMedium>
-                    <div className="gray">김가네벼</div>
+                    <div className="gray">{seqdata.landInfo.landNickName}</div>
                   </DataRow>
                   <DataRow>
                     <TextMedium className="letter">평단가</TextMedium>
-                    <div className="gray">직접입력</div>
+                    <div className="gray">{seqdata.setAmount}</div>
                   </DataRow>
                   <DataRow>
                     <TextMedium className="letter">마감일</TextMedium>
-                    <div className="gray">8/30</div>
+                    <div className="gray">{seqdata.endDate}</div>
                   </DataRow>
                   <DataRow>
                     <TextMedium>사용농약</TextMedium>
                     <RowView2 className="wrap top" style={{ flex: 1 }}>
-                      <div className="gray_w"></div>
+                      <div className="gray_w">{seqdata.pesticide}</div>
                     </RowView2>
                   </DataRow>
 
@@ -437,7 +612,7 @@ const Matching = () => {
                   </DataRow>
                   <DataRow>
                     <TextMedium className="auto">서비스 이용금액</TextMedium>
-                    <div className="gray">10,000원</div>
+                    <div className="gray">1,000원</div>
                   </DataRow>
 
                   <Hr className="black" />
@@ -452,15 +627,16 @@ const Matching = () => {
                   </RowView>
                   <RowView>
                     <TextSemiBold $fontsize={20}>
-                      총<span style={{ color: blueColor }}> {4}</span>건 서비스
+                      총<span style={{ color: blueColor }}> {seqList.length}</span>건 서비스
                       이용금액
                     </TextSemiBold>
                     <TextMedium className="auto" $fontsize={20} $color={true}>
-                      10,000원
+                      {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+
                     </TextMedium>
                   </RowView>
 
-                  <Btn>결제하기</Btn>
+                  <Btn onClick={()=> {window.location.reload(); putfarmrequest()}}>결제하기</Btn>
                 </div>
 
                 <div className="btn" onClick={setting_next}>

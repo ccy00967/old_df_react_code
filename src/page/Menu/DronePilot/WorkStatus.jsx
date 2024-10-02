@@ -137,6 +137,7 @@ const WorkStatus = () => {
   // const [count_작업완료, setCount_작업완료] = useState();
   const [filter, setFilter] = useState([]);
   const [workBtn, setWorkBtn] = useState([]);
+  const [exorderid,setexorderid] = useState([]);
   const setting_reset = () => setFilter("");
   // const setting_매칭완료 = () => setFilter("매칭완료");
   // const setting_작업시작 = () => setFilter("작업시작");
@@ -151,7 +152,7 @@ const WorkStatus = () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
 
-    const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+    const res = await fetch("https://192.168.0.28/exterminator/workinglist/1/", {
       //const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: 'GET',
       headers: {
@@ -241,10 +242,13 @@ const WorkStatus = () => {
   }, [currentPage, perPage]);
 
   //시작 버튼 API
-  const workStart_API = () => {
+  const workStart_API = async () => {
     if (window.confirm("시작하시겠습니까?")) {
       setWorkBtn(2)
       alert("시작.");
+      setexorderid(dataList.orderid)
+      console.log(exorderid)
+      //const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${exorderid}/`)
     } else { alert("취소"); }
 
   };
