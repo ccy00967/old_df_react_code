@@ -86,6 +86,18 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
         form_chk.enc_data.value = res.enc_data;
         form_chk.integrity_value.value = res.integrity_value;
         document.form_chk.submit();
+
+        function receiveMessage(event) {
+
+            // if (event.origin !== "http://example.com")
+            //     return;
+            console.log(event);
+            console.log("aaaaaaaaaa");
+            console.log(event.data);
+        }
+        window.addEventListener("message", receiveMessage);
+
+        //nicePopUpWindow.opener.postMessage("hello there!", "http://127.0.0.1:3000");
     }
 
     return (
