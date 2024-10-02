@@ -150,91 +150,73 @@ const Login = (props) => {
     return "";
   };
 
-  const Set_User_info = async () => {
-    console.log(User_Credential.uuid)
-    const res = await fetch('https://192.168.0.28:443/user/userinfo/' + User_Credential.uuid + '/', {
+  const fetchUserInfo = async (uuid, accessToken) => {
+    const res = await fetch(`https://192.168.0.28:443/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: "Bearer " + User_Credential.access_token,
+        authorization: `Bearer ${accessToken}`
       },
-      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
-      credentials: "include",
-    })
-      .then((res) => { return res.json(); })
-      .then((data) => {
-        return data
-      });
-
-
-    setUserInfo(res)
-  }
-
-  const Login_API = async () => {
-
-    // 로그인 API
-    const res = await fetch('https://192.168.0.28:443/user/login/', {
-      method: 'POST',
-      headers: [["Content-Type", 'application/json'],
-      ],
-      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
-      credentials: "include",
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then((res) => { return res.json(); })
-      .then((data) => {
-        return data
-      });
-
-    console.log(res)
-    // User_info 저장
-    const userCredential = {
-      userType: userType,
-      access_token: res.access,
-      refresh_token: res.refresh,
-      uuid: res.uuid,
-      //...res
-    };
-    setUser_info(userCredential);
-    localStorage.setItem("User_Credential", JSON.stringify(userCredential));
-
-    // 유저 정보 가져오기
-    console.log(userCredential.uuid)
-    const resUserinfo = await fetch('https://192.168.0.28:443/user/userinfo/' + userCredential.uuid + '/', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: "Bearer " + userCredential.access_token,
-      },
-      // 나중에 동시 로그인, 다른 곳에서 로그인을 credentials의 정보로 찾기
-      credentials: "include",
-    })
-      .then((res) => { return res.json(); })
-      .then((data) => {
-        return data
-      });
-
-    console.log(resUserinfo);
-    setUserInfo(resUserinfo)
+      credentials: 'include',
+    });
+    const data = await res.json();
+    return data;
   };
 
-  // 엔터 시 로그인 실행
+  const Login_API = async () => {
+    try {
+      const res = await fetch('https://192.168.0.28:443/user/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await res.json();
+
+      const userCredential = {
+        userType: userType,
+        access_token: data.access,
+        refresh_token: data.refresh,
+        uuid: data.uuid,
+      };
+      
+      setUser_info(userCredential);
+      localStorage.setItem("User_Credential", JSON.stringify(userCredential));
+
+      const userInfoData = await fetchUserInfo(userCredential.uuid, userCredential.access_token);
+      setUserInfo(userInfoData);
+
+    } catch (error) {
+      console.error("Login failed: ", error);
+    }
+  };
+
+  const Set_User_info = async () => {
+    if (User_Credential && User_Credential.uuid) {
+      const userInfoData = await fetchUserInfo(User_Credential.uuid, User_Credential.access_token);
+      setUserInfo(userInfoData);
+    }
+  };
 
   const enterPress = (e) => {
     if (e.key === "Enter") {
       Login_API();
     }
   };
+
   useEffect(() => {
-    const userCredential = JSON.parse(localStorage.getItem("User_Credential"));
-    if (userCredential) {
-      setUser_info(userCredential);
+    const storedCredentials = JSON.parse(localStorage.getItem("User_Credential"));
+    if (storedCredentials) {
+      setUser_info(storedCredentials);
       Set_User_info();
     }
-  }, []);
+  }, [setUser_info]);
 
   const goFindEmail = () => Navigate("/findID");
   const goFindPassword = () => Navigate("/findPW");

@@ -16,6 +16,7 @@ import PerPageControl from "../../../Component/UI/PerPageControl";
 import SideMenuBar from "../SideMenuBar";
 import GWNaverMap from "../../../Component/naver_maps/GWNaverMaps";
 import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
+import { useUser } from "../../../Component/userContext";
 
 const ContentArea = styled.div`
   flex: 1;
@@ -100,6 +101,8 @@ const Component_mapList = (props) => {
   const [cnt, setCnt] = useState(0); // 전체 개시글 갯수
   const [perPage, setPerPage] = useState(20); // 페이지당 게시글 갯수 (디폴트:20)
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const { setUser_info } = useUser();
+
 
   // 농지 데이터 load
   const [dataList, setDataList] = useState([]);
@@ -112,32 +115,74 @@ const Component_mapList = (props) => {
   // });
   //
   const load_API = async () => {
-    // 호출 성공시
-    // setCnt(960);
-    //setDataList(testData);
-
-    // 여기다가 패치로 농지 정보들 가져오기
+    // 액세스 토큰과 리프레시 토큰을 갱신하는 함수
+    const refreshAccessToken = async () => {
+      const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+      const refreshToken = userInfo?.refresh_token;
+  
+      const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
+  
+      const data = await res.json();
+      if (res.ok) {
+        // 액세스 토큰과 리프레시 토큰을 로컬스토리지와 상태에 갱신
+        userInfo.access_token = data.access;
+        localStorage.setItem('User_Credential', JSON.stringify(userInfo));
+        setUser_info(userInfo); // 상태 업데이트
+        return data.access; // 새로운 액세스 토큰 반환
+      } else {
+        console.error('토큰 갱신 실패');
+        return null;
+      }
+    };
+  
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo?.access_token;
-
-
-    const res = await fetch("https://192.168.0.28:443/customer/lands/", {
+  
+    const firstResponse = await fetch("https://192.168.0.28:443/customer/lands/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        //setDataList(res);
-        // setCount(res.length);
-        return res;
-
-      })
-
-    setDataList(res);
+    });
+  
+    // 401 에러 발생 시 토큰 갱신 후 재시도
+    if (firstResponse.status === 401) {
+      const newAccessToken = await refreshAccessToken();
+      if (newAccessToken) {
+        const retryResponse = await fetch("https://192.168.0.28:443/customer/lands/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${newAccessToken}`,
+          },
+        });
+  
+        if (retryResponse.ok) {
+          const data = await retryResponse.json();
+          console.log(data);
+          setDataList(data);  // 받아온 데이터를 상태에 저장
+          // setCount(data.length);  // 필요시 전체 카운트 업데이트
+        } else {
+          console.error('데이터 로드 실패');
+        }
+      }
+    } else if (firstResponse.ok) {
+      const data = await firstResponse.json();
+      console.log(data);
+      setDataList(data);  // 받아온 데이터를 상태에 저장
+      // setCount(data.length);  // 필요시 전체 카운트 업데이트
+    } else {
+      console.error('데이터 로드 실패');
+    }
   };
 
   useEffect(() => {
