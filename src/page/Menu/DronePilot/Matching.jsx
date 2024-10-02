@@ -195,6 +195,9 @@ const Matching = () => {
   const [towns, setTowns] = useState([]);
   const [filteredData, setFilteredData] = useState(null); // 필터링된 데이터
 
+  // 임시 cd값 가져오기
+  const [cd, setCd] = useState("");
+
   // 단계별 주소찾기 accessToken
   // const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
 
@@ -213,7 +216,7 @@ const Matching = () => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = User_Credential?.access_token;
 
-    const res = await fetch("https://192.168.0.28/exterminator/getrequests/", {
+    const res = await fetch("https://192.168.0.28/exterminator/getrequests/" , {
       //const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: 'GET',
       headers: {
@@ -311,9 +314,7 @@ const Matching = () => {
         <ContentArea>
           <TextSemiBold $size={28}>거래매칭</TextSemiBold>
 
-          <DepthAddressInformation/>
-        
-       
+          <DepthAddressInformation setCd={setCd}/>
 
           <SearchBox
             type={"number"}

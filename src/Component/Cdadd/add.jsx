@@ -47,7 +47,7 @@ const fetchToken = async () => {
     }
 };
 
-const DepthAddressInformation = ({ code }) => {
+const DepthAddressInformation = ({ setCd }) => {
     const [token, setToken] = useState(null);
     const [provinces, setProvinces] = useState([]); // 시/도 데이터
     const [cities, setCities] = useState([]); // 시/군/구 데이터
