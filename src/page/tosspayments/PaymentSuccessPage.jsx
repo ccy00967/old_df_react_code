@@ -9,23 +9,22 @@ export function PaymentSuccessPage() {
     useEffect(() => {
         async function confirm() {
             const requestData = {
-                orderId: searchParams.get("orderId"),
-                totalAmount: searchParams.get("amount"),
                 paymentKey: searchParams.get("paymentKey"),
-                method: "CARD",
-                status: "SUCCESS",
+                amount: searchParams.get("amount"),
+                orderId: searchParams.get("orderId"),
+                orderIdList: [searchParams.get("orderId")],
             };
 
             const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
             const accessToken = userInfo.access_token;
             const csrfToken = document.cookie.match(/csrftoken=([^;]*)/)?.[1];  // CSRF 토큰 가져오기
 
-            const response = await fetch(`https://192.168.0.28/payments/success/${searchParams.get("paymentKey")}/`, {
-                method: "PUT",
+            const response = await fetch(`https://192.168.0.28/payments/success/`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ${accessToken}`,
-                    "X-CSRFToken": csrfToken,  // CSRF 토큰 헤더에 추가
+                    // "X-CSRFToken": csrfToken,  // CSRF 토큰 헤더에 추가
                 },
                 body: JSON.stringify(requestData),
                 credentials: "include",

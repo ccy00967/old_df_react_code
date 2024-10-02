@@ -102,7 +102,7 @@ const PestControl_apply = () => {
   
   const [transaction, setTransaction] = useState("일반거래");
   const [selectFarmland, setSelectFarmland] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(30);
   const [pesticidesUsed, setPesticidesUsed] = useState("");
   const [startDate, setStartDate] = useState("");
   const [uuid, setUuid] = useState("");
@@ -125,6 +125,7 @@ const PestControl_apply = () => {
     startDate: '2024-10-30',
     endDate: '2021-11-03',
     pesticide: pesticidesUsed,
+    setAmount: price,
   };
 
   // 모달 열기
@@ -151,6 +152,7 @@ const PestControl_apply = () => {
     
     if (res.status === 201) {
       const responseData = await res.json();
+      console.log(responseData);
       openModal(responseData);  
     }};
 
@@ -212,6 +214,7 @@ const PestControl_apply = () => {
             value={price}
             onChange={setting_price}
           />
+          <span>일반거래의 평단가는 30원입니다.</span>
 
           <div className="subtitle">시작일</div>
           <RowView>

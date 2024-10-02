@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Common_Layout from "../../Component/common_Layout";
 import {
@@ -113,18 +113,48 @@ const MyInfo = () => {
     if (userType === "농약상") return "red";
   };
 
-  const [myInfo, setMyInfo] = useState({
-    name: "홍길동",
-    email: "test@gmail.com",
-    tel: "010-1010-1010",
-  });
-  const [email, setEmail] = useState(myInfo.email);
+  const [myInfo, setMyInfo] = useState({});
+  const [email, setEmail] = useState(myInfo?.email);
   const [otp, setOtp] = useState("");
-  const [tel, setTel] = useState(myInfo.tel);
+  const [tel, setTel] = useState(myInfo?.tel);
 
   const setting_email = (e) => setEmail(e.target.value);
   const setting_otp = (e) => setOtp(e.target.value);
   const setting_tel = (e) => setTel(e.target.value);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userCredential = JSON.parse(localStorage.getItem('User_Credential'));
+      const accessToken = userCredential ? userCredential.access_token : null;
+      const uuid = userCredential ? userCredential.uuid : null;
+
+      if (accessToken && uuid) {
+        const res = await fetch(`https://192.168.0.28/user/userinfo/${uuid}/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (res.ok) {
+          const resdata = await res.json();
+          setMyInfo({
+            name: resdata.name,
+            email: resdata.email,
+            tel: resdata.mobileno,
+          });
+        } else {
+          console.error('유저정보를 불러오지 못했습니다.', res.status);
+        }
+      } else {
+        console.error('액세스토큰 또는 uuid가 없습니다.');
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
 
   const sendOTP_API = () => {
     alert("인증번호 전송");
@@ -200,7 +230,7 @@ const MyInfo = () => {
                   onChange={setting_tel}
                 />
                 <Btn
-                  className={`${themeColor()}light`}
+                  className={themeColor()}
                   $width={9}
                   onClick={tel_API}
                 >

@@ -228,6 +228,13 @@ const Login = (props) => {
       Login_API();
     }
   };
+  useEffect(() => {
+    const userCredential = JSON.parse(localStorage.getItem("User_Credential"));
+    if (userCredential) {
+      setUser_info(userCredential);
+      Set_User_info();
+    }
+  }, []);
 
   const goFindEmail = () => Navigate("/findID");
   const goFindPassword = () => Navigate("/findPW");
