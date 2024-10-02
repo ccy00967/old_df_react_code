@@ -119,7 +119,7 @@ const Component_mapList = (props) => {
     const refreshAccessToken = async () => {
       const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
       const refreshToken = userInfo?.refresh_token;
-  
+
       const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
         method: 'POST',
         headers: {
@@ -129,7 +129,7 @@ const Component_mapList = (props) => {
           refresh: refreshToken,
         }),
       });
-  
+
       const data = await res.json();
       if (res.ok) {
         // 액세스 토큰과 리프레시 토큰을 로컬스토리지와 상태에 갱신
@@ -138,14 +138,17 @@ const Component_mapList = (props) => {
         setUser_info(userInfo); // 상태 업데이트
         return data.access; // 새로운 액세스 토큰 반환
       } else {
-        console.error('토큰 갱신 실패');
+        // 리프레시 토큰이 만료되었거나 유효하지 않을 경우 처리
+        alert('로그인이 만료되었습니다.'); // 경고창 표시
+        localStorage.removeItem('User_Credential'); // 로컬 스토리지에서 정보 제거
+        window.location.replace('/'); // 첫 페이지로 리다이렉트
         return null;
       }
     };
-  
+
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo?.access_token;
-  
+
     const firstResponse = await fetch("https://192.168.0.28:443/customer/lands/", {
       method: "GET",
       headers: {
@@ -153,7 +156,7 @@ const Component_mapList = (props) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-  
+
     // 401 에러 발생 시 토큰 갱신 후 재시도
     if (firstResponse.status === 401) {
       const newAccessToken = await refreshAccessToken();
@@ -165,7 +168,7 @@ const Component_mapList = (props) => {
             Authorization: `Bearer ${newAccessToken}`,
           },
         });
-  
+
         if (retryResponse.ok) {
           const data = await retryResponse.json();
           console.log(data);
