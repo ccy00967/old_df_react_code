@@ -240,7 +240,7 @@ const WorkStatus = () => {
     load_API();
   }, [currentPage, perPage]);
 
-//시작 버튼 API
+  //시작 버튼 API
   const workStart_API = () => {
     if (window.confirm("시작하시겠습니까?")) {
       setWorkBtn(2)
@@ -249,7 +249,7 @@ const WorkStatus = () => {
 
   };
 
-//완료 버튼 API
+  //완료 버튼 API
   const workFin_API = () => {
     if (window.confirm("작업이 끝났습니까?")) {
       setWorkBtn(3)
