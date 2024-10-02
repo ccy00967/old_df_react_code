@@ -169,21 +169,72 @@ const PestControl_useList = () => {
   //   setDataList(testData);
   // };
   const load_API = async () => {
-    const userInfo = JSON.parse(localStorage.getItem("User_Credential"));
-    const accessToken = userInfo?.access_token;
-
-    const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+    // 액세스 토큰과 리프레시 토큰을 갱신하는 함수
+    const refreshAccessToken = async () => {
+      const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+      const refreshToken = userInfo?.refresh_token;
+  
+      const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
+  
+      if (res.ok) {
+        const data = await res.json();
+        // 액세스 토큰과 리프레시 토큰을 로컬스토리지에 갱신
+        userInfo.access_token = data.access;
+        localStorage.setItem('User_Credential', JSON.stringify(userInfo));
+        return data.access; // 새로운 액세스 토큰 반환
+      } else {
+        // 리프레시 토큰이 만료되었거나 유효하지 않을 경우 처리
+        alert('다시 로그인해주세요'); // 경고창 표시
+        localStorage.removeItem('User_Credential'); // 로컬 스토리지에서 정보 제거
+        window.location.replace('/'); // 첫 페이지로 리다이렉트
+        return null;
+      }
+    };
+  
+    const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+    let accessToken = userInfo?.access_token;
+  
+    // 첫 번째 API 호출
+    let res = await fetch("https://192.168.0.28/farmrequest/requests/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
-    const data = await res.json();
-    setCnt(data.length); // 전체 게시글 수 설정
-    setDataList(data); // 데이터 목록 설정
-    console.log(data);
+  
+    // 401 에러가 발생하면 리프레시 토큰으로 액세스 토큰 갱신 후 다시 시도
+    if (res.status === 401) {
+      accessToken = await refreshAccessToken();
+      if (accessToken) {
+        // 새로운 액세스 토큰으로 다시 시도
+        res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      }
+    }
+  
+    // 응답이 성공했을 때 데이터 처리
+    if (res.ok) {
+      const data = await res.json();
+      setCnt(data.length); // 전체 게시글 수 설정
+      setDataList(data); // 데이터 목록 설정
+      // console.log(data);
+    } else {
+      console.error('데이터 로드 실패');
+    }
   };
   useEffect(() => {
     load_API();

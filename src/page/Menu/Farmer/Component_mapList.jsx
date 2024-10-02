@@ -94,7 +94,7 @@ const Component_mapList = (props) => {
   // 방제신청 > 농지선택 함수
   const setSelectFarmland = props.setSelectFarmland || null;
   const setSearchAddr = props.setSearchAddr || null;
-  const setCount = props.setCount || null;
+  const { setTotalArea, setLandCount } = props;
 
   //const [searchAddr, setSearchAddr] = useState([]); // 주소변수를 받는곳
 
@@ -173,7 +173,10 @@ const Component_mapList = (props) => {
           const data = await retryResponse.json();
           console.log(data);
           setDataList(data);  // 받아온 데이터를 상태에 저장
-          // setCount(data.length);  // 필요시 전체 카운트 업데이트
+          // 총 면적과 필지 개수를 계산하고 부모 컴포넌트로 전달
+          const totalArea = data.reduce((sum, item) => sum + item.lndpclAr, 0);
+          setTotalArea(totalArea);
+          setLandCount(data.length);
         } else {
           console.error('데이터 로드 실패');
         }
@@ -182,7 +185,10 @@ const Component_mapList = (props) => {
       const data = await firstResponse.json();
       console.log(data);
       setDataList(data);  // 받아온 데이터를 상태에 저장
-      // setCount(data.length);  // 필요시 전체 카운트 업데이트
+      // 총 면적과 필지 개수를 계산하고 부모 컴포넌트로 전달
+      const totalArea = data.reduce((sum, item) => sum + parseFloat(item.lndpclAr), 0);
+      setTotalArea(totalArea);
+      setLandCount(data.length);
     } else {
       console.error('데이터 로드 실패');
     }

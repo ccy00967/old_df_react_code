@@ -137,11 +137,41 @@ const PestControl_apply = () => {
 
   // 방제 신청
   const apply = async () => {
+    // 액세스 토큰과 리프레시 토큰을 갱신하는 함수
+    const refreshAccessToken = async () => {
+      const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+      const refreshToken = userInfo?.refresh_token;
+  
+      const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
+  
+      if (res.ok) {
+        const data = await res.json();
+        // 액세스 토큰과 리프레시 토큰을 로컬스토리지와 상태에 갱신
+        userInfo.access_token = data.access;
+        localStorage.setItem('User_Credential', JSON.stringify(userInfo));
+        return data.access; // 새로운 액세스 토큰 반환
+      } else {
+        // 리프레시 토큰이 만료되었거나 유효하지 않을 경우 처리
+        alert('다시 로그인해주세요'); // 경고창 표시
+        localStorage.removeItem('User_Credential'); // 로컬 스토리지에서 정보 제거
+        window.location.replace('/'); // 첫 페이지로 리다이렉트
+        return null;
+      }
+    };
+  
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
-    const accessToken = userInfo.access_token;
+    let accessToken = userInfo?.access_token;
     console.log(postData);
-    
-    const res = await fetch(`https://192.168.0.28/farmrequest/send/${uuid}/`, {
+  
+    let res = await fetch(`https://192.168.0.28/farmrequest/send/${uuid}/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -149,13 +179,31 @@ const PestControl_apply = () => {
       },
       body: JSON.stringify(postData),
     });
-    
+  
+    // 401 에러가 발생하면 리프레시 토큰으로 액세스 토큰 갱신 후 다시 시도
+    if (res.status === 401) {
+      accessToken = await refreshAccessToken();
+      if (accessToken) {
+        // 새로운 액세스 토큰으로 다시 시도
+        res = await fetch(`https://192.168.0.28/farmrequest/send/${uuid}/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(postData),
+        });
+      }
+    }
+  
     if (res.status === 201) {
       const responseData = await res.json();
       console.log(responseData);
       openModal(responseData);  
-    }};
-
+    } else {
+      console.error('요청 실패');
+    }
+  };
 
   return (
     <Common_Layout>
