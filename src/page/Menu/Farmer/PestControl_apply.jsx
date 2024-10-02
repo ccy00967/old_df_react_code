@@ -106,6 +106,7 @@ const PestControl_apply = () => {
   const [pesticidesUsed, setPesticidesUsed] = useState("");
   const [startDate, setStartDate] = useState("");
   const [uuid, setUuid] = useState("");
+  const [dummy, setDummy] = useState("");
 
   const setting_General = () => setTransaction("일반거래");
   const setting_personal = () => setTransaction("개인거래");
@@ -121,25 +122,24 @@ const PestControl_apply = () => {
   };
   const postData = {
     dealmothod: transaction === "일반거래" ? 0 : 1,
-    startDate: '2021-08-30',
-    endDate: '2021-09-03',
+    startDate: '2024-10-30',
+    endDate: '2021-11-03',
     pesticide: pesticidesUsed,
   };
 
   // 모달 열기
   const applyRef = useRef();
-  const openModal = (applyData) => {
-    applyRef.current.visible(applyData);
-    console.log(applyData);
+  const openModal = (postData) => {
+    applyRef.current.visible(postData);
+    console.log(postData);
   };
 
   // 방제 신청
   const apply = async () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
-
-    openModal()
-
+    console.log(postData);
+    
     const res = await fetch(`https://192.168.0.28/farmrequest/send/${uuid}/`, {
       method: "POST",
       headers: {
@@ -148,7 +148,11 @@ const PestControl_apply = () => {
       },
       body: JSON.stringify(postData),
     });
-  };
+    
+    if (res.status === 201) {
+      const responseData = await res.json();
+      openModal(responseData);  
+    }};
 
 
   return (
@@ -156,12 +160,11 @@ const PestControl_apply = () => {
       <Component_mapList
         mainmenu={"방제"}
         submenu={"방제신청"}
-        setSearchAddr={setSelectFarmland}
+        setSearchAddr={setDummy}
         setSelectFarmland={(data) => {
           const farmland = `${data.landNickName}(${data.address.jibunAddress})`;
           setSelectFarmland(farmland); // 선택된 농지 이름
           setUuid(data.uuid);
-          const applyData = {data}
         }}
       >
         <InsertBox>

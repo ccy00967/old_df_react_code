@@ -33,6 +33,8 @@ import Adjustment from "./page/Menu/DronePilot/Adjustment";
 import Inventory_manage from "./page/Menu/PesticideDealer/Inventory_manage";
 import WorkStatus2 from "./page/Menu/PesticideDealer/WorkStatus";
 import Adjustment2 from "./page/Menu/PesticideDealer/Adjustment";
+import { PaymentSuccessPage } from "./page/tosspayments/PaymentSuccessPage";
+import { PaymentFailPage } from "./page/tosspayments/PaymentFailPage";
 
 function App() {
   const { isLogin, User_Credential } = useUser();
@@ -202,6 +204,8 @@ function App() {
           />
         }
       />
+      <Route path="/success" element={<PaymentSuccessPage />} />
+      <Route path="/fail" element={<PaymentFailPage />} />
     </Routes>
   );
 }

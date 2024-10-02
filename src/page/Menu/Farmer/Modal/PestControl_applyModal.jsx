@@ -12,6 +12,8 @@ import {
 } from "../../../../Component/common_style";
 import noScroll from "../../../../Component/function/noScroll";
 import useEscapeKey from "../../../../Component/function/useEscapeKey";
+import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
+import { requestPayment } from "../../../tosspayments/TossPayments_func";
 
 const ModalBox = styled.div`
   box-sizing: border-box;
@@ -91,6 +93,7 @@ const Btn = styled.div`
 const PestControl_applyModal = forwardRef((props, ref) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [data, setData] = useState({});
+  console.log(data);
 
   useImperativeHandle(ref, () => ({
     visible: (data) => {
@@ -101,15 +104,52 @@ const PestControl_applyModal = forwardRef((props, ref) => {
   // 모달 open시 스크롤방지
   noScroll(modalOpen);
 
-  const name = data?.owner || "이름 없음";
-  const [phonenum, setPhoneNum] = useState("101-1010-1010");
-  const [amount, setAmount] = useState(10000);
+  const name = data.owner?.name || "이름 없음";
+  const phonenum = data.owner?.mobileno || "번호 없음";
+  const amount = data.landInfo?.lndpclAr * /*data.price*/30 || 0;  // 나중에 평단가 받아와야함
+  const email = data.owner?.email || "이메일 없음";
+  const payorderid = data?.orderid || "주문번호 없음";
   const [serviceAmount, setServiceAmount] = useState(10000);
+  const [payment, setPayment] = useState(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
+  const totalAmount = amount + serviceAmount;
+  
+  const userid = JSON.parse(localStorage.getItem('User_Credential'));
+  const customerKey = userid.uuid;
+
+  const clientKey = "test_ck_LlDJaYngro2ZZaqGR00xVezGdRpX";
+
+
+  function selectPaymentMethod(method) {
+      setSelectedPaymentMethod(method);
+  }
+
+  useEffect(() => {
+      async function fetchPayment() {
+          try {
+              const tossPayments = await loadTossPayments(clientKey);
+
+              // 회원 결제
+              // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
+              const payment = tossPayments.payment({
+                  customerKey,
+              });
+              // 비회원 결제
+              // const payment = tossPayments.payment({ customerKey: ANONYMOUS });
+
+              setPayment(payment);
+          } catch (error) {
+              console.error("Error fetching payment:", error);
+          }
+      }
+
+      fetchPayment();
+  }, [clientKey, customerKey]);
 
   // 결제하기
-  const pay_API = () => {
-    console.log(data);
-  };
+  // const pay_API = () => {
+  //   console.log(data);
+  // };
 
   // 닫기
   const closeModal = () => {
@@ -147,24 +187,24 @@ const PestControl_applyModal = forwardRef((props, ref) => {
 
         <DataRow>
           <TextMedium>거래방식</TextMedium>
-          <div className="gray">{data.거래방식 || ""}</div>
+          <div className="gray">{data.dealmothod === 0 ? "일반거래" : data.dealmothod === 1 ? "개인거래" : ""}</div>
         </DataRow>
         <DataRow>
           <TextMedium>농ㅤㅤ지</TextMedium>
-          <div className="gray">{data.농지선택 || "(선택안함)"}</div>
+          <div className="gray">{data.landInfo?.address.jibunAddress || "(선택안함)"}</div>
         </DataRow>
         <DataRow>
           <TextMedium className="letter">평단가</TextMedium>
-          <div className="gray">{data.평단가 || "-"}</div>
+          <div className="gray">{/*price*/30 + "원" || "-"}</div>
         </DataRow>
         <DataRow>
           <TextMedium className="letter">마감일</TextMedium>
-          <div className="gray">{data.마감일 || "-"}</div>
+          <div className="gray">{data?.endDate || "-"}</div>
         </DataRow>
         <DataRow>
           <TextMedium>사용농약</TextMedium>
           <RowView2 className="wrap top" style={{ flex: 1 }}>
-            <div className="gray_w">{data.사용농약 || "-"}</div>
+            <div className="gray_w">{data?.pesticide || "-"}</div>
             <div className="bold">농약을 준비해주세요!</div>
           </RowView2>
         </DataRow>
@@ -185,11 +225,11 @@ const PestControl_applyModal = forwardRef((props, ref) => {
         <RowView> 
           <TextSemiBold $fontsize={20}>최종결제금액</TextSemiBold>
           <TextMedium className="auto" $fontsize={20} $color={true}>
-            {(amount + serviceAmount).toLocaleString("ko-KR")}원
+            {(totalAmount).toLocaleString("ko-KR")}원
           </TextMedium>
         </RowView>
 
-        <Btn onClick={pay_API}>결제하기</Btn>
+        <Btn onClick={() => requestPayment(payment, selectedPaymentMethod, totalAmount, name, phonenum, email, payorderid)}>결제하기</Btn>
       </ModalBox>
     </BackgroundArea>
   );
