@@ -96,10 +96,10 @@ const consumer_SECRET = "a7ec04e5c1f8401594d5"
 
 // 농지를 등록하는 페이지
 const Farmland_Insert = () => {
-  
+
   const [searchAddr, setSearchAddr] = useState(""); // 사용자가 입력한 지번 주소
   const [check, setCheck] = useState(false);  // 약관동의
-  
+
   // 네이버 지도 주소 정보
   const [roadaddress, setRoadaddress] = useState("");
   const [jibunAddress, setJibunAddress] = useState("");
@@ -125,7 +125,7 @@ const Farmland_Insert = () => {
     "cropsInfo": cropsInfo || "값이 없음",
     "additionalPhoneNum": "값이 없음"
   };
-  
+
   const setting_addr = (e) => setSearchAddr(e.target.value)
   const setting_name = (e) => setLandNickName(e.target.value);
   // const setting_area = (e) => setFarmlandArea(e.target.value);
@@ -234,23 +234,76 @@ const Farmland_Insert = () => {
 
   // 농지 등록
   const insert_API = async () => {
+    // 액세스 토큰과 리프레시 토큰을 갱신하는 함수
+    const refreshAccessToken = async () => {
+      const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+      const refreshToken = userInfo?.refresh_token;
+
+      const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        // 액세스 토큰을 로컬스토리지에 갱신
+        userInfo.access_token = data.access;
+        localStorage.setItem('User_Credential', JSON.stringify(userInfo));
+        return data.access; // 새로운 액세스 토큰 반환
+      } else {
+        // 리프레시 토큰이 만료되었거나 유효하지 않을 경우 처리
+        alert('다시 로그인해주세요'); // 경고창 표시
+        localStorage.removeItem('User_Credential'); // 로컬 스토리지에서 정보 제거
+        window.location.replace('/'); // 첫 페이지로 리다이렉트
+        return null;
+      }
+    };
+
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
-    const accessToken = userInfo.access_token;
+    let accessToken = userInfo?.access_token;
     console.log(landinfo);
 
-    const res = await fetch("https://192.168.0.28/customer/lands/", {
+    // 첫 번째 POST 요청
+    let res = await fetch("https://192.168.0.28/customer/lands/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(landinfo),
     });
 
+    // 401 에러 발생 시 토큰 갱신 후 다시 시도
+    if (res.status === 401) {
+      accessToken = await refreshAccessToken();
+      if (accessToken) {
+        // 새로운 액세스 토큰으로 다시 시도
+        res = await fetch("https://192.168.0.28/customer/lands/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(landinfo),
+        });
+      }
+    }
 
-    const result = await res.json();
-    console.log("Success:", result);
-
+    // 응답이 성공했을 때 데이터 처리
+    if (res.ok) {
+      const result = await res.json();
+      alert("농지 등록이 완료되었습니다.");
+      console.log("Success:", result);
+      // 페이지 새로고침
+      window.location.reload();
+    } else {
+      console.error('요청 실패');
+    }
   };
   //주소찾기를 클릭하면 순차적으로 실행되도록 하는 함수
   const handleSearch = async () => {

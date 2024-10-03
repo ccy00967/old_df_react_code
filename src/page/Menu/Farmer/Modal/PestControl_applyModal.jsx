@@ -106,7 +106,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
 
   const name = data.owner?.name || "이름 없음";
   const phonenum = data.owner?.mobileno || "번호 없음";
-  const amount = data.landInfo?.lndpclAr * /*data.price*/30 || 0;  // 나중에 평단가 받아와야함
+  const amount = data?.setAmount /*data.price*/ || 0;  // 나중에 평단가 받아와야함
   const email = data.owner?.email || "이메일 없음";
   const payorderid = data?.orderid || "주문번호 없음";
   const [serviceAmount, setServiceAmount] = useState(10000);
@@ -195,7 +195,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
         </DataRow>
         <DataRow>
           <TextMedium className="letter">평단가</TextMedium>
-          <div className="gray">{/*price*/30 + "원" || "-"}</div>
+          <div className="gray">{/*price*/amount + "원" || "-"}</div>
         </DataRow>
         <DataRow>
           <TextMedium className="letter">마감일</TextMedium>

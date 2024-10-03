@@ -16,6 +16,7 @@ import PerPageControl from "../../../Component/UI/PerPageControl";
 import SideMenuBar from "../SideMenuBar";
 import GWNaverMap from "../../../Component/naver_maps/GWNaverMaps";
 import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
+import { useUser } from "../../../Component/userContext";
 
 const ContentArea = styled.div`
   flex: 1;
@@ -93,13 +94,15 @@ const Component_mapList = (props) => {
   // 방제신청 > 농지선택 함수
   const setSelectFarmland = props.setSelectFarmland || null;
   const setSearchAddr = props.setSearchAddr || null;
-  const setCount = props.setCount || null;
+  const { setTotalArea, setLandCount } = props;
 
   //const [searchAddr, setSearchAddr] = useState([]); // 주소변수를 받는곳
 
   const [cnt, setCnt] = useState(0); // 전체 개시글 갯수
   const [perPage, setPerPage] = useState(20); // 페이지당 게시글 갯수 (디폴트:20)
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const { setUser_info } = useUser();
+
 
   // 농지 데이터 load
   const [dataList, setDataList] = useState([]);
@@ -112,32 +115,83 @@ const Component_mapList = (props) => {
   // });
   //
   const load_API = async () => {
-    // 호출 성공시
-    // setCnt(960);
-    //setDataList(testData);
+    // 액세스 토큰과 리프레시 토큰을 갱신하는 함수
+    const refreshAccessToken = async () => {
+      const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
+      const refreshToken = userInfo?.refresh_token;
 
-    // 여기다가 패치로 농지 정보들 가져오기
+      const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          refresh: refreshToken,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        // 액세스 토큰과 리프레시 토큰을 로컬스토리지와 상태에 갱신
+        userInfo.access_token = data.access;
+        localStorage.setItem('User_Credential', JSON.stringify(userInfo));
+        setUser_info(userInfo); // 상태 업데이트
+        return data.access; // 새로운 액세스 토큰 반환
+      } else {
+        // 리프레시 토큰이 만료되었거나 유효하지 않을 경우 처리
+        alert('로그인이 만료되었습니다.'); // 경고창 표시
+        localStorage.removeItem('User_Credential'); // 로컬 스토리지에서 정보 제거
+        window.location.replace('/'); // 첫 페이지로 리다이렉트
+        return null;
+      }
+    };
+
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo?.access_token;
 
-
-    const res = await fetch("https://192.168.0.28:443/customer/lands/", {
+    const firstResponse = await fetch("https://192.168.0.28:443/customer/lands/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        //setDataList(res);
-        // setCount(res.length);
-        return res;
+    });
 
-      })
+    // 401 에러 발생 시 토큰 갱신 후 재시도
+    if (firstResponse.status === 401) {
+      const newAccessToken = await refreshAccessToken();
+      if (newAccessToken) {
+        const retryResponse = await fetch("https://192.168.0.28:443/customer/lands/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${newAccessToken}`,
+          },
+        });
 
-    setDataList(res);
+        if (retryResponse.ok) {
+          const data = await retryResponse.json();
+          console.log(data);
+          setDataList(data);  // 받아온 데이터를 상태에 저장
+          // 총 면적과 필지 개수를 계산하고 부모 컴포넌트로 전달
+          const totalArea = data.reduce((sum, item) => sum + item.lndpclAr, 0);
+          setTotalArea(totalArea);
+          setLandCount(data.length);
+        } else {
+          console.error('데이터 로드 실패');
+        }
+      }
+    } else if (firstResponse.ok) {
+      const data = await firstResponse.json();
+      console.log(data);
+      setDataList(data);  // 받아온 데이터를 상태에 저장
+      // 총 면적과 필지 개수를 계산하고 부모 컴포넌트로 전달
+      const totalArea = data.reduce((sum, item) => sum + parseFloat(item.lndpclAr), 0);
+      setTotalArea(totalArea);
+      setLandCount(data.length);
+    } else {
+      console.error('데이터 로드 실패');
+    }
   };
 
   useEffect(() => {
