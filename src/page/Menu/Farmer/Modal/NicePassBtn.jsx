@@ -79,6 +79,8 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
 
         console.log(res)
 
+        // 아래는 일단 작동하지만 인증이 끝나고 리액트에 정보를 가져올 수가 없음
+
         const nicePopUpWindow = window.open('', 'popupChk', 'width=480, height=812, top=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
         document.form_chk.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb";
         document.form_chk.target = "popupChk";
@@ -96,8 +98,24 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
         }
         //window.addEventListener("message", receiveMessage);
         window.addEventListener("message", receiveMessage);
+        nicePopUpWindow.addEventListener("message", receiveMessage);
 
         //nicePopUpWindow.opener.postMessage("hello there!", "http://127.0.0.1:3000");
+
+
+        /*
+        // 팝업 오픈
+        const nicePopUpWindow = window.open('', 'popupChk', 'width=480, height=812, top=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
+
+        function receiveMessage(event) {
+            document.form_chk.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb";
+            document.form_chk.target = "popupChk";
+            form_chk.token_version_id.value = res.token_version_id;
+            form_chk.enc_data.value = res.enc_data;
+            form_chk.integrity_value.value = res.integrity_value;
+            document.form_chk.submit();
+        }
+        */
     }
 
     return (
