@@ -110,6 +110,8 @@ const PestControl_apply = () => {
   const [startDate, setStartDate] = useState("");
   const [uuid, setUuid] = useState("");
   const [dummy, setDummy] = useState("");
+  const [selectlndpclAr, setSelectlndpclAr] = useState(0);
+  const totalPrice = price * selectlndpclAr;
 
   const setting_General = () => setTransaction("일반거래");
   const setting_personal = () => setTransaction("개인거래");
@@ -129,6 +131,7 @@ const PestControl_apply = () => {
     endDate: '2021-11-03',
     pesticide: pesticidesUsed,
     setAmount: price,
+    // requestAmount: totalPrice,
   };
 
   // 모달 열기
@@ -218,6 +221,7 @@ const PestControl_apply = () => {
           const farmland = `${data.landNickName}(${data.address.jibunAddress})`;
           setSelectFarmland(farmland); // 선택된 농지 이름
           setUuid(data.uuid);
+          setSelectlndpclAr(data.lndpclAr);
         }}
         setTotalArea={setTotalArea} // 총 면적 전달
         setLandCount={setLandCount} // 필지 개수 전달

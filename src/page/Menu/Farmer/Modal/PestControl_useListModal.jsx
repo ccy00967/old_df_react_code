@@ -85,11 +85,10 @@ const PestControl_useListModal = forwardRef((props, ref) => {
   const [price, setPrice] = useState("직접입력");
   const pesticidesUsed = data.pesticide || "농약 없음";
   // -
-  const [amount, setAmount] = useState(10000);
   const [serviceAmount, setServiceAmount] = useState(10000);
-  // -
+  const amount = data?.requestAmount || 0;
   const company = data.exterminatorinfo?.name || "업체 없음";
-  const company_tel = data.exterminatorinfo?.phone_number || "번호 없음";
+  const company_tel = data.exterminatorinfo?.mobileno || "번호 없음";
 
   // 닫기
   const closeModal = () => {

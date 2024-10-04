@@ -226,8 +226,6 @@ function App() {
           />
         }
       />
-      <Route path="/success" element={<PaymentSuccessPage />} />
-      <Route path="/fail" element={<PaymentFailPage />} />
     </Routes>
   );
 }

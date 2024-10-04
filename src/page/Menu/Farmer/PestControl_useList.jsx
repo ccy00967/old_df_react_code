@@ -223,6 +223,7 @@ const PestControl_useList = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        console.log(res);
       }
     }
   
@@ -291,6 +292,7 @@ const PestControl_useList = () => {
   const ModalRef = useRef();
   const openModal = (data) => {
     ModalRef.current.visible(data);
+    console.log(data);
   };
 
   return (

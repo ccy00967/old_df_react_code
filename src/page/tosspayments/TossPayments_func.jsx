@@ -38,8 +38,11 @@ export async function requestPayment(payment, selectedPaymentMethod, totalAmount
         // case "TRANSFER":
         //     await payment.requestPayment({
         //         method: "TRANSFER", // 계좌이체 결제
-        //         amount,
-        //         orderId: generateRandomString(),
+        //         amount: {
+        //             currency: "KRW",
+        //             value: totalAmount,
+        //         },
+        //         orderId: payorderid,
         //         orderName: "토스 티셔츠 외 2건",
         //         successUrl: window.location.origin + "/payment/success",
         //         failUrl: window.location.origin + "/fail",
