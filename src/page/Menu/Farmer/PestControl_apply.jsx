@@ -99,7 +99,10 @@ const Btn = styled.div`
 `;
 
 const PestControl_apply = () => {
-  
+
+  const [totalArea, setTotalArea] = useState(0); // 총 면적
+  const [landCount, setLandCount] = useState(0); // 필지 개수
+
   const [transaction, setTransaction] = useState("일반거래");
   const [selectFarmland, setSelectFarmland] = useState("");
   const [price, setPrice] = useState(30);
@@ -141,7 +144,7 @@ const PestControl_apply = () => {
     const refreshAccessToken = async () => {
       const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
       const refreshToken = userInfo?.refresh_token;
-  
+
       const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
         method: 'POST',
         headers: {
@@ -151,7 +154,7 @@ const PestControl_apply = () => {
           refresh: refreshToken,
         }),
       });
-  
+
       if (res.ok) {
         const data = await res.json();
         // 액세스 토큰과 리프레시 토큰을 로컬스토리지와 상태에 갱신
@@ -166,11 +169,11 @@ const PestControl_apply = () => {
         return null;
       }
     };
-  
+
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     let accessToken = userInfo?.access_token;
     console.log(postData);
-  
+
     let res = await fetch(`https://192.168.0.28/farmrequest/send/${uuid}/`, {
       method: "POST",
       headers: {
@@ -179,7 +182,7 @@ const PestControl_apply = () => {
       },
       body: JSON.stringify(postData),
     });
-  
+
     // 401 에러가 발생하면 리프레시 토큰으로 액세스 토큰 갱신 후 다시 시도
     if (res.status === 401) {
       accessToken = await refreshAccessToken();
@@ -195,11 +198,11 @@ const PestControl_apply = () => {
         });
       }
     }
-  
+
     if (res.status === 201) {
       const responseData = await res.json();
       console.log(responseData);
-      openModal(responseData);  
+      openModal(responseData);
     } else {
       console.error('요청 실패');
     }
@@ -216,6 +219,8 @@ const PestControl_apply = () => {
           setSelectFarmland(farmland); // 선택된 농지 이름
           setUuid(data.uuid);
         }}
+        setTotalArea={setTotalArea} // 총 면적 전달
+        setLandCount={setLandCount} // 필지 개수 전달
       >
         <InsertBox>
           <div className="title">방제신청</div>

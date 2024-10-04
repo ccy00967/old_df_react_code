@@ -12,9 +12,11 @@ export function PaymentSuccessPage() {
                 paymentKey: searchParams.get("paymentKey"),
                 amount: searchParams.get("amount"),
                 orderId: searchParams.get("orderId"),
-                orderIdList: [searchParams.get("orderId")],
+                orderidlist: [searchParams.get("orderId")],
             };
 
+            console.log("bbbbbbbbbbbbbb")
+            console.log(requestData)
             const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
             const accessToken = userInfo.access_token;
             const csrfToken = document.cookie.match(/csrftoken=([^;]*)/)?.[1];  // CSRF 토큰 가져오기
@@ -32,6 +34,7 @@ export function PaymentSuccessPage() {
 
             const json = await response.json();
 
+            console.log({ message: json.message, code: json.code })
             if (!response.ok) {
                 console.log({ message: json.message, code: json.code })
                 throw { message: json.message, code: json.code };

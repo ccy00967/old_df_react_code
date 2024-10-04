@@ -84,8 +84,8 @@ const MainMenu = () => {
     드론조종사: require("../../img/드론 조종사 기본화면 배경.png"),
     농약상: require("../../img/농약상_기본화면 배경.png"),
   };
-const [UserInfo , setUserInfo] = useState([])
-  
+  const [UserInfo, setUserInfo] = useState([])
+
   const Set_User_info = async () => {
     console.log(User_Credential.uuid)
     const res = await fetch('https://192.168.0.28:443/user/userinfo/' + User_Credential.uuid + '/', {
@@ -108,8 +108,8 @@ const [UserInfo , setUserInfo] = useState([])
 
 
   useEffect((
-   
-  ) => {Set_User_info();},[])
+
+  ) => { Set_User_info(); }, [])
 
   return (
     <Common_Layout>
@@ -154,7 +154,7 @@ const [UserInfo , setUserInfo] = useState([])
                     농지분석신청
                   </IconBox>
                   {/* <IconBox onClick={() => Navigate(menu_url["농지분석 이용목록"])}> */}
-                  <IconBox onClick={() =>alert("준비중입니다.")}>
+                  <IconBox onClick={() => alert("준비중입니다.")}>
                     <Icon src={require("../../img/icon_menu_plant.png")} />
                     농지분석 이용목록
                   </IconBox>

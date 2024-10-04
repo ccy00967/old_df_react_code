@@ -97,6 +97,9 @@ const consumer_SECRET = "a7ec04e5c1f8401594d5"
 // 농지를 등록하는 페이지
 const Farmland_Insert = () => {
 
+  const [totalArea, setTotalArea] = useState(0); // 총 면적
+  const [landCount, setLandCount] = useState(0); // 필지 개수
+
   const [searchAddr, setSearchAddr] = useState(""); // 사용자가 입력한 지번 주소
   const [check, setCheck] = useState(false);  // 약관동의
 
@@ -331,7 +334,13 @@ const Farmland_Insert = () => {
 
   return (
     <Common_Layout>
-      <Component_mapList mainmenu={"마이페이지"} submenu={"농지등록"} setSearchAddr={setSearchAddr}>
+      <Component_mapList
+        mainmenu={"마이페이지"}
+        submenu={"농지등록"}
+        setSearchAddr={setSearchAddr}
+        setTotalArea={setTotalArea} // 총 면적 전달
+        setLandCount={setLandCount} // 필지 개수 전달
+      >
         <InsertBox>
           <div className="title">농지등록</div>
 

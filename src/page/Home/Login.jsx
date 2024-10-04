@@ -164,7 +164,8 @@ const Login = (props) => {
   };
 
   const Login_API = async () => {
-    try {
+    if (email == "" || password == "") alert("이메일 또는 비밀번호를 입력해주세요")
+    else {
       const res = await fetch('https://192.168.0.28:443/user/login/', {
         method: 'POST',
         headers: {
@@ -176,24 +177,34 @@ const Login = (props) => {
           password: password,
         }),
       });
+      if (res.ok) {
+        const data = await res.json();
+        const userCredential = {
+          userType: userType,
+          access_token: data.access,
+          refresh_token: data.refresh,
+          uuid: data.uuid,
+        };
 
-      const data = await res.json();
+        const userInfoData = await fetchUserInfo(userCredential.uuid, userCredential.access_token);
 
-      const userCredential = {
-        userType: userType,
-        access_token: data.access,
-        refresh_token: data.refresh,
-        uuid: data.uuid,
-      };
-      
-      setUser_info(userCredential);
-      localStorage.setItem("User_Credential", JSON.stringify(userCredential));
-
-      const userInfoData = await fetchUserInfo(userCredential.uuid, userCredential.access_token);
-      setUserInfo(userInfoData);
-
-    } catch (error) {
-      console.error("Login failed: ", error);
+        if (userInfoData.role == 3) {
+          if (userType !== "드론조종사") {
+            alert("방제사로 로그인 해주세요")
+            return
+          }
+        }
+        if (userInfoData.role == 4) {
+          if (userType !== "농업인") {
+            alert("농업인으로 로그인 해주세요")
+            return
+          }
+        }
+        setUser_info(userCredential);
+        localStorage.setItem("User_Credential", JSON.stringify(userCredential));
+        setUserInfo(userInfoData);
+      }
+      else alert("로그인 정보가 올바르지 않습니다.")
     }
   };
 
