@@ -360,8 +360,8 @@ const Matching = ({ setCd }) => {
         'Authorization': `Bearer ${accessToken}`,
       },
     })
-    .then((res) => res.json())
-    .then((data) => data)
+      .then((res) => res.json())
+      .then((data) => data)
 
     console.log(res)
   }
@@ -400,13 +400,10 @@ const Matching = ({ setCd }) => {
     if (seqList.includes(seq)) {
       {
         setSeqList(seqList.filter((item) => item !== seq));
-
-        console.log("체크아님")
       }
     } else {
       if (seqList.length < 10) {
         setSeqList([...seqList, seq]);
-        console.log("체크")
         setseqdata(dataList[seq]);
         setAcceptOrderid(dataList[seq].orderid);
         console.log(seqdata);
@@ -534,6 +531,8 @@ const Matching = ({ setCd }) => {
                       <CheckBox
                         type={"checkbox"}
                         $color={"#555555"}
+                        id={`id`+idx}
+                    
                         onClick={(e) => { selectSeq(idx); }}
                       // getCheckboxData(data.orderid);
                       />
@@ -636,7 +635,7 @@ const Matching = ({ setCd }) => {
                     </TextMedium>
                   </RowView>
 
-                  <Btn onClick={()=> {window.location.reload(); putfarmrequest()}}>결제하기</Btn>
+                  <Btn onClick={() => { window.location.reload(); putfarmrequest() }}>결제하기</Btn>
                 </div>
 
                 <div className="btn" onClick={setting_next}>

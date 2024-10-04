@@ -131,7 +131,7 @@ const Adjustment = () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
 
-    const res = await fetch("https://192.168.0.28/farmrequest/requests/", {
+    const res = await fetch("https://192.168.0.28/exterminator/workinglist/0/", {
       //const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: 'GET',
       headers: {
@@ -143,7 +143,7 @@ const Adjustment = () => {
       .then((data) => {
         length = data.length;
         //console.log(length);
-        //console.log(data)
+        console.log(data)
         setDataList(data)
         //return data
       });
@@ -195,14 +195,13 @@ const Adjustment = () => {
   };
 
   const getcountlength = (filterType) => {
-    if (dataList.exterminateState === 3) {
-      if (filterType === 1) {
+      if (filterType === 0) {
+        return dataList.filter(item => item.calculation === 0).length;
+      } else if (filterType === 1) {
         return dataList.filter(item => item.calculation === 1).length;
-      } else if (filterType === 2) {
-        return dataList.filter(item => item.calculation === 2).length;
       }
       return dataList.length;
-    }
+    
     return [0];
 
   };

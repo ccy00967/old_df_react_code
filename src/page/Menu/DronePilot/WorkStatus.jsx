@@ -136,8 +136,6 @@ const WorkStatus = () => {
   // const [count_작업시작, setCount_작업시작] = useState();
   // const [count_작업완료, setCount_작업완료] = useState();
   const [filter, setFilter] = useState([]);
-  const [workBtn, setWorkBtn] = useState([]);
-  const [exorderid,setexorderid] = useState([]);
   const setting_reset = () => setFilter("");
   // const setting_매칭완료 = () => setFilter("매칭완료");
   // const setting_작업시작 = () => setFilter("작업시작");
@@ -152,7 +150,7 @@ const WorkStatus = () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
 
-    const res = await fetch("https://192.168.0.28/exterminator/workinglist/1/", {
+    const res = await fetch("https://192.168.0.28/exterminator/workinglist/0/", {
       //const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: 'GET',
       headers: {
@@ -164,7 +162,6 @@ const WorkStatus = () => {
       .then((data) => {
         length = data.length;
         //console.log(length);
-        console.log(data)
         setDataList(data)
         //return data
       });
@@ -242,22 +239,82 @@ const WorkStatus = () => {
   }, [currentPage, perPage]);
 
   //시작 버튼 API
-  const workStart_API = async () => {
+  const workStart_API = async (orderid) => {
     if (window.confirm("시작하시겠습니까?")) {
-      setWorkBtn(2)
       alert("시작.");
-      setexorderid(dataList.orderid)
-      console.log(exorderid)
-      //const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${exorderid}/`)
+      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
+      const accessToken = User_Credential?.access_token;
+      const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${orderid}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ exterminateState: 2 }),
+      })
+      window.location.reload();
     } else { alert("취소"); }
 
   };
 
   //완료 버튼 API
-  const workFin_API = () => {
+  const workFin_API = async (orderid) => {
     if (window.confirm("작업이 끝났습니까?")) {
-      setWorkBtn(3)
       alert("작업완료");
+      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
+      const accessToken = User_Credential?.access_token;
+      const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${orderid}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ exterminateState: 3 }),
+      })
+      window.location.reload();
+
+    } else { alert("취소"); }
+
+  };
+
+
+
+  //취소 버튼 API  => 작업 중에서 작업 준비중으로
+  const  cancel1_API = async (orderid) => {
+    if (window.confirm("취소하시겠습니까?")) {
+      alert("취소");
+      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
+      const accessToken = User_Credential?.access_token;
+      const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${orderid}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ exterminateState: 1 }),
+      })
+      window.location.reload();
+
+    } else { alert("취소"); }
+
+  };
+
+  //취소버튼 APT2 => 완료에서 작업 중으로
+  const cancel2_API = async (orderid) => {
+    if (window.confirm("취소하시겠습니까?")) {
+      alert("취소");
+      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
+      const accessToken = User_Credential?.access_token;
+      const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${orderid}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ exterminateState: 2 }),
+      })
+      window.location.reload();
+
     } else { alert("취소"); }
 
   };
@@ -345,25 +402,34 @@ const WorkStatus = () => {
                   <div>{data.owner.name}</div>
                   <div>{data.owner.phone_number}</div>
                   <div className="addr">{data.owner.address.jibunAddress}</div>
-                  <div>{data.exterminateState}</div>
+                  <div>{data.exterminateState === 1 ? ("작업 준비 중"):(data.exterminateState ===2 ? ("작업 중"):data.exterminateState === 3 && ("작업완료"))}</div>
 
 
                   <BtnArea>
 
                     {data.exterminateState === 1 ? (
-                      <span className="green" onClick={workStart_API}>
-                        시작하기
-                      </span>
+                        <span className="green" onClick={() => workStart_API(data.orderid)}>
+                          시작
+                        </span>
                     ) : (
                       data.exterminateState === 2 ? (
-                        <span className="blue" onClick={workFin_API}>
+                        <RowView2>
+                        <span className="blue" onClick={() => workFin_API(data.orderid)}>
                           작업 완료
                         </span>
+                        <span className="yellow" onClick={()=>cancel1_API(data.orderid)}>
+                          취소하기
+                        </span>
+                        </RowView2>
+
                       ) : (
                         data.exterminateState === 3 && (
+                          <RowView>
                           <span className="gray">
                             완료
                           </span>
+                          <span className="yellow" onClick={()=>cancel2_API(data.orderid)}>취소</span>
+                          </RowView>
                         )
                       )
                     )}
