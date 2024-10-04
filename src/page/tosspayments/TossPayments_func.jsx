@@ -2,6 +2,7 @@
 // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
 // @docs https://docs.tosspayments.com/sdk/v2/js#paymentrequestpayment
 export async function requestPayment(payment, selectedPaymentMethod, totalAmount, name, phonenum, email, payorderid) {
+    console.log(window.location.origin)
     const paymentInfo = {
         amount: {
             currency: "KRW",
@@ -9,11 +10,14 @@ export async function requestPayment(payment, selectedPaymentMethod, totalAmount
         }, //최종 결제 값으로 바꾸기
         orderId: payorderid,
         orderName: "방제 서비스",
-        successUrl: window.location.origin + "/success",
-        failUrl: window.location.origin + "/fail",
-        customerEmail: email,
-        customerName: name,
-        customerMobilePhone: phonenum,
+        successUrl: window.location.origin + "/pestcontrol" + "/success",
+        failUrl: window.location.origin + "/pestcontrol" + "/fail",
+        // customerEmail: email,
+        // customerName: name,
+        // customerMobilePhone: phonenum,
+        customerEmail: "ccy09671324@gmail.com",
+        customerName: "chae",
+        customerMobilePhone: "01057010967",
     }
     console.log(payment, selectedPaymentMethod, totalAmount, name, phonenum, email, payorderid)
 

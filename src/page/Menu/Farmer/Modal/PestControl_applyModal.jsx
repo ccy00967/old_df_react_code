@@ -113,7 +113,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
   const [payment, setPayment] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
   const totalAmount = amount + serviceAmount;
-  
+
   const userid = JSON.parse(localStorage.getItem('User_Credential'));
   const customerKey = userid.uuid;
 
@@ -121,29 +121,29 @@ const PestControl_applyModal = forwardRef((props, ref) => {
 
 
   function selectPaymentMethod(method) {
-      setSelectedPaymentMethod(method);
+    setSelectedPaymentMethod(method);
   }
 
   useEffect(() => {
-      async function fetchPayment() {
-          try {
-              const tossPayments = await loadTossPayments(clientKey);
+    async function fetchPayment() {
+      try {
+        const tossPayments = await loadTossPayments(clientKey);
 
-              // 회원 결제
-              // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
-              const payment = tossPayments.payment({
-                  customerKey,
-              });
-              // 비회원 결제
-              // const payment = tossPayments.payment({ customerKey: ANONYMOUS });
+        // 회원 결제
+        // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
+        const payment = tossPayments.payment({
+          customerKey,
+        });
+        // 비회원 결제
+        // const payment = tossPayments.payment({ customerKey: ANONYMOUS });
 
-              setPayment(payment);
-          } catch (error) {
-              console.error("Error fetching payment:", error);
-          }
+        setPayment(payment);
+      } catch (error) {
+        console.error("Error fetching payment:", error);
       }
+    }
 
-      fetchPayment();
+    fetchPayment();
   }, [clientKey, customerKey]);
 
   // 결제하기
@@ -222,7 +222,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
 
         <Hr className="black" />
 
-        <RowView> 
+        <RowView>
           <TextSemiBold $fontsize={20}>최종결제금액</TextSemiBold>
           <TextMedium className="auto" $fontsize={20} $color={true}>
             {(totalAmount).toLocaleString("ko-KR")}원

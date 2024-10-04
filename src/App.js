@@ -35,6 +35,7 @@ import WorkStatus2 from "./page/Menu/PesticideDealer/WorkStatus";
 import Adjustment2 from "./page/Menu/PesticideDealer/Adjustment";
 import { PaymentSuccessPage } from "./page/tosspayments/PaymentSuccessPage";
 import { PaymentFailPage } from "./page/tosspayments/PaymentFailPage";
+import NicePassPopUp from "./page/Menu/Farmer/Modal/NicePassPopUp";
 
 function App() {
   const { isLogin, User_Credential } = useUser();
@@ -59,6 +60,7 @@ function App() {
         <Route path="rules" element={<Rules />} />
         <Route path="tos/:type" element={<Rule_Modal />} />
         <Route path="login" element={<SignUp_Login />} />
+        <Route path="nicepass" element={<NicePassPopUp />} />
       </Route>
       <Route path="/FindID" element={<FindID />} />
       <Route path="/FindPW" element={<FindPW />} />
@@ -104,6 +106,26 @@ function App() {
               isLogin={isLogin}
               isAccess={accessType1}
               component={PestControl_apply}
+            />
+          }
+        />
+        <Route
+          path="success"
+          element={
+            <PrivateRoute
+              isLogin={isLogin}
+              isAccess={accessType1}
+              component={PaymentSuccessPage}
+            />
+          }
+        />
+        <Route
+          path="fail"
+          element={
+            <PrivateRoute
+              isLogin={isLogin}
+              isAccess={accessType1}
+              component={PaymentFailPage}
             />
           }
         />

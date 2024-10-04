@@ -67,7 +67,7 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
 
         const { form_chk } = document;
 
-        // 표준창 호출에 필요한 정보를 백엔드에서 가져오기
+        //표준창 호출에 필요한 정보를 백엔드에서 가져오기
         const res = await fetch('https://192.168.0.28:443/validation/callnicepass/', {
             method: 'GET',
             headers: [["Content-Type", 'application/json'],
@@ -79,43 +79,13 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
 
         console.log(res)
 
-        // 아래는 일단 작동하지만 인증이 끝나고 리액트에 정보를 가져올 수가 없음
-
-        const nicePopUpWindow = window.open('', 'popupChk', 'width=480, height=812, top=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
+        window.open('', 'popupChk', 'width=480, height=812, top=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
         document.form_chk.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb";
         document.form_chk.target = "popupChk";
         form_chk.token_version_id.value = res.token_version_id;
         form_chk.enc_data.value = res.enc_data;
         form_chk.integrity_value.value = res.integrity_value;
         document.form_chk.submit();
-
-        function receiveMessage(event) {
-            // if (event.origin !== "http://example.com")
-            //     return;
-            console.log(event);
-            console.log("aaaaaaaaaa");
-            console.log(event.data);
-        }
-        //window.addEventListener("message", receiveMessage);
-        window.addEventListener("message", receiveMessage);
-        nicePopUpWindow.addEventListener("message", receiveMessage);
-
-        //nicePopUpWindow.opener.postMessage("hello there!", "http://127.0.0.1:3000");
-
-
-        /*
-        // 팝업 오픈
-        const nicePopUpWindow = window.open('', 'popupChk', 'width=480, height=812, top=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
-
-        function receiveMessage(event) {
-            document.form_chk.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb";
-            document.form_chk.target = "popupChk";
-            form_chk.token_version_id.value = res.token_version_id;
-            form_chk.enc_data.value = res.enc_data;
-            form_chk.integrity_value.value = res.integrity_value;
-            document.form_chk.submit();
-        }
-        */
     }
 
     return (
@@ -129,19 +99,6 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
             </form>
         </div>
     );
-
-    // 원래는 form 아래 버튼이 존재
-    /*
-    return (
-        <form name="form_chk" method="post">
-            <input type="hidden" name="m" value="service" />
-            <input type="hidden" name="token_version_id" value="{{token_version_id}}" />
-            <input type="hidden" name="enc_data" value="{{enc_data}}" />
-            <input type="hidden" name="integrity_value" value="{{integrity}}" />
-            <PASSBtn onClick={fnPopup}>나이스 본인인증</PASSBtn>
-        </form>
-    );
-    */
 };
 
 export default NicePassBtn
