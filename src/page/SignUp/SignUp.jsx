@@ -302,7 +302,8 @@ const SignUp = () => {
       ScrollToTop_smooth();
       return setAlert_type("no");
     }
-    if (alert_pass === "") {
+    //if (localStorage.getItem('niceValidate') !== true) {
+    if (false) {
       // PASS 본인인증을 하지 않았다면 no
       ScrollToTop_smooth();
       return setAlert_pass("no");
