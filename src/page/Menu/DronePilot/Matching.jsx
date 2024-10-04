@@ -182,6 +182,17 @@ const Btn = styled.div`
   border-radius: 8px;
   cursor: pointer;
 `;
+const SearchBtn = styled.div`
+  width: 8rem;
+  padding: 1rem 0rem;
+  margin-left: 1rem;
+  font-family: var(--font-Pretendard-SemiBold);
+  text-align: center;
+  color: white;
+  background-color: ${blueColor};
+  border-radius: 8px;
+  cursor: pointer;
+`;
 
 
 const addressDepthServerModel = (json) => {
@@ -481,11 +492,15 @@ const Matching = ({ setCd }) => {
                 ))}
               </select>
 
+
+              <SearchBtn onClick={() => getfarmrequest()}>
+                검색하기
+              </SearchBtn>
+
+
             </FilterBox>
 
-            <Btn onClick={() => getfarmrequest()}>
-              검색하기
-            </Btn>
+
           </div>
 
           <SearchBox
@@ -531,8 +546,8 @@ const Matching = ({ setCd }) => {
                       <CheckBox
                         type={"checkbox"}
                         $color={"#555555"}
-                        id={`id`+idx}
-                    
+                        id={`id` + idx}
+
                         onClick={(e) => { selectSeq(idx); }}
                       // getCheckboxData(data.orderid);
                       />

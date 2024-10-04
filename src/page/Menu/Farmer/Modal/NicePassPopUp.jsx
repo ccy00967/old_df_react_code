@@ -1,15 +1,15 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import styled from "styled-components";
 import {
-    BackgroundArea,
-    CenterView,
-    GreenColor,
-    hoverGreen,
-    Icon,
-    lightGreenColor,
-    redColor,
-    RowView,
-    RowView2,
+  BackgroundArea,
+  CenterView,
+  GreenColor,
+  hoverGreen,
+  Icon,
+  lightGreenColor,
+  redColor,
+  RowView,
+  RowView2,
 } from "../../../../Component/common_style";
 import noScroll from "../../../../Component/function/noScroll";
 
@@ -30,18 +30,18 @@ const PASSBtn = styled.div`
 
 const NicePassPopUp = () => {
 
-    // 리덕스로 상태 체크하기 -> 본인인증 성공 상태 반영
-    useEffect(() => {
-        console.log("본인인증 완료")
-        localStorage.setItem("niceValidate", true) // 리덕스로 바꿔서 상태오면 변경하기
-        window.location.href = "http://127.0.0.1:3000/signUp/";
-    }, [])
+  // 리덕스로 상태 체크하기 -> 본인인증 성공 상태 반영
+  useEffect(() => {
+    console.log("본인인증 완료")
+    localStorage.setItem("niceValidate", true) // 리덕스로 바꿔서 상태오면 변경하기
+    window.location.href = window.location.href + "/signUp";
+  }, [])
 
-    return (
-        <div>
+  return (
+    <div>
 
-        </div>
-    );
+    </div>
+  );
 };
 
 export default NicePassPopUp
