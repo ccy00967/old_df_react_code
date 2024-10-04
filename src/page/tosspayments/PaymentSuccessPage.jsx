@@ -48,7 +48,7 @@ export function PaymentSuccessPage() {
                 setResponseData(data);
             })
             .catch((error) => {
-                navigate(`/fail?code=${error.code}&message=${error.message}`);
+                navigate(`/pestcontrol/fail?code=${error.code}&message=${error.message}`);
             });
     }, [searchParams]);
 

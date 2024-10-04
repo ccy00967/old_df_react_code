@@ -114,7 +114,7 @@ const Farmland_Insert = () => {
   const [landNickName, setLandNickName] = useState("");
   const [cropsInfo, setCropsInfo] = useState("");
   const [additionalPhoneNum, setAdditionalPhoneNum] = useState("");
-  const adlndpclArup = Math.ceil(lndpclAr / 3.3057)
+  const adlndpclArup = Math.ceil(lndpclAr * 0.3025);
   const landinfo = {
     "address": {
       "roadaddress": window.addressInfo.roadAddress || "값이 없음",

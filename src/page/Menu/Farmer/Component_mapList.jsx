@@ -184,7 +184,6 @@ const Component_mapList = (props) => {
       }
     } else if (firstResponse.ok) {
       const data = await firstResponse.json();
-      console.log(data);
       setDataList(data);  // 받아온 데이터를 상태에 저장
       // 총 면적과 필지 개수를 계산하고 부모 컴포넌트로 전달
       const totalArea = data.reduce((sum, item) => sum + parseFloat(item.lndpclAr), 0);
@@ -240,13 +239,13 @@ const Component_mapList = (props) => {
         </TableHeader>
 
         {dataList.map((data, idx) => {
-          const areaInPyeong = data.lndpclAr;
-          const areaInSquareMeters = Math.ceil(areaInPyeong / 3.3058);
+          const areaInSquareMeters = data.lndpclAr;
+          const areaInPyeong = Math.ceil(areaInSquareMeters * 0.3025);
           return (
             <TableList key={idx} className={(idx + 1) % 2 === 0 ? "x2" : ""}>
               <div>{data.landNickName}</div>
               <div className="addr"> {data.address.jibunAddress}</div>
-              <div>{`${areaInSquareMeters}평/${areaInPyeong}㎡`}</div>
+              <div>{`${areaInPyeong}평/${areaInSquareMeters}㎡`}</div>
               <div>{data.cropsInfo}</div>
 
               {delete_API && (
