@@ -173,7 +173,7 @@ const PestControl_useList = () => {
     const refreshAccessToken = async () => {
       const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
       const refreshToken = userInfo?.refresh_token;
-  
+
       const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
         method: 'POST',
         headers: {
@@ -183,7 +183,7 @@ const PestControl_useList = () => {
           refresh: refreshToken,
         }),
       });
-  
+
       if (res.ok) {
         const data = await res.json();
         // 액세스 토큰과 리프레시 토큰을 로컬스토리지에 갱신
@@ -198,10 +198,10 @@ const PestControl_useList = () => {
         return null;
       }
     };
-  
+
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     let accessToken = userInfo?.access_token;
-  
+
     // 첫 번째 API 호출
     let res = await fetch("https://192.168.0.28/farmrequest/requests/", {
       method: "GET",
@@ -210,7 +210,7 @@ const PestControl_useList = () => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-  
+
     // 401 에러가 발생하면 리프레시 토큰으로 액세스 토큰 갱신 후 다시 시도
     if (res.status === 401) {
       accessToken = await refreshAccessToken();
@@ -226,7 +226,7 @@ const PestControl_useList = () => {
         console.log(res);
       }
     }
-  
+
     // 응답이 성공했을 때 데이터 처리
     if (res.ok) {
       const data = await res.json();
@@ -247,15 +247,16 @@ const PestControl_useList = () => {
       return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
     }
     if (filter === 0) {
-      return dataList.filter(item => item.exterminateSate === 0);
+      return dataList.filter((item) => item.exterminateState === 0);
     }
     else if (filter === 1) {
-      return dataList.filter(item => item.exterminateSate === 1);
-    } else if (filter === 2) {
-      return dataList.filter(item => item.exterminateSate === 2);
+      return dataList.filter(item => item.exterminateState === 1);
+    }
+    else if (filter === 2) {
+      return dataList.filter(item => item.exterminateState === 2);
     }
     else if (filter === 3) {
-      return dataList.filter(item => item.exterminateSate === 3);
+      return dataList.filter(item => item.exterminateState === 3);
     }
     else {
       return dataList;

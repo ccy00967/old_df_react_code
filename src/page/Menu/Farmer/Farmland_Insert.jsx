@@ -59,7 +59,7 @@ const InputDiv = styled(RowView2)`
     border: 0;
   }
   &.smallText {
-    font-size: 10px;
+    font-size: 14px;
     color: gray;
     border: 0;
     margin: 0;
@@ -376,8 +376,14 @@ const Farmland_Insert = () => {
               검색 하기
             </Btn>
           </RowView2>
+          <InputDiv className="smallText">*검색하기를 눌러야 면적이 아래 계산됩니다</InputDiv>
 
-          <div className="subtitle">면적</div>
+
+          <RowView2>
+            <div className="subtitle">면적</div>
+            <div className="subtitle"><InputDiv className="smallText">*자동입력됩니다</InputDiv></div>
+          </RowView2>
+
           <RowView2>
             <InputDiv
               style={{ marginRight: "1rem" }}
@@ -405,12 +411,6 @@ const Farmland_Insert = () => {
               />
               m²
             </InputDiv>
-          </RowView2>
-          <RowView2>
-            <InputDiv id="size" className="smallText" style={{ marginRight: "1rem" }}>
-              자동입력됩니다
-            </InputDiv>
-            <InputDiv className="smallText">자동입력됩니다</InputDiv>
           </RowView2>
 
           <div className="subtitle">작물</div>
