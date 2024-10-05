@@ -285,7 +285,7 @@ const Matching = ({ setCd }) => {
     }
 
     if (!isChecked && checkedList.includes(value.orderid)) {
-      if(seqList.length === see_seq){setSee_Seq(see_seq -1);}
+      if(see_seq === seqList.length){setSee_Seq(see_seq -1);}
       setCheckedList(checkedList.filter((item) => item !== value.orderid));
       setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
       return;

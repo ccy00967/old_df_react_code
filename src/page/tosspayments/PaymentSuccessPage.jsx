@@ -63,7 +63,7 @@ export function PaymentSuccessPage() {
                 setResponseData(data);
             })
             .catch((error) => {
-                navigate(`/pestcontrol/fail?code=${error.code}&message=${error.message}`);
+                navigate(`/fail?code=${error.code}&message=${error.message}`);
             });
 
     }, [searchParams]);
