@@ -117,7 +117,6 @@ const AddressModal = ({ isOpen, closeAddrModal }) => {
   const [farmlandAddr, setHomeAddr] = useState("");
   const [searchAddr, setSearchAddr] = useState([]);
 
-
   const search_addr_API = () => {
     if (!farmlandAddr) {
       return alert("농지 주소를 입력하세요.");

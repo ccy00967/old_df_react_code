@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 
-
-
 window.addressInfo = {
   roadAddress: '',
   jibunAddress: '',
@@ -11,19 +9,24 @@ window.addressInfo = {
 };
 
 const GWNaverMap = ({ setValue }) => {
-  useEffect(() => {
-    const { naver } = window;
+  const { naver } = window;
 
+  useEffect(() => {
     // 지도 생성
     const mapOptions = new naver.maps.Map('map', {
-      center: new naver.maps.LatLng(37.3595316, 127.1052133),
+      center: new naver.maps.LatLng(35.1409402, 126.925774),
       zoom: 15,
-      mapTypeControl: true,
     });
     const map = new naver.maps.Map('map', mapOptions);
+    map.setOptions("mapTypeControl", true); //지도 유형 컨트롤의 표시 여부
 
     const infoWindow = new naver.maps.InfoWindow({
       anchorSkew: true,
+    });
+
+    // 지도 클릭 이벤트 설정
+    map.addListener('click', (e) => {
+      searchCoordinateToAddress(e.coord);
     });
 
     // 좌표를 주소로 변환
@@ -67,7 +70,6 @@ const GWNaverMap = ({ setValue }) => {
       );
 
     }
-
 
     // 주소를 좌표로 변환
     function searchAddressToCoordinate(address) {
@@ -127,11 +129,6 @@ const GWNaverMap = ({ setValue }) => {
         `
       );
     }
-
-    // 지도 클릭 이벤트 설정
-    map.addListener('click', (e) => {
-      searchCoordinateToAddress(e.coord);
-    });
 
     // 전역 변수에 searchAddressToCoordinate 함수 할당하여 주소검색 활성화
     globalSearchAddressToCoordinate = searchAddressToCoordinate;

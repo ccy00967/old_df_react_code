@@ -130,7 +130,7 @@ const PestControl_apply = () => {
     startDate: '2024-10-30',
     endDate: '2021-11-03',
     pesticide: pesticidesUsed,
-    setAmount: price,
+    setAveragePrice: price,
     // requestAmount: totalPrice,
   };
 
