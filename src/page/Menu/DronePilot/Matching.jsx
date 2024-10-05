@@ -269,7 +269,7 @@ const Matching = ({ setCd }) => {
   const amount = pilotdata?.requestAmount || 0;
   const email = pilotdata?.email || "이메일 없음";
   const serviceAmount = checkedList.length * 1000;
-  const payorderid = "Matching"
+  const payorderid = checkedList[0] || "";
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
   const totalAmount = amount + serviceAmount;
