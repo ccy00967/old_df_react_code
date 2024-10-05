@@ -13,6 +13,7 @@ import {
 import PagingControl from "../../../Component/UI/PagingControl";
 import SideMenuBar from "../SideMenuBar";
 import { requestPayment } from "../../tosspayments/TossPayments_func";
+import { server } from "../../url";
 
 const TextSemiBold = styled.div`
   font-size: ${(props) => `${props.$size || 16}px`};
@@ -250,7 +251,7 @@ const Matching = ({ setCd }) => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const uuid = User_Credential?.uuid
     const accessToken = User_Credential?.access_token;
-    const res = await fetch(`https://192.168.0.28:443/user/userinfo/${uuid}/`, {
+    const res = await fetch(server+`/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -284,8 +285,6 @@ const Matching = ({ setCd }) => {
     }
 
     if (!isChecked && checkedList.includes(value.orderid)) {
-      console.log(see_seq)
-      console.log(seqList.length)
       if(see_seq +1 === selectData.length){setSee_Seq(see_seq -1);}
       setCheckedList(checkedList.filter((item) => item !== value.orderid));
       setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
@@ -304,8 +303,8 @@ const Matching = ({ setCd }) => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      console.log('checkedList:', checkedList);
-      console.log('selec', selectData)
+      console.log('checkedList:', [...checkedList]);
+      console.log('selectData', selectData)
 
     },
     [checkedList]
@@ -400,9 +399,9 @@ const Matching = ({ setCd }) => {
 
     const cdInfoURL = cdInfo == "" ? "" : cdInfo + "/"
 
-    const res = await fetch("https://192.168.0.28/exterminator/getrequests/" + cdInfoURL, {
+    const res = await fetch(server+"/exterminator/getrequests/" + cdInfoURL, {
 
-      //const res = await fetch("https://192.168.0.28/customer/lands/", {
+      
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -425,18 +424,20 @@ const Matching = ({ setCd }) => {
   const putfarmrequest = async () => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = User_Credential?.access_token;
-
-    const res = await fetch(`https://192.168.0.28/exterminator/accept/${checkedList}/`, {
-      method: 'PUT',
+    console.log(checkedList)
+    const res = await fetch(server+`/exterminator/accept/`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       },
+      body: JSON.stringify({orderidlist : checkedList}),
     })
       .then((res) => res.json())
       .then((data) => data)
 
     console.log(res)
+
   }
 
   useEffect(() => {
@@ -715,8 +716,10 @@ const Matching = ({ setCd }) => {
                     </TextMedium>
                   </RowView>
 
-                  <button type='submit' >콘솔 찍어보기</button>
-                  <Btn onClick={() => { requestPayment(selectedPaymentMethod,totalAmount,name,phone,email,payorderid) }}>결제하기</Btn>
+                  {/* <button type='submit' >콘솔 찍어보기</button>
+                 
+                  <Btn onClick={() => { putfarmrequest() }}>찍어</Btn> */}
+                  <Btn onClick={() => { putfarmrequest();requestPayment(selectedPaymentMethod,totalAmount,name,phone,email,payorderid); }}>결제하기</Btn>
 
                 </div>
 

@@ -12,6 +12,7 @@ import {
     RowView2,
 } from "../../../../Component/common_style";
 import noScroll from "../../../../Component/function/noScroll";
+import { server } from "../../../url";
 
 
 const PASSBtn = styled.div`
@@ -68,7 +69,7 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
         const { form_chk } = document;
 
         //표준창 호출에 필요한 정보를 백엔드에서 가져오기
-        const res = await fetch('https://192.168.0.28/validation/callnicepass/', {
+        const res = await fetch(server+'/validation/callnicepass/', {
             method: 'GET',
             headers: [["Content-Type", 'application/json'],
             ],

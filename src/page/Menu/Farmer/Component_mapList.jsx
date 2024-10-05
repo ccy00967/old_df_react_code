@@ -17,6 +17,8 @@ import SideMenuBar from "../SideMenuBar";
 import GWNaverMap from "../../../Component/naver_maps/GWNaverMaps";
 import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
 import { useUser } from "../../../Component/userContext";
+import { server } from "../../url";
+
 
 const ContentArea = styled.div`
   flex: 1;
@@ -122,7 +124,7 @@ const Component_mapList = (props) => {
       const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
       const refreshToken = userInfo?.refresh_token;
 
-      const res = await fetch('https://192.168.0.28:443/user/token/refresh/', {
+      const res = await fetch(server+'/user/token/refresh/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -151,7 +153,7 @@ const Component_mapList = (props) => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo?.access_token;
 
-    const firstResponse = await fetch("https://192.168.0.28:443/customer/lands/", {
+    const firstResponse = await fetch(server+"/customer/lands/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -163,7 +165,7 @@ const Component_mapList = (props) => {
     if (firstResponse.status === 401) {
       const newAccessToken = await refreshAccessToken();
       if (newAccessToken) {
-        const retryResponse = await fetch("https://192.168.0.28:443/customer/lands/", {
+        const retryResponse = await fetch(server+"/customer/lands/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -16,6 +16,7 @@ import {
 } from "../../Component/common_style";
 import { useUser } from "../../Component/userContext";
 import SideMenuBar from "./SideMenuBar";
+import { server } from "../url";
 
 const Container = styled(RowView)`
   align-items: flex-start;
@@ -129,7 +130,7 @@ const MyInfo = () => {
       const uuid = userCredential ? userCredential.uuid : null;
 
       if (accessToken && uuid) {
-        const res = await fetch(`https://192.168.0.28/user/userinfo/${uuid}/`, {
+        const res = await fetch(server+`/user/userinfo/${uuid}/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

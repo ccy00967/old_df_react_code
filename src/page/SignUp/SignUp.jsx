@@ -16,6 +16,7 @@ import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
 import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
 import AddressModal from "../Menu/Farmer/Modal/AddressModal";
 import NicePassBtn from "../Menu/Farmer/Modal/NicePassBtn";
+import { server } from "../url";
 
 
 const LoginBox = styled(CenterView)`
@@ -251,7 +252,7 @@ const SignUp = () => {
       setAlert_id("no");
     } else {
 
-      const res = await fetch('https://192.168.0.28:443/validation/emailsend/', {
+      const res = await fetch(server+'/validation/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
         ],
@@ -269,7 +270,7 @@ const SignUp = () => {
       setAlert_otp("no");
     } else {
 
-      const res = await fetch('https://192.168.0.28:443/validation/validatekeycheck/', {
+      const res = await fetch(server+'/validation/validatekeycheck/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json']],
         credentials: "include",
