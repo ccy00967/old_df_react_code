@@ -9,7 +9,6 @@ import {
 } from "../../../Component/common_style";
 import Component_mapList from "./Component_mapList";
 import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
-import { globalSearchCoordinateToAddress } from "../../../Component/naver_maps/GWNaverMaps";
 import $ from 'jquery';
 
 
@@ -122,9 +121,9 @@ const Farmland_Insert = () => {
       "detailAddress": "값이 없음"
     },
     "pnu": pnu || "값이 없음",
-    "lndpclAr": lndpclAr || "값이 없음",
+    "lndpclAr": lndpclAr,
     "cd": cd || "값이 없음",
-    "landNickName": landNickName || "값이 없음",
+    "landNickName": landNickName || "별명 없음",
     "cropsInfo": cropsInfo || "값이 없음",
     "additionalPhoneNum": "값이 없음"
   };
@@ -159,7 +158,10 @@ const Farmland_Insert = () => {
     if (pnu) {
       search_area_api();
     }
-  }, [pnu]);
+    if (lndpclAr) {
+      search_area_api();
+    }
+  }, [pnu, lndpclAr]);
 
   // 주소검색으로 농지 제곱미터 받는 api
   const search_area_api = async () => {
@@ -173,14 +175,11 @@ const Farmland_Insert = () => {
         console.log(area);
         setLndpclAr(area);
       },
+      error: function (e) {
+        alert(e.responseText);
+      }
     });
   };
-
-  useEffect(() => {
-    if (lndpclAr) {
-      search_area_api();
-    }
-  }, [lndpclAr]);
 
   // cd값을 받기 위한 엑세스토큰 발급 API
   const cd_for_accessToken = async () => {
@@ -237,6 +236,16 @@ const Farmland_Insert = () => {
 
   // 농지 등록
   const insert_API = async () => {
+    handleSearch()
+    if (lndpclAr == "") {
+      return alert("검색하기를 눌러서 면적을 입력해주세요");
+    }
+
+    if (!check) {
+      alert("동의를 체크해주세요!")
+      return
+    }
+
     // 액세스 토큰과 리프레시 토큰을 갱신하는 함수
     const refreshAccessToken = async () => {
       const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
@@ -308,7 +317,7 @@ const Farmland_Insert = () => {
       console.error('요청 실패');
     }
   };
-  //주소찾기를 클릭하면 순차적으로 실행되도록 하는 함수
+  //주소 찾기를 클릭하면 순차적으로 실행되도록 하는 함수
   const handleSearch = async () => {
     if (!searchAddr) {
       return alert("농지 주소를 입력하세요.");
@@ -364,7 +373,7 @@ const Farmland_Insert = () => {
               }}
             />
             <Btn className="small" onClick={handleSearch}>
-              주소 찾기
+              검색 하기
             </Btn>
           </RowView2>
 

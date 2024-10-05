@@ -25,10 +25,11 @@ const ContentArea = styled.div`
 `;
 const MapArea = styled(CenterView)`
   flex: 1.5;
-  height: 600px;
+  height: 550px;
   margin-top: 3rem;
   background-color: #f0f0f0;
   border-radius: 8px;
+  z-index: 1;
 `;
 const TableHeader = styled(RowView)`
   height: 4rem;

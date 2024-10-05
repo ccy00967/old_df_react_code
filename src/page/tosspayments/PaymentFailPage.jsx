@@ -1,38 +1,60 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { BackgroundArea, Icon, RowView2 } from "../../Component/common_style";
+import { useState } from "react";
+
+
+const ModalBox = styled.div`
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 28rem;
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  margin: auto 0rem;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+`;
 
 export function PaymentFailPage() {
+    const [modalOpen, setModalOpen] = useState(true);
+
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
+    const closeModal = () => {
+        setModalOpen(false);
+        navigate("/pestcontrol/apply")
+    };
+
     return (
-        <div id="info" className="box_section" style={{ width: "600px" }}>
-            <img width="100px" src="https://static.toss.im/lotties/error-spot-no-loop-space-apng.png" alt="에러 이미지" />
-            <h2>결제를 실패했어요</h2>
+        <BackgroundArea style={modalOpen ? {} : { display: "none" }}>
+            <ModalBox>
+                <RowView2 className="end">
+                    <Icon
+                        className="pointer"
+                        onClick={closeModal}
+                        src={require("../../img/icon_close.png")}
+                    />
+                </RowView2>
+                <div id="info" className="box_section" style={{ width: "600px" }}>
+                    <img width="100px" src="https://static.toss.im/lotties/error-spot-no-loop-space-apng.png" alt="에러 이미지" />
+                    <h2>결제를 실패했어요</h2>
 
-            <div className="p-grid typography--p" style={{ marginTop: "50px" }}>
-                <div className="p-grid-col text--left">
-                    <b>에러메시지</b>
+                    <div className="p-grid typography--p" style={{ marginTop: "50px" }}>
+                        <div className="p-grid-col text--left">
+                            <b>에러메시지</b>
+                        </div>
+                        <div className="p-grid-col text--right" id="message">{`${searchParams.get("message")}`}</div>
+                    </div>
+                    <div className="p-grid typography--p" style={{ marginTop: "10px" }}>
+                        <div className="p-grid-col text--left">
+                            <b>에러코드</b>
+                        </div>
+                        <div className="p-grid-col text--right" id="code">{`${searchParams.get("code")}`}</div>
+                    </div>
                 </div>
-                <div className="p-grid-col text--right" id="message">{`${searchParams.get("message")}`}</div>
-            </div>
-            <div className="p-grid typography--p" style={{ marginTop: "10px" }}>
-                <div className="p-grid-col text--left">
-                    <b>에러코드</b>
-                </div>
-                <div className="p-grid-col text--right" id="code">{`${searchParams.get("code")}`}</div>
-            </div>
-
-            <div className="p-grid-col">
-                <Link to="https://docs.tosspayments.com/guides/v2/payment-widget/integration">
-                    <button className="button p-grid-col5">연동 문서</button>
-                </Link>
-                <Link to="https://discord.gg/A4fRFXQhRu">
-                    <button className="button p-grid-col5" style={{ backgroundColor: "#e8f3ff", color: "#1b64da" }}>
-                        실시간 문의
-                    </button>
-                </Link>
-            </div>
-        </div>
+            </ModalBox>
+        </BackgroundArea>
     );
 }

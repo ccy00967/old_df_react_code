@@ -98,7 +98,6 @@ const PestControl_applyModal = forwardRef((props, ref) => {
     visible: (data) => {
       data ? setData(data) : setData({});
       setModalOpen(true);
-      console.log(data);
     },
   }));
   // 모달 open시 스크롤방지
@@ -106,7 +105,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
 
   const name = data.owner?.name || "이름 없음";
   const phonenum = data.owner?.mobileno || "번호 없음";
-  const amount = data?.requestAmount || 0;  
+  const amount = data?.requestAmount || 0;
   const email = data.owner?.email || "이메일 없음";
   const payorderid = data?.orderid || "주문번호 없음";
   const [serviceAmount, setServiceAmount] = useState(10000);
