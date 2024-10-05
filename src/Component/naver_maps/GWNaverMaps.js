@@ -135,7 +135,7 @@ const GWNaverMap = ({ setValue }) => {
     globalSearchCoordinateToAddress = searchCoordinateToAddress;
 
     // 초기 주소 검색
-    searchAddressToCoordinate('조선대길 146');
+    //searchAddressToCoordinate('조선대길 146');
 
     // 주소를 변환하는 함수
     function makeAddress(item) {
