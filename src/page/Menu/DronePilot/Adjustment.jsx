@@ -12,6 +12,7 @@ import {
 import PagingControl from "../../../Component/UI/PagingControl";
 import PerPageControl from "../../../Component/UI/PerPageControl";
 import SideMenuBar from "../SideMenuBar";
+import { server } from "../../url";
 
 const ContentArea = styled.div`
   flex: 1;
@@ -131,8 +132,8 @@ const Adjustment = () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
 
-    const res = await fetch("https://192.168.0.28/exterminator/workinglist/0/", {
-      //const res = await fetch("https://192.168.0.28/customer/lands/", {
+    const res = await fetch(server+"/exterminator/workinglist/3/", {
+      
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -194,7 +195,6 @@ const Adjustment = () => {
   };
 
   const getcountlength = (filterType) => {
-    
       if (filterType === 0) {
         return dataList.filter(item => item.calculation === 0).length;
       } else if (filterType === 1) {

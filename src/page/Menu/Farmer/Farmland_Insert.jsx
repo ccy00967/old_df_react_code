@@ -10,6 +10,7 @@ import {
 import Component_mapList from "./Component_mapList";
 import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
 import $ from 'jquery';
+import { server } from "../../url";
 
 
 const InsertBox = styled.div`
@@ -281,7 +282,7 @@ const Farmland_Insert = () => {
     console.log(landinfo);
 
     // 첫 번째 POST 요청
-    let res = await fetch("https://192.168.0.28/customer/lands/", {
+    let res = await fetch(server+"/customer/lands/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -295,7 +296,7 @@ const Farmland_Insert = () => {
       accessToken = await refreshAccessToken();
       if (accessToken) {
         // 새로운 액세스 토큰으로 다시 시도
-        res = await fetch("https://192.168.0.28/customer/lands/", {
+        res = await fetch(server+"/customer/lands/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -9,6 +9,7 @@ import {
   RowView2,
 } from "../../Component/common_style";
 import { useUser } from "../../Component/userContext";
+import { server } from "../url";
 
 const LoginBox = styled.div`
   box-sizing: border-box;
@@ -151,7 +152,7 @@ const Login = (props) => {
   };
 
   const fetchUserInfo = async (uuid, accessToken) => {
-    const res = await fetch(`https://192.168.0.28:443/user/userinfo/${uuid}/`, {
+    const res = await fetch(server+`/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -166,7 +167,7 @@ const Login = (props) => {
   const Login_API = async () => {
     if (email == "" || password == "") alert("이메일 또는 비밀번호를 입력해주세요")
     else {
-      const res = await fetch('https://192.168.0.28:443/user/login/', {
+      const res = await fetch(server+'/user/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
