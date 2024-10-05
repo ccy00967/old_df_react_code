@@ -113,42 +113,6 @@ const PestControl_applyModal = forwardRef((props, ref) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
   const totalAmount = amount + serviceAmount;
 
-  const userid = JSON.parse(localStorage.getItem('User_Credential'));
-  const customerKey = userid.uuid;
-
-  const clientKey = "test_ck_LlDJaYngro2ZZaqGR00xVezGdRpX";
-
-
-  function selectPaymentMethod(method) {
-    setSelectedPaymentMethod(method);
-  }
-
-  useEffect(() => {
-    async function fetchPayment() {
-      try {
-        const tossPayments = await loadTossPayments(clientKey);
-
-        // 회원 결제
-        // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
-        const payment = tossPayments.payment({
-          customerKey,
-        });
-        // 비회원 결제
-        // const payment = tossPayments.payment({ customerKey: ANONYMOUS });
-
-        setPayment(payment);
-      } catch (error) {
-        console.error("Error fetching payment:", error);
-      }
-    }
-
-    fetchPayment();
-  }, [clientKey, customerKey]);
-
-  // 결제하기
-  // const pay_API = () => {
-  //   console.log(data);
-  // };
 
   // 닫기
   const closeModal = () => {

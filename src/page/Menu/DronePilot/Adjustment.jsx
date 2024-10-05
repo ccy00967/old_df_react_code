@@ -183,7 +183,6 @@ const Adjustment = () => {
     if (!dataList || dataList.length === 0) {
       return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
     }
-
     if (filter === 0) {
       return dataList.filter(item => item.calculation === 0);
     } else if (filter === 1) {
@@ -195,14 +194,15 @@ const Adjustment = () => {
   };
 
   const getcountlength = (filterType) => {
+    
       if (filterType === 0) {
         return dataList.filter(item => item.calculation === 0).length;
       } else if (filterType === 1) {
         return dataList.filter(item => item.calculation === 1).length;
       }
       return dataList.length;
+   
     
-    return [0];
 
   };
 

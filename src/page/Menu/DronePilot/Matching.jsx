@@ -12,6 +12,7 @@ import {
 } from "../../../Component/common_style";
 import PagingControl from "../../../Component/UI/PagingControl";
 import SideMenuBar from "../SideMenuBar";
+import { requestPayment } from "../../tosspayments/TossPayments_func";
 
 const TextSemiBold = styled.div`
   font-size: ${(props) => `${props.$size || 16}px`};
@@ -203,6 +204,8 @@ const addressDepthServerModel = (json) => {
 };
 
 
+
+
 const fetchToken = async () => {
   try {
     const response = await fetch(
@@ -224,7 +227,7 @@ const Matching = ({ setCd }) => {
   const [cnt, setCnt] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-   const [seqList, setSeqList] = useState([]);
+  const [seqList, setSeqList] = useState([]);
   const [token, setToken] = useState(null);
   const [provinces, setProvinces] = useState([]); // 시/도 데이터
   const [cities, setCities] = useState([]); // 시/군/구 데이터
@@ -238,9 +241,42 @@ const Matching = ({ setCd }) => {
   const [acceptOrderid, setAcceptOrderid] = useState("");
   const [checkedList, setCheckedList] = useState([]);
   const [isChecked, setIsChecked] = useState(false); //체크한 orderid
-  const [selectData, setSelectData] = useState([]); // 체크한 데이터 신청정보창 정보 
+  const [selectData, setSelectData] = useState([]); // 체크한 데이터 신청정보창 정보
+  const [pilotdata, setPilotdata] = useState([]); // pilot data 
+  const [see_seq, setSee_Seq] = useState(0);
 
-//체크박스 로직
+
+  //방제사 정보 가져오기
+  const fetchUserInfo = async () => {
+    const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
+    const uuid = User_Credential?.uuid
+    const accessToken = User_Credential?.access_token;
+    const res = await fetch(`https://192.168.0.28:443/user/userinfo/${uuid}/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${accessToken}`
+      },
+      credentials: 'include',
+    })
+    const data = await res.json();
+    console.log(data)
+   setPilotdata(data)
+  };
+
+  const name  = pilotdata?.name || "이름 없음";
+  const phone  = pilotdata?.mobileno || "번호 없음";
+  const amount = pilotdata?.requestAmount || 0;
+  const email = pilotdata?.email || "이메일 없음";
+  const serviceAmount = checkedList.length * 1000;
+  const payorderid = "Matching"
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
+  const totalAmount = amount + serviceAmount;
+
+
+
+  //체크박스 로직
   const checkedItemHandler = (value, isChecked) => {
     if (isChecked) {
       setCheckedList((prev) => [...prev, value.orderid]);
@@ -249,8 +285,9 @@ const Matching = ({ setCd }) => {
     }
 
     if (!isChecked && checkedList.includes(value.orderid)) {
+      if(seqList.length === see_seq){setSee_Seq(see_seq -1);}
       setCheckedList(checkedList.filter((item) => item !== value.orderid));
-      setSelectData(selectData.filter((item) => item.orderid!== value.orderid));
+      setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
       return;
     }
 
@@ -260,19 +297,19 @@ const Matching = ({ setCd }) => {
   const checkHandler = (e, value) => {
     setIsChecked(!isChecked);
     checkedItemHandler(value, e.target.checked);
-    console.log(value, e.target.checked);
+    
   };
 
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      console.log('checkedList:',checkedList);
-      console.log('selec',selectData)
-      
+      console.log('checkedList:', checkedList);
+      console.log('selec', selectData)
+
     },
     [checkedList]
   );
-// 여기까지
+  // 여기까지
 
 
 
@@ -363,7 +400,7 @@ const Matching = ({ setCd }) => {
     const cdInfoURL = cdInfo == "" ? "" : cdInfo + "/"
 
     const res = await fetch("https://192.168.0.28/exterminator/getrequests/" + cdInfoURL, {
-    
+
       //const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: 'GET',
       headers: {
@@ -404,6 +441,7 @@ const Matching = ({ setCd }) => {
   useEffect(() => {
     getfarmrequest();
     setCnt(dataList.length);
+    fetchUserInfo();
     //fetchLocation();
 
   }, []);
@@ -455,7 +493,7 @@ const Matching = ({ setCd }) => {
   };
 
   // 신청정보 seq
-  const [see_seq, setSee_Seq] = useState(0);
+  
 
 
   const setting_pre = () => {
@@ -468,9 +506,9 @@ const Matching = ({ setCd }) => {
       setSee_Seq(see_seq + 1);
     }
   };
-  useEffect(() => {
-    setSee_Seq(0);
-  }, [seqList]);
+  // useEffect(() => {
+  //   setSee_Seq(0);
+  // }, [seqList]);
 
   return (
     <Common_Layout minWidth={1400}>
@@ -478,49 +516,50 @@ const Matching = ({ setCd }) => {
         <SideMenuBar mainmenu={"방제/농지분석"} submenu={"거래매칭"} />
 
         <ContentArea>
-        <form onSubmit={onSubmit}>
-          <TextSemiBold $size={28}>거래매칭</TextSemiBold>
+          <form onSubmit={onSubmit}>
+            <TextSemiBold $size={28}>거래매칭</TextSemiBold>
 
-          <div>
-            {errorMessage && <p>Error: {errorMessage}</p>}
+            <div>
+              {errorMessage && <p>Error: {errorMessage}</p>}
 
-            {/* 시/도 필터 */}
-            <FilterBox>
-              <select value={selectedProvince} onChange={handleProvinceChange}>
-                <option value="">시/도 선택</option>
-                {provinces.map((province) => (
-                  <option key={province.code} value={province.code}>
-                    {province.name}
-                  </option>
-                ))}
-              </select>
+              {/* 시/도 필터 */}
+              <FilterBox>
+                <select value={selectedProvince} onChange={handleProvinceChange}>
+                  <option value="">시/도 선택</option>
+                  {provinces.map((province) => (
+                    <option key={province.code} value={province.code}>
+                      {province.name}
+                    </option>
+                  ))}
+                </select>
 
-              {/* 시/군/구 필터 */}
-              <select value={selectedCity} onChange={handleCityChange}>
-                <option value="">시/군/구 선택</option>
-                {cities.map((city) => (
-                  <option key={city.code} value={city.code}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
-
-
-              {/* 읍/면/동 필터 */}
-              <select value={selectedTown} onChange={handleTownChange}>
-                <option value="">읍/면/동 선택</option>
-                {towns.map((town) => (
-                  <option key={town.code} value={town.code}>
-                    {town.name}
-                  </option>
-                ))}
-              </select>
+                {/* 시/군/구 필터 */}
+                <select value={selectedCity} onChange={handleCityChange}>
+                  <option value="">시/군/구 선택</option>
+                  {cities.map((city) => (
+                    <option key={city.code} value={city.code}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
 
 
-              <SearchBtn onClick={() => getfarmrequest()}>
-                검색하기
-              </SearchBtn>
+                {/* 읍/면/동 필터 */}
+                <select value={selectedTown} onChange={handleTownChange}>
+                  <option value="">읍/면/동 선택</option>
+                  {towns.map((town) => (
+                    <option key={town.code} value={town.code}>
+                      {town.name}
+                    </option>
+                  ))}
+                </select>
 
+
+                <SearchBtn onClick={() => getfarmrequest()}>
+                  검색하기
+                </SearchBtn>
+                
+                
 
             </FilterBox>
 
@@ -566,7 +605,7 @@ const Matching = ({ setCd }) => {
                     <TableList
                       key={idx}
                       className={(idx + 1) % 2 === 0 ? "x2" : ""}
-                      
+
                     >
                       <CheckBox
                         type={"checkbox"}
@@ -596,7 +635,7 @@ const Matching = ({ setCd }) => {
             </div>
 
             {selectData.length !== 0 && (
-              
+
               <Bill>
                 <div className="btn" onClick={setting_pre}>
                   ◀︎
@@ -678,7 +717,8 @@ const Matching = ({ setCd }) => {
                   </RowView>
 
                   <button type='submit' >콘솔 찍어보기</button>
-                  <Btn onClick={() => { window.location.reload(); putfarmrequest() }}>결제하기</Btn>
+                  <Btn onClick={() => { requestPayment(selectedPaymentMethod,totalAmount,name,phone,email,payorderid) }}>결제하기</Btn>
+
                 </div>
 
                 <div className="btn" onClick={setting_next}>
@@ -687,10 +727,10 @@ const Matching = ({ setCd }) => {
               </Bill>
             )}
           </Content>
-          </form>
-        </ContentArea>
-      </RowView>
-    </Common_Layout>
+        </form>
+      </ContentArea>
+    </RowView>
+    </Common_Layout >
   );
 };
 
