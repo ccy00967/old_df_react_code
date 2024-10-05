@@ -269,7 +269,7 @@ const Matching = ({ setCd }) => {
   const amount = pilotdata?.requestAmount || 0;
   const email = pilotdata?.email || "이메일 없음";
   const serviceAmount = checkedList.length * 1000;
-  const payorderid = "Matching"
+  const payorderid = checkedList[0] || "";
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
   const totalAmount = amount + serviceAmount;
@@ -285,7 +285,7 @@ const Matching = ({ setCd }) => {
     }
 
     if (!isChecked && checkedList.includes(value.orderid)) {
-      if(seqList.length === see_seq){setSee_Seq(see_seq -1);}
+      if(see_seq === seqList.length){setSee_Seq(see_seq -1);}
       setCheckedList(checkedList.filter((item) => item !== value.orderid));
       setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
       return;
