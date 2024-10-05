@@ -70,8 +70,8 @@ export function PaymentSuccessPage() {
 
     const closeModal = () => {
         setModalOpen(false);
-        //navigate(-1)
-        navigate("/pestcontrol/apply")
+        navigate(-1)
+        //navigate("/pestcontrol/apply")
     };
     //useEscapeKey(closeModal);
 

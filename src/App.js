@@ -110,26 +110,6 @@ function App() {
           }
         />
         <Route
-          path="success"
-          element={
-            <PrivateRoute
-              isLogin={isLogin}
-              isAccess={accessType1}
-              component={PaymentSuccessPage}
-            />
-          }
-        />
-        <Route
-          path="fail"
-          element={
-            <PrivateRoute
-              isLogin={isLogin}
-              isAccess={accessType1}
-              component={PaymentFailPage}
-            />
-          }
-        />
-        <Route
           path="uselist"
           element={
             <PrivateRoute
@@ -223,6 +203,24 @@ function App() {
             isLogin={isLogin}
             isAccess={accessType3}
             component={Adjustment2}
+          />
+        }
+      />
+      <Route
+        path="success"
+        element={
+          <PrivateRoute
+            isLogin={isLogin}
+            component={PaymentSuccessPage}
+          />
+        }
+      />
+      <Route
+        path="fail"
+        element={
+          <PrivateRoute
+            isLogin={isLogin}
+            component={PaymentFailPage}
           />
         }
       />

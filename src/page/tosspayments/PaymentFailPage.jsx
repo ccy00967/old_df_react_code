@@ -24,7 +24,8 @@ export function PaymentFailPage() {
 
     const closeModal = () => {
         setModalOpen(false);
-        navigate("/pestcontrol/apply")
+        //navigate("/pestcontrol/apply")
+        navigate(-1)
     };
 
     return (
