@@ -237,7 +237,6 @@ const Matching = ({ setCd }) => {
   const [selectedTown, setSelectedTown] = useState(""); // 선택한 읍/면/동
   const [errorMessage, setErrorMessage] = useState("");
   const [cdInfo, setCdInfo] = useState(""); //cd값 저장
-  const [seqdata, setseqdata] = useState(""); //체크박스 선택시 가져오는 데이터
   const [acceptOrderid, setAcceptOrderid] = useState("");
   const [checkedList, setCheckedList] = useState([]);
   const [isChecked, setIsChecked] = useState(false); //체크한 orderid
@@ -285,7 +284,9 @@ const Matching = ({ setCd }) => {
     }
 
     if (!isChecked && checkedList.includes(value.orderid)) {
-      if(see_seq === seqList.length){setSee_Seq(see_seq -1);}
+      console.log(see_seq)
+      console.log(seqList.length)
+      if(see_seq +1 === selectData.length){setSee_Seq(see_seq -1);}
       setCheckedList(checkedList.filter((item) => item !== value.orderid));
       setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
       return;
@@ -425,7 +426,7 @@ const Matching = ({ setCd }) => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = User_Credential?.access_token;
 
-    const res = await fetch(`https://192.168.0.28/exterminator/accept/${acceptOrderid}/`, {
+    const res = await fetch(`https://192.168.0.28/exterminator/accept/${checkedList}/`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -476,8 +477,6 @@ const Matching = ({ setCd }) => {
     } else {
       if (seqList.length < 10) {
         setSeqList([...seqList, seq]);
-        setseqdata(dataList[seq]);
-        setAcceptOrderid(dataList[seq].orderid);
         //console.log(seqdata);
       }
     }
@@ -506,9 +505,9 @@ const Matching = ({ setCd }) => {
       setSee_Seq(see_seq + 1);
     }
   };
-  // useEffect(() => {
-  //   setSee_Seq(0);
-  // }, [seqList]);
+   useEffect(() => {
+     setSee_Seq(0);
+   }, [seqList]);
 
   return (
     <Common_Layout minWidth={1400}>
