@@ -251,7 +251,7 @@ const Matching = ({ setCd }) => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const uuid = User_Credential?.uuid
     const accessToken = User_Credential?.access_token;
-    const res = await fetch(server+`/user/userinfo/${uuid}/`, {
+    const res = await fetch(server + `/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -285,7 +285,7 @@ const Matching = ({ setCd }) => {
     }
 
     if (!isChecked && checkedList.includes(value.orderid)) {
-      if(see_seq +1 === selectData.length){setSee_Seq(see_seq -1);}
+      if (see_seq + 1 === selectData.length) { setSee_Seq(see_seq - 1); }
       setCheckedList(checkedList.filter((item) => item !== value.orderid));
       setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
       return;
@@ -399,9 +399,9 @@ const Matching = ({ setCd }) => {
 
     const cdInfoURL = cdInfo == "" ? "" : cdInfo + "/"
 
-    const res = await fetch(server+"/exterminator/getrequests/" + cdInfoURL, {
+    const res = await fetch(server + "/exterminator/getrequests/" + cdInfoURL, {
 
-      
+
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -425,13 +425,13 @@ const Matching = ({ setCd }) => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = User_Credential?.access_token;
     console.log(checkedList)
-    const res = await fetch(server+`/exterminator/accept/`, {
+    const res = await fetch(server + `/exterminator/accept/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({orderidlist : checkedList}),
+      body: JSON.stringify({ orderidlist: checkedList }),
     })
       .then((res) => res.json())
       .then((data) => data)
@@ -517,152 +517,153 @@ const Matching = ({ setCd }) => {
 
         <ContentArea>
           <form onSubmit={onSubmit}>
-            <TextSemiBold $size={28}>거래매칭</TextSemiBold>
+            <Content>
+              <TextSemiBold $size={28}>거래매칭</TextSemiBold>
 
-            <div>
-              {errorMessage && <p>Error: {errorMessage}</p>}
+              <div>
+                {errorMessage && <p>Error: {errorMessage}</p>}
 
-              {/* 시/도 필터 */}
-              <FilterBox>
-                <select value={selectedProvince} onChange={handleProvinceChange}>
-                  <option value="">시/도 선택</option>
-                  {provinces.map((province) => (
-                    <option key={province.code} value={province.code}>
-                      {province.name}
-                    </option>
-                  ))}
-                </select>
+                {/* 시/도 필터 */}
+                <FilterBox>
+                  <select value={selectedProvince} onChange={handleProvinceChange}>
+                    <option value="">시/도 선택</option>
+                    {provinces.map((province) => (
+                      <option key={province.code} value={province.code}>
+                        {province.name}
+                      </option>
+                    ))}
+                  </select>
 
-                {/* 시/군/구 필터 */}
-                <select value={selectedCity} onChange={handleCityChange}>
-                  <option value="">시/군/구 선택</option>
-                  {cities.map((city) => (
-                    <option key={city.code} value={city.code}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-
-
-                {/* 읍/면/동 필터 */}
-                <select value={selectedTown} onChange={handleTownChange}>
-                  <option value="">읍/면/동 선택</option>
-                  {towns.map((town) => (
-                    <option key={town.code} value={town.code}>
-                      {town.name}
-                    </option>
-                  ))}
-                </select>
+                  {/* 시/군/구 필터 */}
+                  <select value={selectedCity} onChange={handleCityChange}>
+                    <option value="">시/군/구 선택</option>
+                    {cities.map((city) => (
+                      <option key={city.code} value={city.code}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
 
 
-                <SearchBtn onClick={() => getfarmrequest()}>
-                  검색하기
-                </SearchBtn>
+                  {/* 읍/면/동 필터 */}
+                  <select value={selectedTown} onChange={handleTownChange}>
+                    <option value="">읍/면/동 선택</option>
+                    {towns.map((town) => (
+                      <option key={town.code} value={town.code}>
+                        {town.name}
+                      </option>
+                    ))}
+                  </select>
+
+
+                  <SearchBtn onClick={() => getfarmrequest()}>
+                    검색하기
+                  </SearchBtn>
 
 
 
-              </FilterBox>
+                </FilterBox>
 
 
-            </div>
-            {selectData.length !== 0 && (
+              </div>
+              {selectData.length !== 0 && (
 
-              <Bill>
-                <div className="btn" onClick={setting_pre}>
-                  ◀︎
-                </div>
-                <div className="content">
-                  <CenterView style={{ marginBottom: "2rem" }}>
-                    <TextSemiBold $size={22}>신청정보</TextSemiBold>
-                    <div style={{ color: "gray" }}>
-                      ({see_seq + 1}/{seqList.length})
-                    </div>
-                  </CenterView>
+                <Bill>
+                  <div className="btn" onClick={setting_pre}>
+                    ◀︎
+                  </div>
+                  <div className="content">
+                    <CenterView style={{ marginBottom: "2rem" }}>
+                      <TextSemiBold $size={22}>신청정보</TextSemiBold>
+                      <div style={{ color: "gray" }}>
+                        ({see_seq + 1}/{seqList.length})
+                      </div>
+                    </CenterView>
 
-                  <DataRow>
-                    <TextMedium>이ㅤㅤ름</TextMedium>
-                    <div className="gray">{selectData[see_seq].owner.name}</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium>전화번호</TextMedium>
-                    <div className="gray">{selectData[see_seq].owner.mobileno}</div>
-                  </DataRow>
+                    <DataRow>
+                      <TextMedium>이ㅤㅤ름</TextMedium>
+                      <div className="gray">{selectData[see_seq].owner.name}</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium>전화번호</TextMedium>
+                      <div className="gray">{selectData[see_seq].owner.mobileno}</div>
+                    </DataRow>
 
-                  <Hr />
+                    <Hr />
 
-                  <DataRow>
-                    <TextMedium>거래방식</TextMedium>
-                    <div className="gray">일반거래</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium>농ㅤㅤ지</TextMedium>
-                    <div className="gray">{selectData[see_seq].landInfo.landNickName}</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium className="letter">평단가</TextMedium>
-                    <div className="gray">{selectData[see_seq].setAmount}</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium className="letter">마감일</TextMedium>
-                    <div className="gray">{selectData[see_seq].endDate}</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium>사용농약</TextMedium>
-                    <RowView2 className="wrap top" style={{ flex: 1 }}>
-                      <div className="gray_w">{selectData[see_seq].pesticide}</div>
-                    </RowView2>
-                  </DataRow>
+                    <DataRow>
+                      <TextMedium>거래방식</TextMedium>
+                      <div className="gray">일반거래</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium>농ㅤㅤ지</TextMedium>
+                      <div className="gray">{selectData[see_seq].landInfo.landNickName}</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium className="letter">평단가</TextMedium>
+                      <div className="gray">{selectData[see_seq].setAmount}</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium className="letter">마감일</TextMedium>
+                      <div className="gray">{selectData[see_seq].endDate}</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium>사용농약</TextMedium>
+                      <RowView2 className="wrap top" style={{ flex: 1 }}>
+                        <div className="gray_w">{selectData[see_seq].pesticide}</div>
+                      </RowView2>
+                    </DataRow>
 
-                  <Hr />
+                    <Hr />
 
-                  <DataRow>
-                    <TextMedium className="auto">
-                      개별 방제대금(받으실 돈)
-                    </TextMedium>
-                    <div className="gray">360,000원</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium className="auto">서비스 이용금액</TextMedium>
-                    <div className="gray">1,000원</div>
-                  </DataRow>
+                    <DataRow>
+                      <TextMedium className="auto">
+                        개별 방제대금(받으실 돈)
+                      </TextMedium>
+                      <div className="gray">360,000원</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium className="auto">서비스 이용금액</TextMedium>
+                      <div className="gray">1,000원</div>
+                    </DataRow>
 
-                  <Hr className="black" />
+                    <Hr className="black" />
 
-                  <RowView>
-                    <TextSemiBold $fontsize={20}>
-                      총 방제대금(받으실 돈)
-                    </TextSemiBold>
-                    <TextMedium className="auto" $fontsize={20} $color={true}>
-                      360,000원
-                    </TextMedium>
-                  </RowView>
-                  <RowView>
-                    <TextSemiBold $fontsize={20}>
-                      총<span style={{ color: blueColor }}> {selectData.length}</span>건 서비스
-                      이용금액
-                    </TextSemiBold>
-                    <TextMedium className="auto" $fontsize={20} $color={true}>
-                      {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    <RowView>
+                      <TextSemiBold $fontsize={20}>
+                        총 방제대금(받으실 돈)
+                      </TextSemiBold>
+                      <TextMedium className="auto" $fontsize={20} $color={true}>
+                        360,000원
+                      </TextMedium>
+                    </RowView>
+                    <RowView>
+                      <TextSemiBold $fontsize={20}>
+                        총<span style={{ color: blueColor }}> {selectData.length}</span>건 서비스
+                        이용금액
+                      </TextSemiBold>
+                      <TextMedium className="auto" $fontsize={20} $color={true}>
+                        {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 
-                    </TextMedium>
-                  </RowView>
+                      </TextMedium>
+                    </RowView>
 
-                  {/* <button type='submit' >콘솔 찍어보기</button>
+                    {/* <button type='submit' >콘솔 찍어보기</button>
                  
                   <Btn onClick={() => { putfarmrequest() }}>찍어</Btn> */}
-                  <Btn onClick={() => { putfarmrequest();requestPayment(selectedPaymentMethod,totalAmount,name,phone,email,payorderid); }}>결제하기</Btn>
+                    <Btn onClick={() => { putfarmrequest(); requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid); }}>결제하기</Btn>
 
-                </div>
+                  </div>
 
-                <div className="btn" onClick={setting_next}>
-                  ▶︎
-                </div>
-              </Bill>
-            )}
-          </Content>
-        </form>
-      </ContentArea>
-    </RowView>
+                  <div className="btn" onClick={setting_next}>
+                    ▶︎
+                  </div>
+                </Bill>
+              )}
+            </Content>
+          </form>
+        </ContentArea>
+      </RowView>
     </Common_Layout >
   );
 };
