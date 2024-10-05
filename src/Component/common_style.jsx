@@ -73,9 +73,9 @@ export const CheckBox = styled.input`
   outline: none;
   cursor: pointer;
   &:checked {
-    background-color: ${(props) => props.$color || GreenColor};
-    border: 1px solid ${(props) => props.$color || GreenColor};
-    background-image: url("/img/Vector.png");
+    background-color: ${(props) => props.color || GreenColor};
+    border: 1px solid ${(props) => props.color || GreenColor};
+    background-image: url("/staticfiles/img/Vector.png");
     background-repeat: no-repeat;
     background-position: center;
   }

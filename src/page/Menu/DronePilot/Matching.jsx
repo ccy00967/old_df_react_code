@@ -261,11 +261,11 @@ const Matching = ({ setCd }) => {
     })
     const data = await res.json();
     console.log(data)
-   setPilotdata(data)
+    setPilotdata(data)
   };
 
-  const name  = pilotdata?.name || "이름 없음";
-  const phone  = pilotdata?.mobileno || "번호 없음";
+  const name = pilotdata?.name || "이름 없음";
+  const phone = pilotdata?.mobileno || "번호 없음";
   const amount = pilotdata?.requestAmount || 0;
   const email = pilotdata?.email || "이메일 없음";
   const serviceAmount = checkedList.length * 1000;
@@ -297,7 +297,7 @@ const Matching = ({ setCd }) => {
   const checkHandler = (e, value) => {
     setIsChecked(!isChecked);
     checkedItemHandler(value, e.target.checked);
-    
+
   };
 
   const onSubmit = useCallback(
@@ -493,7 +493,7 @@ const Matching = ({ setCd }) => {
   };
 
   // 신청정보 seq
-  
+
 
 
   const setting_pre = () => {
@@ -506,9 +506,9 @@ const Matching = ({ setCd }) => {
       setSee_Seq(see_seq + 1);
     }
   };
-   useEffect(() => {
-     setSee_Seq(0);
-   }, [seqList]);
+  useEffect(() => {
+    setSee_Seq(0);
+  }, [seqList]);
 
   return (
     <Common_Layout minWidth={1400}>
@@ -558,82 +558,13 @@ const Matching = ({ setCd }) => {
                 <SearchBtn onClick={() => getfarmrequest()}>
                   검색하기
                 </SearchBtn>
-                
-                
-
-            </FilterBox>
 
 
-          </div>
 
-          <SearchBox
-            type={"number"}
-            placeholder="원하시는 묶음의 숫자를 입력해주세요."
-          />
+              </FilterBox>
 
-          <Content className="top">
-            <div className="table">
-              <TableHeader>
-                <CheckBox
-                  type={"checkbox"}
-                  $color={"#555555"}
-                  onClick={all_selectSeq}
-                />
-                <div>농지별명</div>
-                <div className="long">
-                  <select>
-                    <option value={""}>농지주소</option>
-                  </select>
-                </div>
-                <div>면적</div>
-                <div>작물</div>
-                <div>
-                  <select>
-                    <option value={""}>농약</option>
-                    <option value={"오름차순"}>오름</option>
-                    <option value={"내림차순"}>내림</option>
-                  </select>
-                </div>
-              </TableHeader>
 
-              {dataList.map((data, idx) => {
-                if (data.exterminateState == 0) {
-                  if (!data || data.length === 0) {
-                    return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
-                  }
-                  return (
-                    <TableList
-                      key={idx}
-                      className={(idx + 1) % 2 === 0 ? "x2" : ""}
-
-                    >
-                      <CheckBox
-                        type={"checkbox"}
-                        $color={"#555555"}
-                        id={data.orderid}
-                        checked={checkedList.includes(data.orderid)}
-                        onClick={(e) => { selectSeq(idx); }}
-                        onChange={(e) => checkHandler(e, data)}
-                      // getCheckboxData(data.orderid);
-                      />
-                      <div>{data.landInfo.landNickName}</div>
-                      <div className="long">{data.landInfo.address.jibunAddress}</div>
-                      <div className="long">{data.landInfo.lndpclAr}</div>
-                      <div>{data.landInfo.cropsInfo}</div>
-                      <div>{data.pesticide}</div>
-                    </TableList>
-                  );
-                }
-              })}
-
-              <PagingControl
-                cnt={cnt}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                perPage={perPage}
-              />
             </div>
-
             {selectData.length !== 0 && (
 
               <Bill>
