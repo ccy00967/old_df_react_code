@@ -6,6 +6,7 @@ import { useUser } from "../../Component/userContext";
 import SideMenuBar from "./SideMenuBar";
 import { menu_url } from "./SideMenuBar_url";
 import { useEffect, useState } from "react";
+import { server } from "../url";
 
 const Container = styled(RowView)`
   align-items: flex-start;
@@ -88,7 +89,7 @@ const MainMenu = () => {
 
   const Set_User_info = async () => {
     console.log(User_Credential.uuid)
-    const res = await fetch('https://192.168.0.28:443/user/userinfo/' + User_Credential.uuid + '/', {
+    const res = await fetch(server+'/user/userinfo/' + User_Credential.uuid + '/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

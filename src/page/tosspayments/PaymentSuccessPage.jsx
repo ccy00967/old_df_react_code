@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { BackgroundArea, Icon, RowView2 } from "../../Component/common_style";
+import { server } from "../url";
+
+
+
 
 const ModalBox = styled.div`
   box-sizing: border-box;
@@ -36,7 +40,7 @@ export function PaymentSuccessPage() {
             const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
             const accessToken = userInfo.access_token;
 
-            const response = await fetch(`https://192.168.0.28/payments/success/`, {
+            const response = await fetch(server+`/payments/success/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -7,6 +7,7 @@ import {
   RowView,
   RowView2
 } from "../../Component/common_style";
+import { server } from "../url";
 
 const LoginBox = styled(CenterView)`
   width: 100%;
@@ -133,7 +134,7 @@ const Rules = () => {
     console.log(state)
 
     // 회원가입 요청 보내기
-    const res = await fetch('https://192.168.0.28:443/user/register/', {
+    const res = await fetch(server+'/user/register/', {
       method: 'POST',
       headers: [["Content-Type", 'application/json']],
       credentials: "include",

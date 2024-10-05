@@ -16,6 +16,7 @@ import PagingControl from "../../../Component/UI/PagingControl";
 import PerPageControl from "../../../Component/UI/PerPageControl";
 import SideMenuBar from "../SideMenuBar";
 import WorkStatus_Modal from "./Modal/WorkStatus_Modal";
+import { server } from "../../url";
 
 const ContentArea = styled.div`
   flex: 1;
@@ -150,8 +151,8 @@ const WorkStatus = () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
 
-    const res = await fetch("https://192.168.0.28/exterminator/workinglist/0/", {
-      //const res = await fetch("https://192.168.0.28/customer/lands/", {
+    const res = await fetch(server+"/exterminator/workinglist/0/", {
+      
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -244,7 +245,7 @@ const WorkStatus = () => {
       alert("시작.");
       const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
       const accessToken = User_Credential?.access_token;
-      const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${orderid}/`, {
+      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -263,7 +264,7 @@ const WorkStatus = () => {
       alert("작업완료");
       const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
       const accessToken = User_Credential?.access_token;
-      const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${orderid}/`, {
+      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -285,7 +286,7 @@ const WorkStatus = () => {
       alert("취소");
       const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
       const accessToken = User_Credential?.access_token;
-      const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${orderid}/`, {
+      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -305,7 +306,7 @@ const WorkStatus = () => {
       alert("취소");
       const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
       const accessToken = User_Credential?.access_token;
-      const res = await fetch(`https://192.168.0.28/exterminator/exterminatestate/${orderid}/`, {
+      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -389,7 +390,7 @@ const WorkStatus = () => {
               //         : "작업완료";
 
               // 필터가 작업시작이 아니라면 버튼 보여줌
-              const isBtnShow = filter !== "작업완료";
+              // const isBtnShow = filter !== "작업완료";
               //if (data.exterminateSate === 2) {
               return (
                 <TableList

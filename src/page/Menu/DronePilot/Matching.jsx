@@ -13,6 +13,7 @@ import {
 import PagingControl from "../../../Component/UI/PagingControl";
 import SideMenuBar from "../SideMenuBar";
 import { requestPayment } from "../../tosspayments/TossPayments_func";
+import { server } from "../../url";
 
 const TextSemiBold = styled.div`
   font-size: ${(props) => `${props.$size || 16}px`};
@@ -250,7 +251,7 @@ const Matching = ({ setCd }) => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const uuid = User_Credential?.uuid
     const accessToken = User_Credential?.access_token;
-    const res = await fetch(`https://192.168.0.28:443/user/userinfo/${uuid}/`, {
+    const res = await fetch(server+`/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -284,9 +285,7 @@ const Matching = ({ setCd }) => {
     }
 
     if (!isChecked && checkedList.includes(value.orderid)) {
-      console.log(see_seq)
-      console.log(seqList.length)
-      if (see_seq + 1 === selectData.length) { setSee_Seq(see_seq - 1); }
+      if(see_seq +1 === selectData.length){setSee_Seq(see_seq -1);}
       setCheckedList(checkedList.filter((item) => item !== value.orderid));
       setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
       return;
@@ -304,8 +303,8 @@ const Matching = ({ setCd }) => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      console.log('checkedList:', checkedList);
-      console.log('selec', selectData)
+      console.log('checkedList:', [...checkedList]);
+      console.log('selectData', selectData)
 
     },
     [checkedList]
@@ -400,9 +399,9 @@ const Matching = ({ setCd }) => {
 
     const cdInfoURL = cdInfo == "" ? "" : cdInfo + "/"
 
-    const res = await fetch("https://192.168.0.28/exterminator/getrequests/" + cdInfoURL, {
+    const res = await fetch(server+"/exterminator/getrequests/" + cdInfoURL, {
 
-      //const res = await fetch("https://192.168.0.28/customer/lands/", {
+      
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -425,18 +424,20 @@ const Matching = ({ setCd }) => {
   const putfarmrequest = async () => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = User_Credential?.access_token;
-
-    const res = await fetch(`https://192.168.0.28/exterminator/accept/${checkedList}/`, {
-      method: 'PUT',
+    console.log(checkedList)
+    const res = await fetch(server+`/exterminator/accept/`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       },
+      body: JSON.stringify({orderidlist : checkedList}),
     })
       .then((res) => res.json())
       .then((data) => data)
 
     console.log(res)
+
   }
 
   useEffect(() => {
@@ -564,171 +565,104 @@ const Matching = ({ setCd }) => {
 
 
             </div>
+            {selectData.length !== 0 && (
 
-            <SearchBox
-              type={"number"}
-              placeholder="원하시는 묶음의 숫자를 입력해주세요."
-            />
+              <Bill>
+                <div className="btn" onClick={setting_pre}>
+                  ◀︎
+                </div>
+                <div className="content">
+                  <CenterView style={{ marginBottom: "2rem" }}>
+                    <TextSemiBold $size={22}>신청정보</TextSemiBold>
+                    <div style={{ color: "gray" }}>
+                      ({see_seq + 1}/{seqList.length})
+                    </div>
+                  </CenterView>
 
-            <Content className="top">
-              <div className="table">
-                <TableHeader>
-                  <CheckBox
-                    type={"checkbox"}
-                    color={"#555555"}
-                    onClick={all_selectSeq}
-                  />
-                  <div>농지별명</div>
-                  <div className="long">
-                    <select>
-                      <option value={""}>농지주소</option>
-                    </select>
-                  </div>
-                  <div>면적</div>
-                  <div>작물</div>
-                  <div>
-                    <select>
-                      <option value={""}>농약</option>
-                      <option value={"오름차순"}>오름</option>
-                      <option value={"내림차순"}>내림</option>
-                    </select>
-                  </div>
-                </TableHeader>
+                  <DataRow>
+                    <TextMedium>이ㅤㅤ름</TextMedium>
+                    <div className="gray">{selectData[see_seq].owner.name}</div>
+                  </DataRow>
+                  <DataRow>
+                    <TextMedium>전화번호</TextMedium>
+                    <div className="gray">{selectData[see_seq].owner.mobileno}</div>
+                  </DataRow>
 
-                {dataList.map((data, idx) => {
-                  if (data.exterminateState == 0) {
-                    if (!data || data.length === 0) {
-                      return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
-                    }
-                    return (
-                      <TableList
-                        key={idx}
-                        className={(idx + 1) % 2 === 0 ? "x2" : ""}
+                  <Hr />
 
-                      >
-                        <CheckBox
-                          type={"checkbox"}
-                          color={"#555555"}
-                          id={data.orderid}
-                          checked={checkedList.includes(data.orderid)}
-                          onClick={(e) => { selectSeq(idx); }}
-                          onChange={(e) => checkHandler(e, data)}
-                        // getCheckboxData(data.orderid);
-                        />
-                        <div>{data.landInfo.landNickName}</div>
-                        <div className="long">{data.landInfo.address.jibunAddress}</div>
-                        <div className="long">{data.landInfo.lndpclAr}</div>
-                        <div>{data.landInfo.cropsInfo}</div>
-                        <div>{data.pesticide}</div>
-                      </TableList>
-                    );
-                  }
-                })}
+                  <DataRow>
+                    <TextMedium>거래방식</TextMedium>
+                    <div className="gray">일반거래</div>
+                  </DataRow>
+                  <DataRow>
+                    <TextMedium>농ㅤㅤ지</TextMedium>
+                    <div className="gray">{selectData[see_seq].landInfo.landNickName}</div>
+                  </DataRow>
+                  <DataRow>
+                    <TextMedium className="letter">평단가</TextMedium>
+                    <div className="gray">{selectData[see_seq].setAmount}</div>
+                  </DataRow>
+                  <DataRow>
+                    <TextMedium className="letter">마감일</TextMedium>
+                    <div className="gray">{selectData[see_seq].endDate}</div>
+                  </DataRow>
+                  <DataRow>
+                    <TextMedium>사용농약</TextMedium>
+                    <RowView2 className="wrap top" style={{ flex: 1 }}>
+                      <div className="gray_w">{selectData[see_seq].pesticide}</div>
+                    </RowView2>
+                  </DataRow>
 
-                <PagingControl
-                  cnt={cnt}
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                  perPage={perPage}
-                />
-              </div>
+                  <Hr />
 
-              {selectData.length !== 0 && (
+                  <DataRow>
+                    <TextMedium className="auto">
+                      개별 방제대금(받으실 돈)
+                    </TextMedium>
+                    <div className="gray">360,000원</div>
+                  </DataRow>
+                  <DataRow>
+                    <TextMedium className="auto">서비스 이용금액</TextMedium>
+                    <div className="gray">1,000원</div>
+                  </DataRow>
 
-                <Bill>
-                  <div className="btn" onClick={setting_pre}>
-                    ◀︎
-                  </div>
-                  <div className="content">
-                    <CenterView style={{ marginBottom: "2rem" }}>
-                      <TextSemiBold $size={22}>신청정보</TextSemiBold>
-                      <div style={{ color: "gray" }}>
-                        ({see_seq + 1}/{seqList.length})
-                      </div>
-                    </CenterView>
+                  <Hr className="black" />
 
-                    <DataRow>
-                      <TextMedium>이ㅤㅤ름</TextMedium>
-                      <div className="gray">{selectData[see_seq].owner.name}</div>
-                    </DataRow>
-                    <DataRow>
-                      <TextMedium>전화번호</TextMedium>
-                      <div className="gray">{selectData[see_seq].owner.mobileno}</div>
-                    </DataRow>
+                  <RowView>
+                    <TextSemiBold $fontsize={20}>
+                      총 방제대금(받으실 돈)
+                    </TextSemiBold>
+                    <TextMedium className="auto" $fontsize={20} $color={true}>
+                      360,000원
+                    </TextMedium>
+                  </RowView>
+                  <RowView>
+                    <TextSemiBold $fontsize={20}>
+                      총<span style={{ color: blueColor }}> {selectData.length}</span>건 서비스
+                      이용금액
+                    </TextSemiBold>
+                    <TextMedium className="auto" $fontsize={20} $color={true}>
+                      {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 
-                    <Hr />
+                    </TextMedium>
+                  </RowView>
 
-                    <DataRow>
-                      <TextMedium>거래방식</TextMedium>
-                      <div className="gray">일반거래</div>
-                    </DataRow>
-                    <DataRow>
-                      <TextMedium>농ㅤㅤ지</TextMedium>
-                      <div className="gray">{selectData[see_seq].landInfo.landNickName}</div>
-                    </DataRow>
-                    <DataRow>
-                      <TextMedium className="letter">평단가</TextMedium>
-                      <div className="gray">{selectData[see_seq].setAmount}</div>
-                    </DataRow>
-                    <DataRow>
-                      <TextMedium className="letter">마감일</TextMedium>
-                      <div className="gray">{selectData[see_seq].endDate}</div>
-                    </DataRow>
-                    <DataRow>
-                      <TextMedium>사용농약</TextMedium>
-                      <RowView2 className="wrap top" style={{ flex: 1 }}>
-                        <div className="gray_w">{selectData[see_seq].pesticide}</div>
-                      </RowView2>
-                    </DataRow>
+                  {/* <button type='submit' >콘솔 찍어보기</button>
+                 
+                  <Btn onClick={() => { putfarmrequest() }}>찍어</Btn> */}
+                  <Btn onClick={() => { putfarmrequest();requestPayment(selectedPaymentMethod,totalAmount,name,phone,email,payorderid); }}>결제하기</Btn>
 
-                    <Hr />
+                </div>
 
-                    <DataRow>
-                      <TextMedium className="auto">
-                        개별 방제대금(받으실 돈)
-                      </TextMedium>
-                      <div className="gray">360,000원</div>
-                    </DataRow>
-                    <DataRow>
-                      <TextMedium className="auto">서비스 이용금액</TextMedium>
-                      <div className="gray">1,000원</div>
-                    </DataRow>
-
-                    <Hr className="black" />
-
-                    <RowView>
-                      <TextSemiBold $fontsize={20}>
-                        총 방제대금(받으실 돈)
-                      </TextSemiBold>
-                      <TextMedium className="auto" $fontsize={20} $color={true}>
-                        360,000원
-                      </TextMedium>
-                    </RowView>
-                    <RowView>
-                      <TextSemiBold $fontsize={20}>
-                        총<span style={{ color: blueColor }}> {selectData.length}</span>건 서비스
-                        이용금액
-                      </TextSemiBold>
-                      <TextMedium className="auto" $fontsize={20} $color={true}>
-                        {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-
-                      </TextMedium>
-                    </RowView>
-
-                    <button type='submit' >콘솔 찍어보기</button>
-                    <Btn onClick={() => { requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid) }}>결제하기</Btn>
-
-                  </div>
-
-                  <div className="btn" onClick={setting_next}>
-                    ▶︎
-                  </div>
-                </Bill>
-              )}
-            </Content>
-          </form>
-        </ContentArea>
-      </RowView>
+                <div className="btn" onClick={setting_next}>
+                  ▶︎
+                </div>
+              </Bill>
+            )}
+          </Content>
+        </form>
+      </ContentArea>
+    </RowView>
     </Common_Layout >
   );
 };
