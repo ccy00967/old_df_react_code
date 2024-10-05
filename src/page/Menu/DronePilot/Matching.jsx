@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import styled from "styled-components";
 import Common_Layout from "../../../Component/common_Layout";
 import {
@@ -224,7 +224,7 @@ const Matching = ({ setCd }) => {
   const [cnt, setCnt] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [seqList, setSeqList] = useState([]);
+   const [seqList, setSeqList] = useState([]);
   const [token, setToken] = useState(null);
   const [provinces, setProvinces] = useState([]); // 시/도 데이터
   const [cities, setCities] = useState([]); // 시/군/구 데이터
@@ -236,6 +236,45 @@ const Matching = ({ setCd }) => {
   const [cdInfo, setCdInfo] = useState(""); //cd값 저장
   const [seqdata, setseqdata] = useState(""); //체크박스 선택시 가져오는 데이터
   const [acceptOrderid, setAcceptOrderid] = useState("");
+  const [checkedList, setCheckedList] = useState([]);
+  const [isChecked, setIsChecked] = useState(false); //체크한 orderid
+  const [selectData, setSelectData] = useState([]); // 체크한 데이터 신청정보창 정보 
+
+//체크박스 로직
+  const checkedItemHandler = (value, isChecked) => {
+    if (isChecked) {
+      setCheckedList((prev) => [...prev, value.orderid]);
+      setSelectData((prev) => [...prev, value]);
+      return;
+    }
+
+    if (!isChecked && checkedList.includes(value.orderid)) {
+      setCheckedList(checkedList.filter((item) => item !== value.orderid));
+      setSelectData(selectData.filter((item) => item.orderid!== value.orderid));
+      return;
+    }
+
+    return;
+  };
+
+  const checkHandler = (e, value) => {
+    setIsChecked(!isChecked);
+    checkedItemHandler(value, e.target.checked);
+    console.log(value, e.target.checked);
+  };
+
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      console.log('checkedList:',checkedList);
+      console.log('selec',selectData)
+      
+    },
+    [checkedList]
+  );
+// 여기까지
+
+
 
 
   // 토큰을 먼저 받아오고, 받은 토큰을 사용해 데이터를 가져오는 함수
@@ -316,22 +355,6 @@ const Matching = ({ setCd }) => {
 
 
 
-  // 임시 cd값 가져오기
-  //const [cd, setCd] = useState("");
-
-  // 단계별 주소찾기 accessToken
-  // const [sgisapiAccessToken, setSgisapiAccessToken] = useState("");
-
-  // useEffect(() => {
-  //   // 이 부분에 토큰을 받아오는 로직 및 시/도 데이터를 fetching 하는 로직 작성
-  //   const fetchData = async () => {
-  //     const token = await fetchToken(); // 토큰 받아오기
-  //     // 여기서 fetchAddressData()로 시/도 데이터 불러오기
-  //     fetchAddressData("", setProvinces, token);
-  //   };
-  //   fetchData();
-  // }, []);
-
   const getfarmrequest = async () => {
     let length = 0;
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
@@ -340,6 +363,7 @@ const Matching = ({ setCd }) => {
     const cdInfoURL = cdInfo == "" ? "" : cdInfo + "/"
 
     const res = await fetch("https://192.168.0.28/exterminator/getrequests/" + cdInfoURL, {
+    
       //const res = await fetch("https://192.168.0.28/customer/lands/", {
       method: 'GET',
       headers: {
@@ -380,7 +404,6 @@ const Matching = ({ setCd }) => {
   useEffect(() => {
     getfarmrequest();
     setCnt(dataList.length);
-    console.log()
     //fetchLocation();
 
   }, []);
@@ -417,7 +440,7 @@ const Matching = ({ setCd }) => {
         setSeqList([...seqList, seq]);
         setseqdata(dataList[seq]);
         setAcceptOrderid(dataList[seq].orderid);
-        console.log(seqdata);
+        //console.log(seqdata);
       }
     }
   };
@@ -455,6 +478,7 @@ const Matching = ({ setCd }) => {
         <SideMenuBar mainmenu={"방제/농지분석"} submenu={"거래매칭"} />
 
         <ContentArea>
+        <form onSubmit={onSubmit}>
           <TextSemiBold $size={28}>거래매칭</TextSemiBold>
 
           <div>
@@ -542,13 +566,15 @@ const Matching = ({ setCd }) => {
                     <TableList
                       key={idx}
                       className={(idx + 1) % 2 === 0 ? "x2" : ""}
+                      
                     >
                       <CheckBox
                         type={"checkbox"}
                         $color={"#555555"}
-                        id={`id` + idx}
-
+                        id={data.orderid}
+                        checked={checkedList.includes(data.orderid)}
                         onClick={(e) => { selectSeq(idx); }}
+                        onChange={(e) => checkHandler(e, data)}
                       // getCheckboxData(data.orderid);
                       />
                       <div>{data.landInfo.landNickName}</div>
@@ -569,7 +595,8 @@ const Matching = ({ setCd }) => {
               />
             </div>
 
-            {seqList.length !== 0 && (
+            {selectData.length !== 0 && (
+              
               <Bill>
                 <div className="btn" onClick={setting_pre}>
                   ◀︎
@@ -584,11 +611,11 @@ const Matching = ({ setCd }) => {
 
                   <DataRow>
                     <TextMedium>이ㅤㅤ름</TextMedium>
-                    <div className="gray">{seqdata.owner.name}</div>
+                    <div className="gray">{selectData[see_seq].owner.name}</div>
                   </DataRow>
                   <DataRow>
                     <TextMedium>전화번호</TextMedium>
-                    <div className="gray">{seqdata.owner.mobileno}</div>
+                    <div className="gray">{selectData[see_seq].owner.mobileno}</div>
                   </DataRow>
 
                   <Hr />
@@ -599,20 +626,20 @@ const Matching = ({ setCd }) => {
                   </DataRow>
                   <DataRow>
                     <TextMedium>농ㅤㅤ지</TextMedium>
-                    <div className="gray">{seqdata.landInfo.landNickName}</div>
+                    <div className="gray">{selectData[see_seq].landInfo.landNickName}</div>
                   </DataRow>
                   <DataRow>
                     <TextMedium className="letter">평단가</TextMedium>
-                    <div className="gray">{seqdata.setAmount}</div>
+                    <div className="gray">{selectData[see_seq].setAmount}</div>
                   </DataRow>
                   <DataRow>
                     <TextMedium className="letter">마감일</TextMedium>
-                    <div className="gray">{seqdata.endDate}</div>
+                    <div className="gray">{selectData[see_seq].endDate}</div>
                   </DataRow>
                   <DataRow>
                     <TextMedium>사용농약</TextMedium>
                     <RowView2 className="wrap top" style={{ flex: 1 }}>
-                      <div className="gray_w">{seqdata.pesticide}</div>
+                      <div className="gray_w">{selectData[see_seq].pesticide}</div>
                     </RowView2>
                   </DataRow>
 
@@ -641,7 +668,7 @@ const Matching = ({ setCd }) => {
                   </RowView>
                   <RowView>
                     <TextSemiBold $fontsize={20}>
-                      총<span style={{ color: blueColor }}> {seqList.length}</span>건 서비스
+                      총<span style={{ color: blueColor }}> {selectData.length}</span>건 서비스
                       이용금액
                     </TextSemiBold>
                     <TextMedium className="auto" $fontsize={20} $color={true}>
@@ -650,6 +677,7 @@ const Matching = ({ setCd }) => {
                     </TextMedium>
                   </RowView>
 
+                  <button type='submit' >콘솔 찍어보기</button>
                   <Btn onClick={() => { window.location.reload(); putfarmrequest() }}>결제하기</Btn>
                 </div>
 
@@ -659,6 +687,7 @@ const Matching = ({ setCd }) => {
               </Bill>
             )}
           </Content>
+          </form>
         </ContentArea>
       </RowView>
     </Common_Layout>
