@@ -291,7 +291,6 @@ const SignUp = () => {
   /** 주소 찾기 API */
   const search_addr_API = () => {
 
-    console.log(addrmodalOpen);
     setAddrModalOpen(true);
     // setAddr("API 연결");
   };
