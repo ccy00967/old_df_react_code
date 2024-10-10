@@ -14,6 +14,8 @@ import PagingControl from "../../../Component/UI/PagingControl";
 import SideMenuBar from "../SideMenuBar";
 import { requestPayment } from "../../tosspayments/TossPayments_func";
 import { server } from "../../url";
+import { fetchToken } from "./pilotFetchFunc";
+
 
 const TextSemiBold = styled.div`
   font-size: ${(props) => `${props.$size || 16}px`};
@@ -207,24 +209,7 @@ const addressDepthServerModel = (json) => {
 
 
 
-const fetchToken = async () => {
-  try {
-    const response = await fetch(
-      "https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json?consumer_key=a3d30c1dbf844d2596f6&consumer_secret=be8aac1489a6442ea2c4"
-    );
-    if (response.status === 200) {
-      const data = await response.json();
-      return data.result.accessToken; // 받아온 토큰 값
-    } else {
-      throw new Error("Failed to fetch token");
-    }
-  } catch (error) {
-    console.error("Error fetching token:", error);
-    return null;
-  }
-};
-
-const Matching = ({ setCd }) => {
+const Matching = ({  }) => {
   const [cnt, setCnt] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -244,6 +229,7 @@ const Matching = ({ setCd }) => {
   const [selectData, setSelectData] = useState([]); // 체크한 데이터 신청정보창 정보
   const [pilotdata, setPilotdata] = useState([]); // pilot data 
   const [see_seq, setSee_Seq] = useState(0);
+  const [dataList, setDataList] = useState([]);
 
 
   //방제사 정보 가져오기
@@ -451,7 +437,6 @@ const Matching = ({ setCd }) => {
 
 
   // 농지 데이터 load
-  const [dataList, setDataList] = useState([]);
   // 이건 테스트 데이터
   // const testData = Array(parseInt(perPage)).fill({
   //   name: "김가네벼",
@@ -485,11 +470,11 @@ const Matching = ({ setCd }) => {
 
 
   const all_selectSeq = () => {
-    alert("api 연결먼저");
-    return;
-    // 서버에서 받은 데이터 목록에서 seq 추출
-    const seqList = dataList.filter((item) => dataList.seq);
-    setSeqList(seqList);
+    // alert("api 연결먼저");
+    // return;
+    // // 서버에서 받은 데이터 목록에서 seq 추출
+    // const seqList = dataList.filter((item) => dataList.seq);
+    // setSeqList(seqList);
   };
 
   // 신청정보 seq
