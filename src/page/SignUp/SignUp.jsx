@@ -134,26 +134,26 @@ const userModel = {
 }
 
 // address에 들어갈 객체
-const Address = {
-  roadaddress: "도로명",
-  jibunAddress: "지번",
-  englishAddress: "영어주소",
-  navermapsx: "1234",
-  navermapsy: "1234",
-  detailAddress: "디테일",
-}
 
 const SignUp = () => {
   const Navigate = useNavigate();
-
+  
   const [userType, setUserType] = useState("");
   const [id, setID] = useState("");
   const [otp, setOtp] = useState("");
   const [pw, setPw] = useState("");
   const [pwCheck, setPwCheck] = useState("");
-  const [addr, setAddr] = useState(Address);
   const [addrDetail, setAddrDetail] = useState("");
-
+  
+  const Address = {
+    roadaddress: window.addressInfo.roadAddress,
+    jibunAddress: window.addressInfo.jibunAddress,
+    englishAddress: window.addressInfo.englishAddress,
+    navermapsx: window.addressInfo.x,
+    navermapsy: window.addressInfo.y,
+    detailAddress: addrDetail,
+  }
+  
   // 네이버 지도 팝업 모달창
   const [addrmodalOpen, setAddrModalOpen] = useState(false);
   const closeAddrModal = () => { setAddrModalOpen(false) };
@@ -330,7 +330,7 @@ const SignUp = () => {
         //email: id,
         password: pw,
         //role: userType,
-        address: addr,
+        address: Address,
       }
     });
   };

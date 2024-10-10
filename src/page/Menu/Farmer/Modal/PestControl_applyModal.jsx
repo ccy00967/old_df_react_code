@@ -158,7 +158,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
         </DataRow>
         <DataRow>
           <TextMedium className="letter">평단가</TextMedium>
-          <div className="gray">{/*price*/data?.setAmount + "원" || "-"}</div>
+          <div className="gray">{/*price*/data?.setAmount || 30 + "원" || "-"}</div>
         </DataRow>
         <DataRow>
           <TextMedium className="letter">마감일</TextMedium>

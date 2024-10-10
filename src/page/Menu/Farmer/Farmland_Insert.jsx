@@ -149,9 +149,9 @@ const Farmland_Insert = () => {
         console.log(pnuValue);
         setPnu(pnuValue); // Update the PNU state
       },
-      error: function (e) {
-        alert(e.responseText);
-      }
+      // error: function (e) {
+      //   alert(e.responseText);
+      // }
     });
   };
 
@@ -176,9 +176,9 @@ const Farmland_Insert = () => {
         console.log(area);
         setLndpclAr(area);
       },
-      error: function (e) {
-        alert(e.responseText);
-      }
+      // error: function (e) {
+      //   alert(e.responseText);
+      // }
     });
   };
 

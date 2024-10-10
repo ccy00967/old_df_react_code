@@ -62,6 +62,9 @@ const DateBox = styled.div`
   color: ${GreenColor};
   background-color: ${lightGreenColor};
   border-radius: 8px;
+    cursor: pointer;
+  &:hover {
+    background-color: ${hoverGreen};
 `;
 const LightBtn = styled(CenterView)`
   box-sizing: border-box;
