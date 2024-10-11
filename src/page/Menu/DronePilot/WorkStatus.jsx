@@ -17,6 +17,9 @@ import PerPageControl from "../../../Component/UI/PerPageControl";
 import SideMenuBar from "../SideMenuBar";
 import WorkStatus_Modal from "./Modal/WorkStatus_Modal";
 import { server } from "../../url";
+import { workStart_API, workFin_API, cancel1_API, cancel2_API } from "./pilotFetchFunc";
+
+
 
 const ContentArea = styled.div`
   flex: 1;
@@ -107,23 +110,23 @@ const BtnArea = styled.span`
   span {
     padding: 0.4rem 1rem;
     border-radius: 4px;
-  }
-  span.green {
-    background-color: ${GreenColor};
-    cursor: pointer;
-  }
-  span.blue {
-    background-color: ${blueColor};
-    cursor: pointer;
-  }
-  span.gray {
-    background-color: ${grayColor};
-    cursor: pointer;
-  }
-  span.yellow {
-  background-color: ${yellowColor};
-  cursor: pointer;}
-`;
+    }
+    span.green {
+      background-color: ${GreenColor};
+      cursor: pointer;
+      }
+      span.blue {
+        background-color: ${blueColor};
+        cursor: pointer;
+        }
+        span.gray {
+          background-color: ${grayColor};
+          cursor: pointer;
+          }
+          span.yellow {
+            background-color: ${yellowColor};
+            cursor: pointer;}
+            `;
 
 
 
@@ -141,7 +144,8 @@ const WorkStatus = () => {
   // const setting_매칭완료 = () => setFilter("매칭완료");
   // const setting_작업시작 = () => setFilter("작업시작");
   // const setting_작업완료 = () => setFilter("작업완료");
-
+  // 농지 데이터 load
+  const [dataList, setDataList] = useState([]);
 
 
 
@@ -151,8 +155,8 @@ const WorkStatus = () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
 
-    const res = await fetch(server+"/exterminator/workinglist/0/", {
-      
+    const res = await fetch(server + "/exterminator/workinglist/0/", {
+
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -162,11 +166,13 @@ const WorkStatus = () => {
       .then((res) => res.json())
       .then((data) => {
         length = data.length;
+        //store.dispatch(workdatalistSlice.actions.setWorkData(data));
         //console.log(length);
         setDataList(data)
+        console.log(data)
+
         //return data
       });
-    //console.log(res.endDate)
   }
 
   useEffect(() => {
@@ -187,8 +193,6 @@ const WorkStatus = () => {
     return "blue";
   };
 
-  // 농지 데이터 load
-  const [dataList, setDataList] = useState([]);
   // 이건 테스트 데이터
   // const testData = Array(parseInt(perPage)).fill({
   //   farmland: "김가네벼",
@@ -239,86 +243,10 @@ const WorkStatus = () => {
     load_API();
   }, [currentPage, perPage]);
 
-  //시작 버튼 API
-  const workStart_API = async (orderid) => {
-    if (window.confirm("시작하시겠습니까?")) {
-      alert("시작.");
-      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-      const accessToken = User_Credential?.access_token;
-      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ exterminateState: 2 }),
-      })
-      window.location.reload();
-    } else { alert("취소"); }
-
-  };
-
-  //완료 버튼 API
-  const workFin_API = async (orderid) => {
-    if (window.confirm("작업이 끝났습니까?")) {
-      alert("작업완료");
-      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-      const accessToken = User_Credential?.access_token;
-      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ exterminateState: 3 }),
-      })
-      window.location.reload();
-
-    } else { alert("취소"); }
-
-  };
 
 
 
-  //취소 버튼 API  => 작업 중에서 작업 준비중으로
-  const  cancel1_API = async (orderid) => {
-    if (window.confirm("취소하시겠습니까?")) {
-      alert("취소");
-      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-      const accessToken = User_Credential?.access_token;
-      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ exterminateState: 1 }),
-      })
-      window.location.reload();
 
-    } else { alert("취소"); }
-
-  };
-
-  //취소버튼 APT2 => 완료에서 작업 중으로
-  const cancel2_API = async (orderid) => {
-    if (window.confirm("취소하시겠습니까?")) {
-      alert("취소");
-      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-      const accessToken = User_Credential?.access_token;
-      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ exterminateState: 2 }),
-      })
-      window.location.reload();
-
-    } else { alert("취소"); }
-
-  };
 
   // 더블클릭시 열리는 모달
   const ModalRef = useRef();
@@ -403,33 +331,33 @@ const WorkStatus = () => {
                   <div>{data.owner.name}</div>
                   <div>{data.owner.phone_number}</div>
                   <div className="addr">{data.owner.address.jibunAddress}</div>
-                  <div>{data.exterminateState === 1 ? ("작업 준비 중"):(data.exterminateState ===2 ? ("작업 중"):data.exterminateState === 3 && ("작업완료"))}</div>
+                  <div>{data.exterminateState === 1 ? ("작업 준비 중") : (data.exterminateState === 2 ? ("작업 중") : data.exterminateState === 3 && ("작업완료"))}</div>
 
 
                   <BtnArea>
 
                     {data.exterminateState === 1 ? (
-                        <span className="green" onClick={() => workStart_API(data.orderid)}>
-                          시작
-                        </span>
+                      <span className="green" onClick={() => workStart_API(data.orderid)}>
+                        시작
+                      </span>
                     ) : (
                       data.exterminateState === 2 ? (
                         <RowView2>
-                        <span className="blue" onClick={() => workFin_API(data.orderid)}>
-                          작업 완료
-                        </span>
-                        <span className="yellow" onClick={()=>cancel1_API(data.orderid)}>
-                          취소하기
-                        </span>
+                          <span className="blue" onClick={() => workFin_API(data.orderid)}>
+                            작업 완료
+                          </span>
+                          <span className="yellow" onClick={() => cancel1_API(data.orderid)}>
+                            취소하기
+                          </span>
                         </RowView2>
 
                       ) : (
                         data.exterminateState === 3 && (
                           <RowView>
-                          <span className="gray">
-                            완료
-                          </span>
-                          <span className="yellow" onClick={()=>cancel2_API(data.orderid)}>취소</span>
+                            <span className="gray">
+                              완료
+                            </span>
+                            <span className="yellow" onClick={() => cancel2_API(data.orderid)}>취소</span>
                           </RowView>
                         )
                       )

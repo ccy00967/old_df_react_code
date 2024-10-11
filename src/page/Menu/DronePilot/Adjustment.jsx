@@ -288,7 +288,7 @@ const Adjustment = () => {
                   <div>{data.owner.name}</div>
                   <div>{data.owner.phone_number}</div>
                   <div className="addr">{data.owner.address.jibunAddress}</div>
-                  <div>{data.calculation}</div>
+                  <div>{data.calculation ===0 ?("정산대기"):data.calculation ===1&&("정산완료")}</div>
 
 
                   <BtnArea>

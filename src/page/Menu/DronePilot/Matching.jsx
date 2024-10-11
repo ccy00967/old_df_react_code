@@ -14,6 +14,9 @@ import PagingControl from "../../../Component/UI/PagingControl";
 import SideMenuBar from "../SideMenuBar";
 import { requestPayment } from "../../tosspayments/TossPayments_func";
 import { server } from "../../url";
+import { fetchToken, fetchUserInfo, fetchAddressData } from "./pilotFetchFunc";
+
+
 
 const TextSemiBold = styled.div`
   font-size: ${(props) => `${props.$size || 16}px`};
@@ -197,34 +200,11 @@ const SearchBtn = styled.div`
 `;
 
 
-const addressDepthServerModel = (json) => {
-  return {
-    code: json.cd,
-    name: json.addr_name,
-  };
-};
 
 
 
 
-const fetchToken = async () => {
-  try {
-    const response = await fetch(
-      "https://sgisapi.kostat.go.kr/OpenAPI3/auth/authentication.json?consumer_key=a3d30c1dbf844d2596f6&consumer_secret=be8aac1489a6442ea2c4"
-    );
-    if (response.status === 200) {
-      const data = await response.json();
-      return data.result.accessToken; // 받아온 토큰 값
-    } else {
-      throw new Error("Failed to fetch token");
-    }
-  } catch (error) {
-    console.error("Error fetching token:", error);
-    return null;
-  }
-};
-
-const Matching = ({ setCd }) => {
+const Matching = ({ }) => {
   const [cnt, setCnt] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -238,42 +218,23 @@ const Matching = ({ setCd }) => {
   const [selectedTown, setSelectedTown] = useState(""); // 선택한 읍/면/동
   const [errorMessage, setErrorMessage] = useState("");
   const [cdInfo, setCdInfo] = useState(""); //cd값 저장
-  const [acceptOrderid, setAcceptOrderid] = useState("");
   const [checkedList, setCheckedList] = useState([]);
   const [isChecked, setIsChecked] = useState(false); //체크한 orderid
   const [selectData, setSelectData] = useState([]); // 체크한 데이터 신청정보창 정보
   const [pilotdata, setPilotdata] = useState([]); // pilot data 
   const [see_seq, setSee_Seq] = useState(0);
-
-
-  //방제사 정보 가져오기
-  const fetchUserInfo = async () => {
-    const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-    const uuid = User_Credential?.uuid
-    const accessToken = User_Credential?.access_token;
-    const res = await fetch(server+`/user/userinfo/${uuid}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${accessToken}`
-      },
-      credentials: 'include',
-    })
-    const data = await res.json();
-    console.log(data)
-   setPilotdata(data)
-  };
-
-  const name  = pilotdata?.name || "이름 없음";
-  const phone  = pilotdata?.mobileno || "번호 없음";
+  const [dataList, setDataList] = useState([]);
+  
+  
+  const name = pilotdata?.name || "이름 없음";
+  const phone = pilotdata?.mobileno || "번호 없음";
   const amount = pilotdata?.requestAmount || 0;
   const email = pilotdata?.email || "이메일 없음";
   const serviceAmount = checkedList.length * 1000;
   const payorderid = checkedList[0] || "";
-
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
   const totalAmount = amount + serviceAmount;
-
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
+  
 
 
   //체크박스 로직
@@ -285,7 +246,7 @@ const Matching = ({ setCd }) => {
     }
 
     if (!isChecked && checkedList.includes(value.orderid)) {
-      if(see_seq +1 === selectData.length){setSee_Seq(see_seq -1);}
+      if (see_seq + 1 === selectData.length) { setSee_Seq(see_seq - 1); }
       setCheckedList(checkedList.filter((item) => item !== value.orderid));
       setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
       return;
@@ -297,7 +258,7 @@ const Matching = ({ setCd }) => {
   const checkHandler = (e, value) => {
     setIsChecked(!isChecked);
     checkedItemHandler(value, e.target.checked);
-    
+
   };
 
   const onSubmit = useCallback(
@@ -350,22 +311,7 @@ const Matching = ({ setCd }) => {
   }, [selectedCity, token]);
 
   // 주소 데이터를 가져오는 함수
-  const fetchAddressData = async (code, setData, token) => {
-    try {
-      const _code = code ? `&cd=${code}` : "";
-      const apiUrl = `https://sgisapi.kostat.go.kr/OpenAPI3/addr/stage.json?accessToken=${token}${_code}`;
-      const response = await fetch(apiUrl);
-      if (response.status === 200) {
-        const data = await response.json();
-        const result = data.result.map((item) => addressDepthServerModel(item));
-        setData(result);
-      } else {
-        setData([]);
-      }
-    } catch (error) {
-      setData([]);
-    }
-  };
+  
 
   // 필터박스에서 선택될 때 cd 값을 출력하는 함수
   const handleProvinceChange = (e) => {
@@ -373,6 +319,7 @@ const Matching = ({ setCd }) => {
     console.log(selectedCd); // 시/도 코드 출력
     setSelectedProvince(selectedCd);
     setCdInfo(selectedCd);
+   
   };
 
   const handleCityChange = (e) => {
@@ -380,6 +327,7 @@ const Matching = ({ setCd }) => {
     console.log(selectedCd); // 시/군/구 코드 출력
     setSelectedCity(selectedCd);
     setCdInfo(selectedCd);
+    
   };
 
   const handleTownChange = (e) => {
@@ -387,9 +335,8 @@ const Matching = ({ setCd }) => {
     console.log(selectedCd); // 읍/면/동 코드 출력
     setSelectedTown(selectedCd);
     setCdInfo(selectedCd);
+    
   };
-
-
 
 
   const getfarmrequest = async () => {
@@ -399,9 +346,9 @@ const Matching = ({ setCd }) => {
 
     const cdInfoURL = cdInfo == "" ? "" : cdInfo + "/"
 
-    const res = await fetch(server+"/exterminator/getrequests/" + cdInfoURL, {
+    const res = await fetch(server + "/exterminator/getrequests/" + cdInfoURL, {
 
-      
+
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -413,9 +360,9 @@ const Matching = ({ setCd }) => {
         length = data.length;
         //console.log(length);
         setDataList(data)
+        console.log(data)
         //return data
       });
-    //console.log(res.endDate)
   }
 
 
@@ -425,13 +372,13 @@ const Matching = ({ setCd }) => {
     const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = User_Credential?.access_token;
     console.log(checkedList)
-    const res = await fetch(server+`/exterminator/accept/`, {
+    const res = await fetch(server + `/exterminator/accept/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({orderidlist : checkedList}),
+      body: JSON.stringify({ orderidlist: checkedList }),
     })
       .then((res) => res.json())
       .then((data) => data)
@@ -444,30 +391,20 @@ const Matching = ({ setCd }) => {
     getfarmrequest();
     setCnt(dataList.length);
     fetchUserInfo();
-    //fetchLocation();
+
+
+    const fetchinfo = async () => {
+      //방제사 정보 가져오기
+      const pilotdata = await fetchUserInfo();
+      setPilotdata(pilotdata); 
+    }
+    fetchinfo();
+    
 
   }, []);
 
 
 
-  // 농지 데이터 load
-  const [dataList, setDataList] = useState([]);
-  // 이건 테스트 데이터
-  // const testData = Array(parseInt(perPage)).fill({
-  //   name: "김가네벼",
-  //   addr: "전북특별자치도 김제시 백산읍 공덕 2길",
-  //   area: "20,000평/44,233.092m²",
-  //   plant: "옥수수",
-  //   pesticide: "튼튼농약",
-  // });
-  const load_API = () => {
-    // 호출 성공시
-    setCnt(960);
-    //setDataList(testData);
-  };
-  useEffect(() => {
-    //load_API();
-  }, [currentPage, perPage]);
 
   // 선택 게시글
   const selectSeq = (seq) => {
@@ -484,18 +421,8 @@ const Matching = ({ setCd }) => {
   };
 
 
-  const all_selectSeq = () => {
-    alert("api 연결먼저");
-    return;
-    // 서버에서 받은 데이터 목록에서 seq 추출
-    const seqList = dataList.filter((item) => dataList.seq);
-    setSeqList(seqList);
-  };
 
   // 신청정보 seq
-  
-
-
   const setting_pre = () => {
     if (see_seq !== 0) {
       setSee_Seq(see_seq - 1);
@@ -506,9 +433,11 @@ const Matching = ({ setCd }) => {
       setSee_Seq(see_seq + 1);
     }
   };
-   useEffect(() => {
-     setSee_Seq(0);
-   }, [seqList]);
+
+
+  useEffect(() => {
+    setSee_Seq(0);
+  }, [seqList]);
 
   return (
     <Common_Layout minWidth={1400}>
@@ -558,180 +487,181 @@ const Matching = ({ setCd }) => {
                 <SearchBtn onClick={() => getfarmrequest()}>
                   검색하기
                 </SearchBtn>
-                
-                
-
-            </FilterBox>
 
 
-          </div>
 
-          <SearchBox
-            type={"number"}
-            placeholder="원하시는 묶음의 숫자를 입력해주세요."
-          />
+              </FilterBox>
 
-          <Content className="top">
-            <div className="table">
-              <TableHeader>
-                <CheckBox
-                  type={"checkbox"}
-                  $color={"#555555"}
-                  onClick={all_selectSeq}
-                />
-                <div>농지별명</div>
-                <div className="long">
-                  <select>
-                    <option value={""}>농지주소</option>
-                  </select>
-                </div>
-                <div>면적</div>
-                <div>작물</div>
-                <div>
-                  <select>
-                    <option value={""}>농약</option>
-                    <option value={"오름차순"}>오름</option>
-                    <option value={"내림차순"}>내림</option>
-                  </select>
-                </div>
-              </TableHeader>
 
-              {dataList.map((data, idx) => {
-                if (data.exterminateState == 0) {
-                  if (!data || data.length === 0) {
-                    return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
-                  }
-                  return (
-                    <TableList
-                      key={idx}
-                      className={(idx + 1) % 2 === 0 ? "x2" : ""}
-
-                    >
-                      <CheckBox
-                        type={"checkbox"}
-                        $color={"#555555"}
-                        id={data.orderid}
-                        checked={checkedList.includes(data.orderid)}
-                        onClick={(e) => { selectSeq(idx); }}
-                        onChange={(e) => checkHandler(e, data)}
-                      // getCheckboxData(data.orderid);
-                      />
-                      <div>{data.landInfo.landNickName}</div>
-                      <div className="long">{data.landInfo.address.jibunAddress}</div>
-                      <div className="long">{data.landInfo.lndpclAr}</div>
-                      <div>{data.landInfo.cropsInfo}</div>
-                      <div>{data.pesticide}</div>
-                    </TableList>
-                  );
-                }
-              })}
-
-              <PagingControl
-                cnt={cnt}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                perPage={perPage}
-              />
             </div>
 
-            {selectData.length !== 0 && (
+            <SearchBox
+              type={"number"}
+              placeholder="원하시는 묶음의 숫자를 입력해주세요."
+            />
 
-              <Bill>
-                <div className="btn" onClick={setting_pre}>
-                  ◀︎
-                </div>
-                <div className="content">
-                  <CenterView style={{ marginBottom: "2rem" }}>
-                    <TextSemiBold $size={22}>신청정보</TextSemiBold>
-                    <div style={{ color: "gray" }}>
-                      ({see_seq + 1}/{seqList.length})
-                    </div>
-                  </CenterView>
+            <Content className="top">
+              <div className="table">
+                <TableHeader>
+                  <CheckBox
+                    type={"checkbox"}
+                    $color={"#555555"}
+                    // onClick={}
+                  />
+                  <div>농지별명</div>
+                  <div className="long">
+                    <select>
+                      <option value={""}>농지주소</option>
+                    </select>
+                  </div>
+                  <div>면적</div>
+                  <div>작물</div>
+                  <div>
+                    <select>
+                      <option value={""}>농약</option>
+                      <option value={"오름차순"}>오름</option>
+                      <option value={"내림차순"}>내림</option>
+                    </select>
+                  </div>
+                </TableHeader>
 
-                  <DataRow>
-                    <TextMedium>이ㅤㅤ름</TextMedium>
-                    <div className="gray">{selectData[see_seq].owner.name}</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium>전화번호</TextMedium>
-                    <div className="gray">{selectData[see_seq].owner.mobileno}</div>
-                  </DataRow>
+                {dataList.map((data, idx) => {
+                  if (data.exterminateState == 0) {
+                    if (!data || data.length === 0) {
+                      return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
+                    }
+                    return (
+                      <TableList
+                        key={idx}
+                        className={(idx + 1) % 2 === 0 ? "x2" : ""}
 
-                  <Hr />
+                      >
+                        <CheckBox
+                          type={"checkbox"}
+                          $color={"#555555"}
+                          id={data.orderid}
+                          checked={checkedList.includes(data.orderid)}
+                          onClick={(e) => { selectSeq(idx); }}
+                          onChange={(e) => checkHandler(e, data)}
+                        // getCheckboxData(data.orderid);
+                        />
+                        <div>{data.landInfo.landNickName}</div>
+                        <div className="long">{data.landInfo.address.jibunAddress}</div>
+                        <div className="long">{data.landInfo.lndpclAr}</div>
+                        <div>{data.landInfo.cropsInfo}</div>
+                        <div>{data.pesticide}</div>
+                      </TableList>
+                    );
+                  }
+                })}
 
-                  <DataRow>
-                    <TextMedium>거래방식</TextMedium>
-                    <div className="gray">일반거래</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium>농ㅤㅤ지</TextMedium>
-                    <div className="gray">{selectData[see_seq].landInfo.landNickName}</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium className="letter">평단가</TextMedium>
-                    <div className="gray">{selectData[see_seq].setAmount}</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium className="letter">마감일</TextMedium>
-                    <div className="gray">{selectData[see_seq].endDate}</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium>사용농약</TextMedium>
-                    <RowView2 className="wrap top" style={{ flex: 1 }}>
-                      <div className="gray_w">{selectData[see_seq].pesticide}</div>
-                    </RowView2>
-                  </DataRow>
+                <PagingControl
+                  cnt={cnt}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  perPage={perPage}
+                />
+              </div>
 
-                  <Hr />
+              {selectData.length !== 0 && (
 
-                  <DataRow>
-                    <TextMedium className="auto">
-                      개별 방제대금(받으실 돈)
-                    </TextMedium>
-                    <div className="gray">360,000원</div>
-                  </DataRow>
-                  <DataRow>
-                    <TextMedium className="auto">서비스 이용금액</TextMedium>
-                    <div className="gray">1,000원</div>
-                  </DataRow>
+                <Bill>
+                  <div className="btn" onClick={setting_pre}>
+                    ◀︎
+                  </div>
+                  <div className="content">
+                    <CenterView style={{ marginBottom: "2rem" }}>
+                      <TextSemiBold $size={22}>신청정보</TextSemiBold>
+                      <div style={{ color: "gray" }}>
+                        ({see_seq + 1}/{seqList.length})
+                      </div>
+                    </CenterView>
 
-                  <Hr className="black" />
+                    <DataRow>
+                      <TextMedium>이ㅤㅤ름</TextMedium>
+                      <div className="gray">{selectData[see_seq].owner.name}</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium>전화번호</TextMedium>
+                      <div className="gray">{selectData[see_seq].owner.mobileno}</div>
+                    </DataRow>
 
-                  <RowView>
-                    <TextSemiBold $fontsize={20}>
-                      총 방제대금(받으실 돈)
-                    </TextSemiBold>
-                    <TextMedium className="auto" $fontsize={20} $color={true}>
-                      360,000원
-                    </TextMedium>
-                  </RowView>
-                  <RowView>
-                    <TextSemiBold $fontsize={20}>
-                      총<span style={{ color: blueColor }}> {selectData.length}</span>건 서비스
-                      이용금액
-                    </TextSemiBold>
-                    <TextMedium className="auto" $fontsize={20} $color={true}>
-                      {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    <Hr />
 
-                    </TextMedium>
-                  </RowView>
+                    <DataRow>
+                      <TextMedium>거래방식</TextMedium>
+                      <div className="gray">일반거래</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium>농ㅤㅤ지</TextMedium>
+                      <div className="gray">{selectData[see_seq].landInfo.landNickName}</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium className="letter">평단가</TextMedium>
+                      <div className="gray">{selectData[see_seq].setAmount}</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium className="letter">마감일</TextMedium>
+                      <div className="gray">{selectData[see_seq].endDate}</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium>사용농약</TextMedium>
+                      <RowView2 className="wrap top" style={{ flex: 1 }}>
+                        <div className="gray_w">{selectData[see_seq].pesticide}</div>
+                      </RowView2>
+                    </DataRow>
 
-                  {/* <button type='submit' >콘솔 찍어보기</button>
+                    <Hr />
+
+                    <DataRow>
+                      <TextMedium className="auto">
+                        개별 방제대금(받으실 돈)
+                      </TextMedium>
+                      <div className="gray">360,000원</div>
+                    </DataRow>
+                    <DataRow>
+                      <TextMedium className="auto">서비스 이용금액</TextMedium>
+                      <div className="gray">1,000원</div>
+                    </DataRow>
+
+                    <Hr className="black" />
+
+                    <RowView>
+                      <TextSemiBold $fontsize={20}>
+                        총 방제대금(받으실 돈)
+                      </TextSemiBold>
+                      <TextMedium className="auto" $fontsize={20} $color={true}>
+                        360,000원
+                      </TextMedium>
+                    </RowView>
+                    <RowView>
+                      <TextSemiBold $fontsize={20}>
+                        총<span style={{ color: blueColor }}> {selectData.length}</span>건 서비스
+                        이용금액
+                      </TextSemiBold>
+                      <TextMedium className="auto" $fontsize={20} $color={true}>
+                        {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+
+                      </TextMedium>
+                    </RowView>
+
+                    {/* <button type='submit' >콘솔 찍어보기</button>
                  
                   <Btn onClick={() => { putfarmrequest() }}>찍어</Btn> */}
-                  <Btn onClick={() => { putfarmrequest();requestPayment(selectedPaymentMethod,totalAmount,name,phone,email,payorderid); }}>결제하기</Btn>
+                    <Btn onClick={() => {  requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid); }}>결제하기</Btn>
+                    {/* <Btn onClick={() => { putfarmrequest(); requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid); }}>결제하기</Btn> */}
 
-                </div>
+                  </div>
 
-                <div className="btn" onClick={setting_next}>
-                  ▶︎
-                </div>
-              </Bill>
-            )}
-          </Content>
-        </form>
-      </ContentArea>
-    </RowView>
+                  <div className="btn" onClick={setting_next}>
+                    ▶︎
+                  </div>
+                </Bill>
+              )}
+            </Content>
+          </form>
+        </ContentArea>
+      </RowView>
     </Common_Layout >
   );
 };
