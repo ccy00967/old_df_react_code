@@ -69,13 +69,13 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
         const { form_chk } = document;
 
         //표준창 호출에 필요한 정보를 백엔드에서 가져오기
-        const res = await fetch("https://192.168.0.28" +'/validation/callnicepass/', {
+        const res = await fetch(server+'/validation/callnicepass/', {
             method: 'POST',
             headers: [["Content-Type", 'application/json'],
             ],
             credentials: "include",
             body: JSON.stringify({
-                returnURL: window.location.origin + "/nicepass",
+                returnURL: window.location.origin + "/SignUp" + "/nicepass",
              }),
         })
             .then((res) => res.json())

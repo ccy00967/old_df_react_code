@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Common_Layout from "../../Component/common_Layout";
@@ -173,6 +173,17 @@ const SignUp = () => {
     if (userType === type) return "this";
     return "";
   };
+
+  // useEffect(() => {
+  //   const niceValidate = localStorage.getItem("niceValidate");
+  //   if (niceValidate === "true") {
+  //     setAlert_pass("ok");
+  //   }
+
+  //   return () => {
+  //     localStorage.removeItem("niceValidate");
+  //   };
+  // }, []);
 
   const setting_id = (e) => setID(e.target.value);
   const setting_otp = (e) => setOtp(e.target.value);
