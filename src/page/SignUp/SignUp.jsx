@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Common_Layout from "../../Component/common_Layout";
@@ -134,14 +134,6 @@ const userModel = {
 }
 
 // address에 들어갈 객체
-const Address = {
-  roadaddress: "도로명",
-  jibunAddress: "지번",
-  englishAddress: "영어주소",
-  navermapsx: "1234",
-  navermapsy: "1234",
-  detailAddress: "디테일",
-}
 
 const SignUp = () => {
   const Navigate = useNavigate();
@@ -151,8 +143,16 @@ const SignUp = () => {
   const [otp, setOtp] = useState("");
   const [pw, setPw] = useState("");
   const [pwCheck, setPwCheck] = useState("");
-  const [addr, setAddr] = useState(Address);
   const [addrDetail, setAddrDetail] = useState("");
+
+  const Address = {
+    roadaddress: window.addressInfo.roadAddress,
+    jibunAddress: window.addressInfo.jibunAddress,
+    englishAddress: window.addressInfo.englishAddress,
+    navermapsx: window.addressInfo.x,
+    navermapsy: window.addressInfo.y,
+    detailAddress: addrDetail,
+  }
 
   // 네이버 지도 팝업 모달창
   const [addrmodalOpen, setAddrModalOpen] = useState(false);
@@ -173,6 +173,17 @@ const SignUp = () => {
     if (userType === type) return "this";
     return "";
   };
+
+  // useEffect(() => {
+  //   const niceValidate = localStorage.getItem("niceValidate");
+  //   if (niceValidate === "true") {
+  //     setAlert_pass("ok");
+  //   }
+
+  //   return () => {
+  //     localStorage.removeItem("niceValidate");
+  //   };
+  // }, []);
 
   const setting_id = (e) => setID(e.target.value);
   const setting_otp = (e) => setOtp(e.target.value);
@@ -252,7 +263,7 @@ const SignUp = () => {
       setAlert_id("no");
     } else {
 
-      const res = await fetch(server+'/validation/emailsend/', {
+      const res = await fetch(server + '/validation/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
         ],
@@ -270,7 +281,7 @@ const SignUp = () => {
       setAlert_otp("no");
     } else {
 
-      const res = await fetch(server+'/validation/validatekeycheck/', {
+      const res = await fetch(server + '/validation/validatekeycheck/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json']],
         credentials: "include",
@@ -291,7 +302,6 @@ const SignUp = () => {
   /** 주소 찾기 API */
   const search_addr_API = () => {
 
-    console.log(addrmodalOpen);
     setAddrModalOpen(true);
     // setAddr("API 연결");
   };
@@ -330,7 +340,7 @@ const SignUp = () => {
         //email: id,
         password: pw,
         //role: userType,
-        address: addr,
+        address: Address,
       }
     });
   };

@@ -88,7 +88,6 @@ const MainMenu = () => {
   const [UserInfo, setUserInfo] = useState([])
 
   const Set_User_info = async () => {
-    console.log(User_Credential.uuid)
     const res = await fetch(server+'/user/userinfo/' + User_Credential.uuid + '/', {
       method: 'GET',
       headers: {
