@@ -155,8 +155,8 @@ const AddressModal = ({ isOpen, closeAddrModal }) => {
               <GWNaverMap setValue={setSearchAddr} />
             </GWNaverMaps>
             <InputBox
-              style={{ width: "100%", margin: "2rem 0 1rem 0", padding: '1rem 0rem', textAlign: 'left' }}
-              placeholder="자택 주소를 입력하세요."
+              style={{ width: "100%", margin: "1rem 0 1rem 0", padding: '1rem 0rem', textAlign: 'left' }}
+              placeholder="  자택 주소를 입력해 주세요."
               value={farmlandAddr}
               onChange={(e) => setHomeAddr(e.target.value)}
             />
