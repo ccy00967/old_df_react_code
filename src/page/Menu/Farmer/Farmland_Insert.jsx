@@ -11,7 +11,6 @@ import Component_mapList from "./Component_mapList";
 import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
 import $ from 'jquery';
 import { server } from "../../url";
-import { useSelector, useDispatch } from "react-redux";
 
 
 const InsertBox = styled.div`

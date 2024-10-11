@@ -137,14 +137,14 @@ const userModel = {
 
 const SignUp = () => {
   const Navigate = useNavigate();
-  
+
   const [userType, setUserType] = useState("");
   const [id, setID] = useState("");
   const [otp, setOtp] = useState("");
   const [pw, setPw] = useState("");
   const [pwCheck, setPwCheck] = useState("");
   const [addrDetail, setAddrDetail] = useState("");
-  
+
   const Address = {
     roadaddress: window.addressInfo.roadAddress,
     jibunAddress: window.addressInfo.jibunAddress,
@@ -153,7 +153,7 @@ const SignUp = () => {
     navermapsy: window.addressInfo.y,
     detailAddress: addrDetail,
   }
-  
+
   // 네이버 지도 팝업 모달창
   const [addrmodalOpen, setAddrModalOpen] = useState(false);
   const closeAddrModal = () => { setAddrModalOpen(false) };
@@ -263,7 +263,7 @@ const SignUp = () => {
       setAlert_id("no");
     } else {
 
-      const res = await fetch(server+'/validation/emailsend/', {
+      const res = await fetch(server + '/validation/emailsend/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json'],
         ],
@@ -281,7 +281,7 @@ const SignUp = () => {
       setAlert_otp("no");
     } else {
 
-      const res = await fetch(server+'/validation/validatekeycheck/', {
+      const res = await fetch(server + '/validation/validatekeycheck/', {
         method: 'POST',
         headers: [["Content-Type", 'application/json']],
         credentials: "include",
