@@ -52,23 +52,20 @@ const NicePassPopUp = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(requestData),
         credentials: "include",
+        body: JSON.stringify(requestData),
       })
         .then((response) => {
           if (!response.ok) {
-            console.error("본인인증 실패:", response.status);
+            window.opener.postMessage("no", window.location.href);
+            window.close()
             return; // 오류 처리 후 종료
           }
           return response.json();
         })
         .then((data) => {
           if (data) {
-            console.log("본인인증 성공:", data);
-
-            // 본인인증 성공 후 로컬스토리지에 저장 및 페이지 이동 - 리덕스로 바꾸기
-            localStorage.setItem("niceValidate", "true");
-            //window.location.href = "/signUp";
+            window.opener.postMessage("ok", window.location.href);
             window.close()
           }
         })

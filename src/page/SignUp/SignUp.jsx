@@ -17,6 +17,8 @@ import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
 import AddressModal from "../Menu/Farmer/Modal/AddressModal";
 import NicePassBtn from "../Menu/Farmer/Modal/NicePassBtn";
 import { server } from "../url";
+import { useDispatch, useSelector } from "react-redux";
+import { nicePassFail, nicePassSuccess } from "../../state/niceSuccessState";
 
 
 const LoginBox = styled(CenterView)`
@@ -145,13 +147,17 @@ const SignUp = () => {
   const [pwCheck, setPwCheck] = useState("");
   const [addrDetail, setAddrDetail] = useState("");
 
+  // 나이스 본인인증 현황
+  const dispatch = useDispatch();
+  const nicePassIsSuccess = useSelector(state => { return state.niceSuccessState.isSuccess; });
+
   const Address = {
-    roadaddress: window.addressInfo.roadAddress,
-    jibunAddress: window.addressInfo.jibunAddress,
-    englishAddress: window.addressInfo.englishAddress,
-    navermapsx: window.addressInfo.x,
-    navermapsy: window.addressInfo.y,
-    detailAddress: addrDetail,
+    // roadaddress: window.addressInfo.roadAddress,
+    // jibunAddress: window.addressInfo.jibunAddress,
+    // detailAddress: addrDetail,
+    roadaddress: "전라남도 목포시 삼학로 303-3",
+    jibunAddress: "전라남도 목포시 용해동 152-80 동아아파트",
+    detailAddress: "옥수수 밭입니다",
   }
 
   // 네이버 지도 팝업 모달창
@@ -214,7 +220,7 @@ const SignUp = () => {
 
   // 경고문 상태값 (빈문자열, ok, no 로 구분)
   const [alert_type, setAlert_type] = useState("");
-  const [alert_pass, setAlert_pass] = useState("");
+  //const [alert_pass, setAlert_pass] = useState("");
   const [alert_id, setAlert_id] = useState("");
   const [alert_otp, setAlert_otp] = useState("");
   const [alert_pw, setAlert_pw] = useState("");
@@ -249,13 +255,6 @@ const SignUp = () => {
     no: "비밀번호가 일치하지 않습니다.",
     ok: "입력한 비밀번호가 일치합니다.",
     default: "",
-  };
-
-  const test_tmp_click_PASS = () => {
-    // 모달창 열기
-    setTmpModalOpen(true);
-    console.log(tmpmodalOpen);
-    setAlert_pass("ok"); // no 혹은 ok
   };
 
   const click_otp_send = async () => {
@@ -314,10 +313,12 @@ const SignUp = () => {
       return setAlert_type("no");
     }
     //if (localStorage.getItem('niceValidate') !== true) {
-    if (false) {
+    if (nicePassIsSuccess != "ok") {
       // PASS 본인인증을 하지 않았다면 no
       ScrollToTop_smooth();
-      return setAlert_pass("no");
+      //return setAlert_pass("no");
+      console.log(nicePassIsSuccess)
+      return dispatch(nicePassFail())
     }
     if (id === "") {
       // 아이디가 없으면 no
@@ -327,6 +328,10 @@ const SignUp = () => {
     if (alert_pw === "no" || alert_pwCheck === "no") {
       return;
     }
+
+    // 기본값 4 == 농업인
+    let roleSelect = 4
+    if (userType === "드론조종사") { roleSelect = 3 } // * 나중에 3,4번으로 전부 수정하기 3==방제사, 4==농민
 
     // 약관 동의로 이동
     Navigate("rules", {
@@ -339,7 +344,7 @@ const SignUp = () => {
         phone_number: niceData.phone_number,
         //email: id,
         password: pw,
-        //role: userType,
+        role: roleSelect,
         address: Address,
       }
     });
@@ -381,8 +386,8 @@ const SignUp = () => {
 
         <div className="title">본인인증</div>
         <NicePassBtn />
-        <AlertText className={alert_pass}>
-          {alert_pass_message[alert_pass] || alert_pass_message.default}
+        <AlertText className={nicePassIsSuccess}>
+          {alert_pass_message[nicePassIsSuccess] || alert_pass_message.default}
         </AlertText>
 
         {/* <div className="title">임시용 본인인증</div>
