@@ -92,14 +92,13 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
   const farmland = data.landInfo?.address.jibunAddress || "농지 없음";
   const date =data.endDate
   // const [date, setDate] = useState("8/19");
-  const [price, setPrice] = useState("직접입력");
+  const [price, setPrice] = useState("30원");
   const pesticidesUsed = data.pesticide || "농약 없음";
   // -
   const [amount, setAmount] = useState(360000);
-  const [serviceAmount, setServiceAmount] = useState(10000);
+  const [serviceAmount, setServiceAmount] = useState(1000);
   // -
-  const company = data.exterminatorinfo?.name || "업체 없음";
-  const company_tel = data.exterminatorinfo?.phone_number || "번호 없음";
+ 
 
   // 닫기
   const closeModal = () => {
@@ -163,7 +162,7 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
           <Hr />
 
           <DataRow>
-            <TextMedium>방제금액</TextMedium>
+            <TextMedium>방제대금</TextMedium>
             <div className="gray">{amount.toLocaleString("ko-KR")}원</div>
           </DataRow>
           <DataRow>
@@ -189,12 +188,12 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
           <RowView style={{ marginBottom: "1rem" }}>
             <TextSemiBold $fontsize={20}>최종결제금액</TextSemiBold>
             <TextMedium className="auto" $fontsize={20} $color={true}>
-              {(amount + serviceAmount).toLocaleString("ko-KR")}원
+              {(serviceAmount).toLocaleString("ko-KR")}원
             </TextMedium>
           </RowView>
           <RowView style={{ marginBottom: "1rem" }}>
             <TextSemiBold $fontsize={20}>
-              총 <span style={{ color: blueColor }}>{4}</span>건 서비스 이용금액
+              총 <span style={{ color: blueColor }}>{1}</span>건 서비스 이용금액
             </TextSemiBold>
             <TextMedium className="auto" $fontsize={20} $color={true}>
               {(amount + serviceAmount).toLocaleString("ko-KR")}원

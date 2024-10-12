@@ -224,8 +224,9 @@ const Matching = ({ }) => {
   const [pilotdata, setPilotdata] = useState([]); // pilot data 
   const [see_seq, setSee_Seq] = useState(0);
   const [dataList, setDataList] = useState([]);
-  
-  
+  const [lndpcl, setlndpcl] = useState([]);
+  const [sum,setsum]=useState([]);
+
   const name = pilotdata?.name || "이름 없음";
   const phone = pilotdata?.mobileno || "번호 없음";
   const amount = pilotdata?.requestAmount || 0;
@@ -234,26 +235,79 @@ const Matching = ({ }) => {
   const payorderid = checkedList[0] || "";
   const totalAmount = amount + serviceAmount;
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("CARD");
-  
+
 
 
   //체크박스 로직
   const checkedItemHandler = (value, isChecked) => {
-    if (isChecked) {
-      setCheckedList((prev) => [...prev, value.orderid]);
-      setSelectData((prev) => [...prev, value]);
-      return;
+    // landInfo가 유효한 객체인지 확인
+    if (value.landInfo && typeof value.landInfo === 'object') {
+      const lndpclAr = parseFloat(value.landInfo.lndpclAr); // 문자열을 숫자로 변환
+  
+      // lndpclAr가 유효한 숫자인지 확인
+      if (!isNaN(lndpclAr)) {
+        const calculatedLndpcl = lndpclAr * 30 * 0.3025; // 숫자로 계산
+        
+        if (isChecked) {
+          // 항목이 체크된 경우
+          setCheckedList((prev) => [...prev, value.orderid]);
+          setSelectData((prev) => [...prev, value]);
+          // lndpcl에 숫자 값 추가 (중복 허용)
+          setlndpcl((prev) => [...prev, calculatedLndpcl]);
+          
+          return;
+        }
+      
+        // 항목이 체크 해제된 경우
+        if (!isChecked && checkedList.includes(value.orderid)) {
+          // 선택된 마지막 항목이라면 see_seq 감소
+          if (see_seq + 1 === selectData.length) { 
+            setSee_Seq(see_seq - 1); 
+          }
+  
+          // 체크리스트에서 orderid 제거
+          setCheckedList((prev) => prev.filter((item) => item !== value.orderid));
+  
+          // selectData에서 해당 값 제거
+          setSelectData((prev) => prev.filter((item) => item.orderid !== value.orderid));
+  
+          // lndpcl에서 계산된 값 제거
+          setlndpcl((prev) => {
+            // 해당 값을 제거 (중복된 값 제거)
+            const updatedLndpcl = [...prev];
+            const index = updatedLndpcl.lastIndexOf(calculatedLndpcl); // 마지막으로 추가된 값의 인덱스 찾기
+            if (index !== -1) {
+              updatedLndpcl.splice(index, 1); // 해당 인덱스의 값 제거
+            }
+            return updatedLndpcl;
+          });
+  
+          console.log(lndpcl);
+          console.log(selectData);
+          
+          return;
+        }
+      } else {
+        console.error('Invalid lndpclAr value:', value.landInfo.lndpclAr);
+      }
+    } else {
+      console.error('landInfo is not a valid object:', value.landInfo);
     }
-
-    if (!isChecked && checkedList.includes(value.orderid)) {
-      if (see_seq + 1 === selectData.length) { setSee_Seq(see_seq - 1); }
-      setCheckedList(checkedList.filter((item) => item !== value.orderid));
-      setSelectData(selectData.filter((item) => item.orderid !== value.orderid));
-      return;
-    }
-
+  
     return;
   };
+  
+  // 숫자만 포함된 lndpcl 배열에서 합계 계산
+  const formattedTotal = Math.round(
+    lndpcl.reduce((acc, cur) => acc + cur, 0) // lndpcl에는 이미 숫자만 들어있음
+  )
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
+  
+ 
+  
+  
+  
 
   const checkHandler = (e, value) => {
     setIsChecked(!isChecked);
@@ -311,7 +365,7 @@ const Matching = ({ }) => {
   }, [selectedCity, token]);
 
   // 주소 데이터를 가져오는 함수
-  
+
 
   // 필터박스에서 선택될 때 cd 값을 출력하는 함수
   const handleProvinceChange = (e) => {
@@ -319,7 +373,7 @@ const Matching = ({ }) => {
     console.log(selectedCd); // 시/도 코드 출력
     setSelectedProvince(selectedCd);
     setCdInfo(selectedCd);
-   
+
   };
 
   const handleCityChange = (e) => {
@@ -327,7 +381,7 @@ const Matching = ({ }) => {
     console.log(selectedCd); // 시/군/구 코드 출력
     setSelectedCity(selectedCd);
     setCdInfo(selectedCd);
-    
+
   };
 
   const handleTownChange = (e) => {
@@ -335,7 +389,7 @@ const Matching = ({ }) => {
     console.log(selectedCd); // 읍/면/동 코드 출력
     setSelectedTown(selectedCd);
     setCdInfo(selectedCd);
-    
+
   };
 
 
@@ -396,10 +450,10 @@ const Matching = ({ }) => {
     const fetchinfo = async () => {
       //방제사 정보 가져오기
       const pilotdata = await fetchUserInfo();
-      setPilotdata(pilotdata); 
+      setPilotdata(pilotdata);
     }
     fetchinfo();
-    
+
 
   }, []);
 
@@ -433,7 +487,7 @@ const Matching = ({ }) => {
       setSee_Seq(see_seq + 1);
     }
   };
-
+  
 
   useEffect(() => {
     setSee_Seq(0);
@@ -506,7 +560,7 @@ const Matching = ({ }) => {
                   <CheckBox
                     type={"checkbox"}
                     $color={"#555555"}
-                    // onClick={}
+                  // onClick={}
                   />
                   <div>농지별명</div>
                   <div className="long">
@@ -547,7 +601,7 @@ const Matching = ({ }) => {
                         />
                         <div>{data.landInfo.landNickName}</div>
                         <div className="long">{data.landInfo.address.jibunAddress}</div>
-                        <div className="long">{data.landInfo.lndpclAr}</div>
+                        <div className="long">{data.landInfo.lndpclAr}m<sup>2</sup></div>
                         <div>{data.landInfo.cropsInfo}</div>
                         <div>{data.pesticide}</div>
                       </TableList>
@@ -598,7 +652,7 @@ const Matching = ({ }) => {
                     </DataRow>
                     <DataRow>
                       <TextMedium className="letter">평단가</TextMedium>
-                      <div className="gray">{selectData[see_seq].setAmount}</div>
+                      <div className="gray">{selectData[see_seq].setAmount}30원</div>
                     </DataRow>
                     <DataRow>
                       <TextMedium className="letter">마감일</TextMedium>
@@ -617,7 +671,8 @@ const Matching = ({ }) => {
                       <TextMedium className="auto">
                         개별 방제대금(받으실 돈)
                       </TextMedium>
-                      <div className="gray">360,000원</div>
+                      {/* 소수점 반올림 */}
+                      <div className="gray">{Math.round(30 * selectData[see_seq].landInfo.lndpclAr * 0.3025).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</div>
                     </DataRow>
                     <DataRow>
                       <TextMedium className="auto">서비스 이용금액</TextMedium>
@@ -631,7 +686,7 @@ const Matching = ({ }) => {
                         총 방제대금(받으실 돈)
                       </TextSemiBold>
                       <TextMedium className="auto" $fontsize={20} $color={true}>
-                        360,000원
+                        {formattedTotal}
                       </TextMedium>
                     </RowView>
                     <RowView>
@@ -640,7 +695,7 @@ const Matching = ({ }) => {
                         이용금액
                       </TextSemiBold>
                       <TextMedium className="auto" $fontsize={20} $color={true}>
-                        {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        {(seqList.length * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
 
                       </TextMedium>
                     </RowView>
@@ -648,7 +703,7 @@ const Matching = ({ }) => {
                     {/* <button type='submit' >콘솔 찍어보기</button>
                  
                   <Btn onClick={() => { putfarmrequest() }}>찍어</Btn> */}
-                    <Btn onClick={() => {  requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid); }}>결제하기</Btn>
+                    <Btn onClick={() => { requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid); }}>결제하기</Btn>
                     {/* <Btn onClick={() => { putfarmrequest(); requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid); }}>결제하기</Btn> */}
 
                   </div>
