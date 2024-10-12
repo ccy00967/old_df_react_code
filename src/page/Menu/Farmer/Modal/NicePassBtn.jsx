@@ -13,6 +13,8 @@ import {
 } from "../../../../Component/common_style";
 import noScroll from "../../../../Component/function/noScroll";
 import { server } from "../../../url";
+import { useDispatch } from "react-redux";
+import { nicePassFail, nicePassSuccess } from "../../../../state/niceSuccessState";
 
 
 const PASSBtn = styled.div`
@@ -54,6 +56,8 @@ function validate_fail() {
 
 const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
 
+    const dispatch = useDispatch();
+
     //const [modalOpen, setModalOpen] = useState(false);
     const [name, setName] = useState("");
     const [birth, setBirth] = useState("");
@@ -90,6 +94,19 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
         form_chk.enc_data.value = res.enc_data;
         form_chk.integrity_value.value = res.integrity_value;
         document.form_chk.submit();
+
+        function receiveMessage(event) {
+            //if (event.origin !== window.location.href) return;
+            console.log(event.data)
+            if (event.data === "ok") {
+                dispatch(nicePassSuccess())
+            }
+            if (event.data === "no") {
+                dispatch(nicePassFail())
+            }
+            return;
+        }
+        window.addEventListener("message", receiveMessage, false);
     }
 
     return (

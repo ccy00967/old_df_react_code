@@ -152,7 +152,7 @@ const Login = (props) => {
   };
 
   const fetchUserInfo = async (uuid, accessToken) => {
-    const res = await fetch(server+`/user/userinfo/${uuid}/`, {
+    const res = await fetch(server + `/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ const Login = (props) => {
   const Login_API = async () => {
     if (email == "" || password == "") alert("이메일 또는 비밀번호를 입력해주세요")
     else {
-      const res = await fetch(server+'/user/login/', {
+      const res = await fetch(server + '/user/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -205,7 +205,15 @@ const Login = (props) => {
         localStorage.setItem("User_Credential", JSON.stringify(userCredential));
         setUserInfo(userInfoData);
       }
-      else alert("로그인 정보가 올바르지 않습니다.")
+      else {
+        if (res.status === 400) {
+          const data = await res.json();
+          alert(data.non_field_errors)
+        }
+        if (res.status === 500) {
+          alert("아이디와 비밀번호를 다시 확인해주세요!")
+        }
+      }
     }
   };
 
