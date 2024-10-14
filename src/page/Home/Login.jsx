@@ -9,7 +9,6 @@ import {
   RowView2,
 } from "../../Component/common_style";
 import { useUser } from "../../Component/userContext";
-import { server } from "../url";
 
 const LoginBox = styled.div`
   box-sizing: border-box;
@@ -152,6 +151,7 @@ const Login = (props) => {
   };
 
   const fetchUserInfo = async (uuid, accessToken) => {
+
     const res = await fetch(server + `/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
@@ -178,14 +178,6 @@ const Login = (props) => {
           password: password,
         }),
       });
-      if (res.ok) {
-        const data = await res.json();
-        const userCredential = {
-          userType: userType,
-          access_token: data.access,
-          refresh_token: data.refresh,
-          uuid: data.uuid,
-        };
 
         console.log("커밋에러 수정")
         const userInfoData = await fetchUserInfo(userCredential.uuid, userCredential.access_token);
@@ -215,6 +207,7 @@ const Login = (props) => {
           alert("아이디와 비밀번호를 다시 확인해주세요!")
         }
       }
+
     }
   };
 
