@@ -60,7 +60,7 @@ function App() {
         <Route path="rules" element={<Rules />} />
         <Route path="tos/:type" element={<Rule_Modal />} />
         <Route path="login" element={<SignUp_Login />} />
-        <Route path="nicepass" element={<NicePassPopUp />} />
+        <Route path="/nicepass" element={<NicePassPopUp />} />
       </Route>
       <Route path="/FindID" element={<FindID />} />
       <Route path="/FindPW" element={<FindPW />} />
