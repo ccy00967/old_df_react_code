@@ -47,7 +47,7 @@ const NicePassPopUp = () => {
     };
 
     if (token_version_id && enc_data && integrity_value) {
-      await fetch(server + "/validation/nicepasscallback/", {
+      fetch(server + "/validation/nicepasscallback/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const NicePassPopUp = () => {
       })
         .then((response) => {
           if (!response.ok) {
-            window.opener.postMessage("no", window.location.href);
+            window.opener.postMessage("no", window.location.origin + "/signUp");
             window.close()
             return; // 오류 처리 후 종료
           }
@@ -65,7 +65,7 @@ const NicePassPopUp = () => {
         })
         .then((data) => {
           if (data) {
-            window.opener.postMessage("ok", window.location.href);
+            window.opener.postMessage("ok", window.location.origin + "/signUp");
             window.close()
           }
         })
