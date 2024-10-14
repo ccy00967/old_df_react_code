@@ -152,12 +152,9 @@ const SignUp = () => {
   const nicePassIsSuccess = useSelector(state => { return state.niceSuccessState.isSuccess; });
 
   const Address = {
-    // roadaddress: window.addressInfo.roadAddress,
-    // jibunAddress: window.addressInfo.jibunAddress,
-    // detailAddress: addrDetail,
-    roadaddress: "전라남도 목포시 삼학로 303-3",
-    jibunAddress: "전라남도 목포시 용해동 152-80 동아아파트",
-    detailAddress: "옥수수 밭입니다",
+    roadaddress: window.addressInfo.roadAddress,
+    jibunAddress: window.addressInfo.jibunAddress,
+    detailAddress: addrDetail,
   }
 
   // 네이버 지도 팝업 모달창

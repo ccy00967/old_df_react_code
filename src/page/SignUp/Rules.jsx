@@ -131,9 +131,6 @@ const Rules = () => {
     );
 
   const signUpAPI = async () => {
-    console.log("aaaaaStatEaaaaaa")
-    console.log(state)
-
     // 회원가입 요청 보내기
     const res = await fetch(server + '/user/register/', {
       method: 'POST',
