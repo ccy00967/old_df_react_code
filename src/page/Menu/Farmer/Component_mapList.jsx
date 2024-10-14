@@ -205,7 +205,7 @@ const Component_mapList = (props) => {
   // 방재신청 > 농지선택
   const selectFarmland = (data) => {
     if (setSelectFarmland) {
-      console.log(data);
+      console.log("selectFarmland",data);
       const farmland = `${data.landNickName}(${data.address.jibunAddress})`;
       setSelectFarmland(data);
       ScrollToTop_smooth();
