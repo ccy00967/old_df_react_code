@@ -9,7 +9,6 @@ import {
   RowView2,
 } from "../../Component/common_style";
 import { useUser } from "../../Component/userContext";
-import { server } from "../url";
 
 const LoginBox = styled.div`
   box-sizing: border-box;
@@ -152,6 +151,7 @@ const Login = (props) => {
   };
 
   const fetchUserInfo = async (uuid, accessToken) => {
+
     const res = await fetch(server + `/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
@@ -215,6 +215,7 @@ const Login = (props) => {
           alert("아이디와 비밀번호를 다시 확인해주세요!")
         }
       }
+
     }
   };
 
