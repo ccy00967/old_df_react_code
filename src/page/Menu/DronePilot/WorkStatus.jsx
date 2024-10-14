@@ -18,6 +18,8 @@ import SideMenuBar from "../SideMenuBar";
 import WorkStatus_Modal from "./Modal/WorkStatus_Modal";
 import { server } from "../../url";
 import { workStart_API, workFin_API, cancel1_API, cancel2_API } from "./pilotFetchFunc";
+import { ScrollToTop_smooth } from "../../../Component/function/ScrollTop";
+import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
 
 
 
@@ -232,7 +234,11 @@ const WorkStatus = () => {
   }, [currentPage, perPage]);
 
 
-
+  const selectFarmland = (data) => {
+      console.log('dldj',data.landInfo);
+      ScrollToTop_smooth();
+      globalSearchAddressToCoordinate(data.landInfo.address.jibunAddress);
+  };
 
 
 
@@ -240,6 +246,7 @@ const WorkStatus = () => {
   const ModalRef = useRef();
   const openModal = (data) => {
     ModalRef.current.visible(data);
+    
   };
 
   return (
@@ -300,13 +307,13 @@ const WorkStatus = () => {
                 <TableList
                   key={idx}
                   className={(idx + 1) % 2 === 0 ? "x2" : ""}
-                  onDoubleClick={() => openModal(data)}
+                  onDoubleClick={() => {openModal(data); selectFarmland(data);}}
                 >
                   <div>{data.landInfo.landNickName}</div>
                   <div>{data.startDate}</div>
                   <div>{data.owner.name}</div>
-                  <div>{data.owner.mobileno}</div>
-                  <div className="addr">{data.owner.address.jibunAddress}</div>
+                  <div>{data.owner.mobileno.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) }</div>
+                  <div className="addr">{data.landInfo.address.jibunAddress}</div>
                   <div>{data.exterminateState === 1 ? ("작업 준비 중") : (data.exterminateState === 2 ? ("작업 중") : data.exterminateState === 3 && ("작업완료"))}</div>
 
 

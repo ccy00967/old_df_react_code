@@ -11,6 +11,18 @@ import {
 } from "../../../../Component/common_style";
 import noScroll from "../../../../Component/function/noScroll";
 import useEscapeKey from "../../../../Component/function/useEscapeKey";
+import GWNaverMap from "../../../../Component/naver_maps/GWNaverMaps";
+
+
+
+const GWNaverMaps = styled.div`
+  height: 300px;
+  margin-top: 1rem;
+  border: 1px solid #f0f0f0;
+  `;
+
+
+
 
 const ConBox = styled(CenterView)`
   width: 100%;
@@ -73,7 +85,7 @@ const TextMedium = styled.div`
 `;
 
 const WorkStatus_Modal = forwardRef((props, ref) => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(true);
   const [data, setData] = useState({});
 
   useImperativeHandle(ref, () => ({
@@ -82,23 +94,27 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
       setModalOpen(true);
     },
   }));
-  // 모달 open시 스크롤방지F
+
+  
+  // 모달 open시 스크롤방지
   noScroll(modalOpen);
 
   const name = data.owner?.name || "이름 없음"
-  const phonenum = data.owner?.phone_number || "번호 없음";
+  const phonenum = data.owner?.mobileno || "번호 없음";
   // -
   const transaction = data.dealmothod === 0 ? "일반거래" : "개인거래";
   const farmland = data.landInfo?.address.jibunAddress || "농지 없음";
-  const date =data.endDate
+  const date = data.endDate
   // const [date, setDate] = useState("8/19");
   const [price, setPrice] = useState("30원");
   const pesticidesUsed = data.pesticide || "농약 없음";
+  const moneyReceive = data.landInfo?.lndpclAr || "없음"
   // -
   const [amount, setAmount] = useState(360000);
   const [serviceAmount, setServiceAmount] = useState(1000);
+  const [searchAddr, setSearchAddr] = useState([]);
   // -
- 
+
 
   // 닫기
   const closeModal = () => {
@@ -106,8 +122,17 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
   };
   useEscapeKey(closeModal);
 
+
+
+
+
+
+
+
   return (
     <BackgroundArea style={modalOpen ? {} : { display: "none" }}>
+
+
       <ConBox>
         {/* <div className="btn">◀︎</div> */}
 
@@ -133,7 +158,7 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
           </DataRow>
           <DataRow>
             <TextMedium>전화번호</TextMedium>
-            <div className="gray">{phonenum}</div>
+            <div className="gray">{phonenum.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)}</div>
           </DataRow>
 
           <Hr />
@@ -159,11 +184,20 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
             <div className="gray">{pesticidesUsed}</div>
           </DataRow>
 
+
+
+
           <Hr />
+
+          <GWNaverMaps>
+            <GWNaverMap setValue={setSearchAddr} />
+          </GWNaverMaps>
+
+
 
           <DataRow>
             <TextMedium>방제대금</TextMedium>
-            <div className="gray">{amount.toLocaleString("ko-KR")}원</div>
+            <div className="gray">{Math.round(30 * moneyReceive * 0.3025).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</div>
           </DataRow>
           <DataRow>
             <TextMedium className="auto">서비스 이용금액</TextMedium>
@@ -192,12 +226,12 @@ const WorkStatus_Modal = forwardRef((props, ref) => {
             </TextMedium>
           </RowView>
           <RowView style={{ marginBottom: "1rem" }}>
-            <TextSemiBold $fontsize={20}>
+            {/* <TextSemiBold $fontsize={20}>
               총 <span style={{ color: blueColor }}>{1}</span>건 서비스 이용금액
             </TextSemiBold>
             <TextMedium className="auto" $fontsize={20} $color={true}>
-              {(amount + serviceAmount).toLocaleString("ko-KR")}원
-            </TextMedium>
+              {(serviceAmount).toLocaleString("ko-KR")}원
+            </TextMedium> */}
           </RowView>
         </ModalBox>
 
