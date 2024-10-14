@@ -187,6 +187,7 @@ const Login = (props) => {
           uuid: data.uuid,
         };
 
+        console.log("커밋에러 수정")
         const userInfoData = await fetchUserInfo(userCredential.uuid, userCredential.access_token);
 
         if (userInfoData.role == 3) {
