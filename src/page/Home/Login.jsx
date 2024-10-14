@@ -179,7 +179,8 @@ const Login = (props) => {
         }),
       });
 
-      const data = await res.json();
+        console.log("커밋에러 수정")
+        const userInfoData = await fetchUserInfo(userCredential.uuid, userCredential.access_token);
 
         if (userInfoData.role == 3) {
           if (userType !== "드론조종사") {
