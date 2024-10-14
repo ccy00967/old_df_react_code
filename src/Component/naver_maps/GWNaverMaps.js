@@ -54,7 +54,7 @@ const GWNaverMap = ({ setValue }) => {
             return `${address}`;
           });
 
-          console.log('좌주', htmlAddresses)
+          console.log('좌표->주소', htmlAddresses[0])
 
           showInfoWindowTextBox(htmlAddresses)
 
@@ -98,7 +98,7 @@ const GWNaverMap = ({ setValue }) => {
           item.jibunAddress != null ? htmlAddresses.push(item.jibunAddress) : htmlAddresses.push("")
           item.roadAddress != null ? htmlAddresses.push(item.roadAddress) : htmlAddresses.push("")
 
-          console.log('주좌', htmlAddresses)
+          console.log('주소=>좌', htmlAddresses)
 
           showInfoWindowTextBox(htmlAddresses)
 
@@ -165,7 +165,7 @@ const GWNaverMap = ({ setValue }) => {
     }
   }, []); // 빈 배열로 설정하여 컴포넌트가 처음 렌더링될 때만 실행
 
-  return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
+  return <div id="map" style={{ width: '100%', height: '100%' }}/>;
 };
 
 export default GWNaverMap;

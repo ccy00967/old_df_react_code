@@ -637,7 +637,7 @@ const Matching = ({ }) => {
                     </DataRow>
                     <DataRow>
                       <TextMedium>전화번호</TextMedium>
-                      <div className="gray">{selectData[see_seq].owner.mobileno}</div>
+                      <div className="gray">{selectData[see_seq].owner.mobileno.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) }</div>
                     </DataRow>
 
                     <Hr />
@@ -703,7 +703,7 @@ const Matching = ({ }) => {
                     {/* <button type='submit' >콘솔 찍어보기</button>
                  
                   <Btn onClick={() => { putfarmrequest() }}>찍어</Btn> */}
-                    <Btn onClick={() => { requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid); }}>결제하기</Btn>
+                    <Btn onClick={() => { requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid);putfarmrequest(); }}>결제하기</Btn>
                     {/* <Btn onClick={() => { putfarmrequest(); requestPayment(selectedPaymentMethod, totalAmount, name, phone, email, payorderid); }}>결제하기</Btn> */}
 
                   </div>
