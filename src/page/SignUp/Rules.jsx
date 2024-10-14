@@ -131,10 +131,8 @@ const Rules = () => {
     );
 
   const signUpAPI = async () => {
-    console.log(state)
-
     // 회원가입 요청 보내기
-    const res = await fetch(server+'/user/register/', {
+    const res = await fetch(server + '/user/register/', {
       method: 'POST',
       headers: [["Content-Type", 'application/json']],
       credentials: "include",
@@ -153,8 +151,9 @@ const Rules = () => {
 
   const goHome = () => Navigate("/");
   const goNext = () => {
+    // 전체동의
     if (check1 && check2 && check3 && check4) {
-      // 전체동의
+      // 회원가입 실행 if문안에서 실행
       if (signUpAPI())
         Navigate("/signUp/login", {
           state: state,

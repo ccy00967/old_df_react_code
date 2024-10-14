@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import checkbackimg from "../img/Vector.png"
 
 export const GreenColor = "#2dcc71";
 export const lightGreenColor = "#DCF6E7";
@@ -75,7 +76,7 @@ export const CheckBox = styled.input`
   &:checked {
     background-color: ${(props) => props.color || GreenColor};
     border: 1px solid ${(props) => props.color || GreenColor};
-    background-image: url("/staticfiles/img/Vector.png");
+    background-image: url(${checkbackimg});
     background-repeat: no-repeat;
     background-position: center;
   }

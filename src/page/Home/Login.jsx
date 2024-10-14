@@ -151,7 +151,8 @@ const Login = (props) => {
   };
 
   const fetchUserInfo = async (uuid, accessToken) => {
-    const res = await fetch(`https://192.168.0.28:443/user/userinfo/${uuid}/`, {
+
+    const res = await fetch(server + `/user/userinfo/${uuid}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -164,8 +165,9 @@ const Login = (props) => {
   };
 
   const Login_API = async () => {
-    try {
-      const res = await fetch('https://192.168.0.28:443/user/login/', {
+    if (email == "" || password == "") alert("이메일 또는 비밀번호를 입력해주세요")
+    else {
+      const res = await fetch(server + '/user/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -179,21 +181,32 @@ const Login = (props) => {
 
       const data = await res.json();
 
-      const userCredential = {
-        userType: userType,
-        access_token: data.access,
-        refresh_token: data.refresh,
-        uuid: data.uuid,
-      };
-      
-      setUser_info(userCredential);
-      localStorage.setItem("User_Credential", JSON.stringify(userCredential));
+        if (userInfoData.role == 3) {
+          if (userType !== "드론조종사") {
+            alert("방제사로 로그인 해주세요")
+            return
+          }
+        }
+        if (userInfoData.role == 4) {
+          if (userType !== "농업인") {
+            alert("농업인으로 로그인 해주세요")
+            return
+          }
+        }
+        setUser_info(userCredential);
+        localStorage.setItem("User_Credential", JSON.stringify(userCredential));
+        setUserInfo(userInfoData);
+      }
+      else {
+        if (res.status === 400) {
+          const data = await res.json();
+          alert(data.non_field_errors)
+        }
+        if (res.status === 500) {
+          alert("아이디와 비밀번호를 다시 확인해주세요!")
+        }
+      }
 
-      const userInfoData = await fetchUserInfo(userCredential.uuid, userCredential.access_token);
-      setUserInfo(userInfoData);
-
-    } catch (error) {
-      console.error("로그인에 실패했습니다.", error);
     }
   };
 

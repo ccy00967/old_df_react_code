@@ -32,46 +32,41 @@ const PASSBtn = styled.div`
 
 const NicePassPopUp = () => {
   const location = useLocation();
-  
-  
-  
-  
+
   // 리덕스로 상태 체크하기 -> 본인인증 성공 상태 반영
-  useEffect(() => {
+  useEffect(async () => {
     const queryParams = new URLSearchParams(location.search);
     const token_version_id = queryParams.get("token_version_id");
     const enc_data = queryParams.get("enc_data");
     const integrity_value = queryParams.get("integrity_value");
-    
+
     const requestData = {
       token_version_id,
       enc_data,
       integrity_value,
     };
-    
+
     if (token_version_id && enc_data && integrity_value) {
       fetch(server + "/validation/nicepasscallback/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(requestData),
         credentials: "include",
+        body: JSON.stringify(requestData),
       })
         .then((response) => {
           if (!response.ok) {
-            console.error("본인인증 실패:", response.status);
+            window.opener.postMessage("no", window.location.origin + "/signUp");
+            window.close()
             return; // 오류 처리 후 종료
           }
           return response.json();
         })
         .then((data) => {
           if (data) {
-            console.log("본인인증 성공:", data);
-
-            // 본인인증 성공 후 로컬스토리지에 저장 및 페이지 이동
-            localStorage.setItem("niceValidate", "true");
-            window.location.href = "/signUp";
+            window.opener.postMessage("ok", window.location.origin + "/signUp");
+            window.close()
           }
         })
         .catch((error) => {

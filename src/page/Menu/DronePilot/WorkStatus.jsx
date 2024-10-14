@@ -17,6 +17,11 @@ import PerPageControl from "../../../Component/UI/PerPageControl";
 import SideMenuBar from "../SideMenuBar";
 import WorkStatus_Modal from "./Modal/WorkStatus_Modal";
 import { server } from "../../url";
+import { workStart_API, workFin_API, cancel1_API, cancel2_API } from "./pilotFetchFunc";
+import { ScrollToTop_smooth } from "../../../Component/function/ScrollTop";
+import { globalSearchAddressToCoordinate } from "../../../Component/naver_maps/GWNaverMaps";
+
+
 
 const ContentArea = styled.div`
   flex: 1;
@@ -101,29 +106,31 @@ const BtnArea = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 6rem;
+  width: 10rem;
+  margin-right: 0px;
+  margin-left: 0px;
   font-family: var(--font-Pretendard-Medium);
   color: white;
   span {
-    padding: 0.4rem 1rem;
+    padding: 0.4rem 1.2rem;
     border-radius: 4px;
-  }
-  span.green {
-    background-color: ${GreenColor};
-    cursor: pointer;
-  }
-  span.blue {
-    background-color: ${blueColor};
-    cursor: pointer;
-  }
-  span.gray {
-    background-color: ${grayColor};
-    cursor: pointer;
-  }
-  span.yellow {
-  background-color: ${yellowColor};
-  cursor: pointer;}
-`;
+    }
+    span.green {
+      background-color: ${GreenColor};
+      cursor: pointer;
+      }
+      span.blue {
+        background-color: ${blueColor};
+        cursor: pointer;
+        }
+        span.gray {
+          background-color: ${grayColor};
+          cursor: pointer;
+          }
+          span.yellow {
+            background-color: ${yellowColor};
+            cursor: pointer;}
+            `;
 
 
 
@@ -133,15 +140,10 @@ const WorkStatus = () => {
   const [cnt, setCnt] = useState(0); // 전체 개시글 갯수
   const [perPage, setPerPage] = useState(20); // 페이지당 게시글 갯수 (디폴트:20)
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  // const [count_매칭완료, setCount_매칭완료] = useState();
-  // const [count_작업시작, setCount_작업시작] = useState();
-  // const [count_작업완료, setCount_작업완료] = useState();
   const [filter, setFilter] = useState([]);
   const setting_reset = () => setFilter("");
-  // const setting_매칭완료 = () => setFilter("매칭완료");
-  // const setting_작업시작 = () => setFilter("작업시작");
-  // const setting_작업완료 = () => setFilter("작업완료");
 
+  const [dataList, setDataList] = useState([]);
 
 
 
@@ -151,8 +153,8 @@ const WorkStatus = () => {
     const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
     const accessToken = userInfo.access_token;
 
-    const res = await fetch(server+"/exterminator/workinglist/0/", {
-      
+    const res = await fetch(server + "/exterminator/workinglist/0/", {
+
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -162,15 +164,17 @@ const WorkStatus = () => {
       .then((res) => res.json())
       .then((data) => {
         length = data.length;
+        //store.dispatch(workdatalistSlice.actions.setWorkData(data));
         //console.log(length);
         setDataList(data)
+        console.log(data)
+
         //return data
       });
-    //console.log(res.endDate)
   }
 
   useEffect(() => {
-    getWorkStatus()
+  getWorkStatus()
   }, []);
 
   //필터 함수
@@ -187,17 +191,7 @@ const WorkStatus = () => {
     return "blue";
   };
 
-  // 농지 데이터 load
-  const [dataList, setDataList] = useState([]);
-  // 이건 테스트 데이터
-  // const testData = Array(parseInt(perPage)).fill({
-  //   farmland: "김가네벼",
-  //   date: "2020.02.02",
-  //   name: "홍길동",
-  //   tel: "010-2020-2020", 
-  //   addr: "전북특별자치도 김제시 백산읍 공덕 2길",
-  //   state: "작업시작",
-  // });
+
   const filterData = () => {
     if (!dataList || dataList.length === 0) {
       return [];  // data가 undefined 또는 빈 배열일 때 빈 배열 반환
@@ -239,91 +233,20 @@ const WorkStatus = () => {
     load_API();
   }, [currentPage, perPage]);
 
-  //시작 버튼 API
-  const workStart_API = async (orderid) => {
-    if (window.confirm("시작하시겠습니까?")) {
-      alert("시작.");
-      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-      const accessToken = User_Credential?.access_token;
-      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ exterminateState: 2 }),
-      })
-      window.location.reload();
-    } else { alert("취소"); }
 
-  };
-
-  //완료 버튼 API
-  const workFin_API = async (orderid) => {
-    if (window.confirm("작업이 끝났습니까?")) {
-      alert("작업완료");
-      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-      const accessToken = User_Credential?.access_token;
-      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ exterminateState: 3 }),
-      })
-      window.location.reload();
-
-    } else { alert("취소"); }
-
+  const selectFarmland = (data) => {
+      console.log('dldj',data.landInfo);
+      ScrollToTop_smooth();
+      globalSearchAddressToCoordinate(data.landInfo.address.jibunAddress);
   };
 
 
-
-  //취소 버튼 API  => 작업 중에서 작업 준비중으로
-  const  cancel1_API = async (orderid) => {
-    if (window.confirm("취소하시겠습니까?")) {
-      alert("취소");
-      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-      const accessToken = User_Credential?.access_token;
-      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ exterminateState: 1 }),
-      })
-      window.location.reload();
-
-    } else { alert("취소"); }
-
-  };
-
-  //취소버튼 APT2 => 완료에서 작업 중으로
-  const cancel2_API = async (orderid) => {
-    if (window.confirm("취소하시겠습니까?")) {
-      alert("취소");
-      const User_Credential = JSON.parse(localStorage.getItem('User_Credential'));
-      const accessToken = User_Credential?.access_token;
-      const res = await fetch(server+`/exterminator/exterminatestate/${orderid}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ exterminateState: 2 }),
-      })
-      window.location.reload();
-
-    } else { alert("취소"); }
-
-  };
 
   // 더블클릭시 열리는 모달
   const ModalRef = useRef();
   const openModal = (data) => {
     ModalRef.current.visible(data);
+    
   };
 
   return (
@@ -379,57 +302,45 @@ const WorkStatus = () => {
           {filterData().map((data, idx) => {
             //'매칭중'인 데이터는 cut
             if (data.exterminateState !== 0) {
-              // 테스트용 state
-              // const testState =
-              //   filter !== ""
-              //     ? filter
-              //     : (idx + 1) % 5 === 0
-              //       ? "매칭완료"
-              //       : (idx + 1) % 2 === 0
-              //         ? "작업시작"
-              //         : "작업완료";
-
-              // 필터가 작업시작이 아니라면 버튼 보여줌
-              // const isBtnShow = filter !== "작업완료";
-              //if (data.exterminateSate === 2) {
+          
               return (
                 <TableList
                   key={idx}
                   className={(idx + 1) % 2 === 0 ? "x2" : ""}
-                  onDoubleClick={() => openModal(data)}
+                  onDoubleClick={() => {openModal(data); selectFarmland(data);}}
                 >
                   <div>{data.landInfo.landNickName}</div>
                   <div>{data.startDate}</div>
                   <div>{data.owner.name}</div>
-                  <div>{data.owner.phone_number}</div>
-                  <div className="addr">{data.owner.address.jibunAddress}</div>
-                  <div>{data.exterminateState === 1 ? ("작업 준비 중"):(data.exterminateState ===2 ? ("작업 중"):data.exterminateState === 3 && ("작업완료"))}</div>
+                  <div>{data.owner.mobileno.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) }</div>
+                  <div className="addr">{data.landInfo.address.jibunAddress}</div>
+                  <div>{data.exterminateState === 1 ? ("작업 준비 중") : (data.exterminateState === 2 ? ("작업 중") : data.exterminateState === 3 && ("작업완료"))}</div>
 
 
                   <BtnArea>
 
                     {data.exterminateState === 1 ? (
-                        <span className="green" onClick={() => workStart_API(data.orderid)}>
-                          시작
-                        </span>
+                      <span className="green" onClick={() => workStart_API(data.orderid)}>
+                        시작
+                      </span>
                     ) : (
                       data.exterminateState === 2 ? (
                         <RowView2>
-                        <span className="blue" onClick={() => workFin_API(data.orderid)}>
-                          작업 완료
-                        </span>
-                        <span className="yellow" onClick={()=>cancel1_API(data.orderid)}>
-                          취소하기
-                        </span>
+                          <span className="blue" onClick={() => workFin_API(data.orderid)}>
+                            완료
+                          </span>
+                           <span className="yellow" onClick={() => cancel1_API(data.orderid)}>
+                            취소
+                          </span> 
                         </RowView2>
 
                       ) : (
                         data.exterminateState === 3 && (
                           <RowView>
-                          <span className="gray">
-                            완료
-                          </span>
-                          <span className="yellow" onClick={()=>cancel2_API(data.orderid)}>취소</span>
+                            {/* <span className="gray">
+                              완료
+                            </span> */}
+                            <span className="yellow" onClick={() => cancel2_API(data.orderid)}>취소</span>
                           </RowView>
                         )
                       )
