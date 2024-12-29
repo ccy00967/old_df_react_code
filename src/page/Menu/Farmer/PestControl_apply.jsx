@@ -152,7 +152,7 @@ const PestControl_apply = () => {
       const userInfo = JSON.parse(localStorage.getItem('User_Credential'));
       const refreshToken = userInfo?.refresh_token;
 
-      const res = await fetch(server+'/user/token/refresh/', {
+      const res = await fetch(server + '/user/token/refresh/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ const PestControl_apply = () => {
     let accessToken = userInfo?.access_token;
     console.log(postData);
 
-    let res = await fetch(server+`/farmrequest/send/${uuid}/`, {
+    let res = await fetch(server + `/farmrequest/send/${uuid}/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -195,7 +195,7 @@ const PestControl_apply = () => {
       accessToken = await refreshAccessToken();
       if (accessToken) {
         // 새로운 액세스 토큰으로 다시 시도
-        res = await fetch(server+`/farmrequest/send/${uuid}/`, {
+        res = await fetch(server + `/farmrequest/send/${uuid}/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

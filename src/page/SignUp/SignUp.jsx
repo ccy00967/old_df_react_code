@@ -13,12 +13,14 @@ import {
   RowView,
 } from "../../Component/common_style";
 import { ScrollToTop_smooth } from "../../Component/function/ScrollTop";
-import TmpNicepassModal from "../Menu/Farmer/Modal/TmpNicepassModal";
-import AddressModal from "../Menu/Farmer/Modal/AddressModal";
-import NicePassBtn from "../Menu/Farmer/Modal/NicePassBtn";
+import AddressModal from "./AddressModal";
+import NicePassBtn from "./NicePassBtn";
 import { server } from "../url";
 import { useDispatch, useSelector } from "react-redux";
-import { nicePassFail, nicePassSuccess } from "../../state/niceSuccessState";
+import { nicePassFail } from "../../state/niceSuccessState";
+import * as message from "./messageforSignUp";
+import { emailValidateCheck, sendOTPEmail } from "./signupFunc";
+
 
 
 const LoginBox = styled(CenterView)`
@@ -121,6 +123,7 @@ const Btn = styled.span`
   }
 `;
 
+
 // 로그인에 필요한 유저정보
 const userModel = {
   name: "",
@@ -131,39 +134,34 @@ const userModel = {
   phone_number: "",
   email: "",
   password: "",
-  //role: "",
-  address: {},
+  role: "",
+  address: {
+    roadaddress: "",
+    jibunAddress: "",
+    detailAddress: "",
+  },
 }
-
-// address에 들어갈 객체
 
 const SignUp = () => {
   const Navigate = useNavigate();
 
   const [userType, setUserType] = useState("");
-  const [id, setID] = useState("");
+  const [id, setID] = useState(""); // id는 email과 같음
   const [otp, setOtp] = useState("");
   const [pw, setPw] = useState("");
   const [pwCheck, setPwCheck] = useState("");
+
+  const [addrRoad, setAddrRoad] = useState("");
+  const [addrJibun, setAddrJibun] = useState("");
   const [addrDetail, setAddrDetail] = useState("");
 
-  // 나이스 본인인증 현황
+  // 나이스 본인인증 여부
   const dispatch = useDispatch();
   const nicePassIsSuccess = useSelector(state => { return state.niceSuccessState.isSuccess; });
-
-  const Address = {
-    roadaddress: window.addressInfo.roadAddress,
-    jibunAddress: window.addressInfo.jibunAddress,
-    detailAddress: addrDetail,
-  }
 
   // 네이버 지도 팝업 모달창
   const [addrmodalOpen, setAddrModalOpen] = useState(false);
   const closeAddrModal = () => { setAddrModalOpen(false) };
-
-  // 임시 나이스 본인인증 - 모달창을 띄워서 필요정보 직접입력
-  const [tmpmodalOpen, setTmpModalOpen] = useState(false);
-  const tmpcloseModal = () => { setTmpModalOpen(false) }
 
   // 임시 본인인증 데이터 - 나이스에서는 토큰으로 넘어올 예정
   const [niceData, setNicepass] = useState({});
@@ -177,20 +175,13 @@ const SignUp = () => {
     return "";
   };
 
-  // useEffect(() => {
-  //   const niceValidate = localStorage.getItem("niceValidate");
-  //   if (niceValidate === "true") {
-  //     setAlert_pass("ok");
-  //   }
-
-  //   return () => {
-  //     localStorage.removeItem("niceValidate");
-  //   };
-  // }, []);
-
   const setting_id = (e) => setID(e.target.value);
   const setting_otp = (e) => setOtp(e.target.value);
+
+  const setting_addrRoad = (e) => setAddrRoad(e.target.value);
+  const setting_addrJubun = (e) => setAddrJibun(e.target.value);
   const setting_addrDetail = (e) => setAddrDetail(e.target.value);
+
   const setting_pw = (e) => {
     if (isOk_Pw(e.target.value)) {
       setAlert_pw("ok");
@@ -223,98 +214,52 @@ const SignUp = () => {
   const [alert_pw, setAlert_pw] = useState("");
   const [alert_pwCheck, setAlert_pwCheck] = useState("");
 
-  const alert_type_message = {
-    no: "회원선택을 먼저 해주세요.",
-    ok: "",
-    default: "회원선택을 해주세요.",
-  };
-  const alert_pass_message = {
-    no: "본인인증을 먼저 해주세요.",
-    ok: "본인인증이 완료되었습니다.",
-    default: "",
-  };
-  const alert_id_message = {
-    no: "이메일을 입력해주세요.",
-    ok: "사용 가능한 이메일입니다.",
-    default: "",
-  };
-  const alert_otp_message = {
-    no: "인증번호가 일치하지 않습니다.",
-    ok: "인증번호가 일치합니다.",
-    default: "",
-  };
-  const alert_pw_message = {
-    no: "비밀번호는 영문/숫자/특수문자 포함 10~16자를 포함해야 합니다.",
-    ok: "사용가능한 비밀번호입니다.",
-    default: "영문/숫자/특수문자 포함 8~16자",
-  };
-  const alert_pwCheck_message = {
-    no: "비밀번호가 일치하지 않습니다.",
-    ok: "입력한 비밀번호가 일치합니다.",
-    default: "",
-  };
-
+  // 인증이메일 발송
   const click_otp_send = async () => {
     if (id === "") {
       setAlert_id("no");
-    } else {
+      return;
+    }
 
-      const res = await fetch(server + '/validation/emailsend/', {
-        method: 'POST',
-        headers: [["Content-Type", 'application/json'],
-        ],
-        credentials: "include",
-        body: JSON.stringify({ email: id }),
-      });
-
-      if (res.ok) {
-        setAlert_id("ok");
-      }
-    };
+    const res = await sendOTPEmail(id)
+    if (res.ok) {
+      setAlert_id("ok");
+    }
   }
+
+  // 인증번호 유효성 검사
   const click_otp_check = async () => {
     if (otp === "") {
       setAlert_otp("no");
-    } else {
+      return;
+    }
 
-      const res = await fetch(server + '/validation/validatekeycheck/', {
-        method: 'POST',
-        headers: [["Content-Type", 'application/json']],
-        credentials: "include",
-        body: JSON.stringify({ validatekey: otp }),
-      });
-
+    const res = await emailValidateCheck(otp)
+    if (res.ok) {
       console.log(res)
-
-      if (res.ok) {
-        setAlert_otp("ok");
-      }
-      else {
-        setAlert_otp("no");
-      }
+      setAlert_otp("ok");
+    }
+    else {
+      setAlert_otp("no");
     }
   };
 
   /** 주소 찾기 API */
   const search_addr_API = () => {
-
     setAddrModalOpen(true);
     // setAddr("API 연결");
   };
 
   /** 가입하기 버튼 - 로직은 수정 바랍니다. */
   const go_nextPage = () => {
+    // 회원선택을 선택하지 않았다면 no
     if (userType === "") {
-      // 회원선택을 선택하지 않았다면 no
       ScrollToTop_smooth();
       return setAlert_type("no");
     }
-    //if (localStorage.getItem('niceValidate') !== true) {
+    // PASS 본인인증을 하지 않았다면 no
     if (nicePassIsSuccess != "ok") {
-      // PASS 본인인증을 하지 않았다면 no
       ScrollToTop_smooth();
-      //return setAlert_pass("no");
-      console.log(nicePassIsSuccess)
       return dispatch(nicePassFail())
     }
     if (id === "") {
@@ -330,19 +275,26 @@ const SignUp = () => {
     let roleSelect = 4
     if (userType === "드론조종사") { roleSelect = 3 } // * 나중에 3,4번으로 전부 수정하기 3==방제사, 4==농민
 
+    console.log({
+      password: pw,
+      role: roleSelect,
+      address: {
+        roadaddress: addrRoad,
+        jibunAddress: addrJibun,
+        detailAddress: addrDetail,
+      },
+    })
+
     // 약관 동의로 이동
     Navigate("rules", {
       state: {
-        name: niceData.name,
-        birth: niceData.birth,
-        gender: niceData.gender,
-        nationalinfo: niceData.nationalinfo,
-        mobileco: niceData.mobileco,
-        phone_number: niceData.phone_number,
-        //email: id,
         password: pw,
         role: roleSelect,
-        address: Address,
+        address: {
+          roadaddress: addrRoad,
+          jibunAddress: addrJibun,
+          detailAddress: addrDetail,
+        },
       }
     });
   };
@@ -377,22 +329,15 @@ const SignUp = () => {
         </RowView>
         {userType === "" && (
           <AlertText className={alert_type}>
-            {alert_type_message[alert_type] || alert_type_message.default}
+            {message.alert_type[alert_type] || message.alert_type.default}
           </AlertText>
         )}
 
         <div className="title">본인인증</div>
         <NicePassBtn />
         <AlertText className={nicePassIsSuccess}>
-          {alert_pass_message[nicePassIsSuccess] || alert_pass_message.default}
+          {message.alert_pass[nicePassIsSuccess] || message.alert_pass.default}
         </AlertText>
-
-        {/* <div className="title">임시용 본인인증</div>
-        <TmpPASSBtn onClick={test_tmp_click_PASS}>임시 본인인증 버튼</TmpPASSBtn>
-        <AlertText className={alert_pass}>
-          {alert_pass_message[alert_pass] || alert_pass_message.default}
-        </AlertText> */}
-
 
         <div className="title">아이디</div>
         <RowView>
@@ -405,7 +350,7 @@ const SignUp = () => {
           <Btn onClick={click_otp_send}>인증번호 발송</Btn>
         </RowView>
         <AlertText className={alert_id}>
-          {alert_id_message[alert_id] || alert_id_message.default}
+          {message.alert_id[alert_id] || message.alert_id.default}
         </AlertText>
 
         <div className="title">인증번호</div>
@@ -420,7 +365,7 @@ const SignUp = () => {
           <Btn onClick={click_otp_check}>확인</Btn>
         </RowView>
         <AlertText className={alert_otp}>
-          {alert_otp_message[alert_otp] || alert_otp_message.default}
+          {message.alert_otp[alert_otp] || message.alert_otp.default}
         </AlertText>
 
         <div className="title">비밀번호</div>
@@ -435,7 +380,7 @@ const SignUp = () => {
           />
         </RowView>
         <AlertText className={alert_pw}>
-          {alert_pw_message[alert_pw] || alert_pw_message.default}
+          {message.alert_pw[alert_pw] || message.alert_pw.default}
         </AlertText>
 
         <div className="title">비밀번호 확인</div>
@@ -449,15 +394,15 @@ const SignUp = () => {
           />
         </RowView>
         <AlertText className={alert_pwCheck}>
-          {alert_pwCheck_message[alert_pwCheck] ||
-            alert_pwCheck_message.default}
+          {message.alert_pwCheck[alert_pwCheck] ||
+            message.alert_pwCheck.default}
         </AlertText>
 
         <div className="title">집 주소</div>
         <RowView>
           <InputBox
             placeholder="집 주소를 입력해주세요."
-            value={window.addressInfo.jibunAddress}
+            value={addrRoad}
             readOnly
           />
           <Btn onClick={search_addr_API}>주소 찾기</Btn>
@@ -476,16 +421,15 @@ const SignUp = () => {
         </Btn>
       </LoginBox>
       {
-        tmpmodalOpen &&
-        <TmpNicepassModal isOpen={tmpmodalOpen} closeModal={tmpcloseModal} setNicepass={setNicepass}></TmpNicepassModal>
-      }
-
-      {
         addrmodalOpen &&
-        <AddressModal isOpen={addrmodalOpen} closeAddrModal={closeAddrModal} />
+        <AddressModal
+          isOpen={addrmodalOpen}
+          closeAddrModal={closeAddrModal}
+          setAddrRoad={setAddrRoad}
+          setAddrJibun={setAddrJibun}
+        />
       }
     </Common_Layout>
-
   );
 };
 

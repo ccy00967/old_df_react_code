@@ -97,6 +97,7 @@ const Home = () => {
         <RowView className="content">
           <CenterView className="flex">
             <div>
+              <div className="xlarge">현재 서비스 개발 중입니다</div>
               <div className="large">디지털 농업의 시작</div>
               <div className="xxlarge">드론평야</div>
               <div className="small">

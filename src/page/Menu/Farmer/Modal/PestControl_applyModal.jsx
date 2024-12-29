@@ -192,7 +192,7 @@ const PestControl_applyModal = forwardRef((props, ref) => {
           </TextMedium>
         </RowView>
 
-        <Btn onClick={() => requestPayment(payment, selectedPaymentMethod, totalAmount, name, phonenum, email, payorderid)}>결제하기</Btn>
+        <Btn onClick={() => requestPayment(selectedPaymentMethod, totalAmount, name, phonenum, email, payorderid)}>결제하기</Btn>
       </ModalBox>
     </BackgroundArea>
   );

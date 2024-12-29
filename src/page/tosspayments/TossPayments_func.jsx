@@ -18,10 +18,7 @@ export async function requestPayment(selectedPaymentMethod, totalAmount, name, p
         // 비회원 결제
         // const payment = tossPayments.payment({ customerKey: ANONYMOUS });
 
-        //setPayment(payment);
-        console.log(payment);
-
-        console.log(window.location.origin)
+        //console.log(window.location.origin)
         const paymentInfo = {
             amount: {
                 currency: "KRW",
@@ -35,12 +32,13 @@ export async function requestPayment(selectedPaymentMethod, totalAmount, name, p
             customerName: name,
             customerMobilePhone: phonenum,
         }
-        console.log(payment, selectedPaymentMethod, totalAmount, name, phonenum, email, payorderid)
+        //console.log(payment, selectedPaymentMethod, totalAmount, name, phonenum, email, payorderid)
 
         // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
         // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
         switch (selectedPaymentMethod) {
             case "CARD":
+                console.log(payment, paymentInfo)
                 await payment.requestPayment({
                     method: "CARD", // 카드 및 간편결제
                     ...paymentInfo,

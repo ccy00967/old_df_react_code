@@ -1,20 +1,13 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import styled from "styled-components";
 import {
-    BackgroundArea,
-    CenterView,
     GreenColor,
-    hoverGreen,
-    Icon,
     lightGreenColor,
-    redColor,
-    RowView,
-    RowView2,
-} from "../../../../Component/common_style";
-import noScroll from "../../../../Component/function/noScroll";
-import { server } from "../../../url";
+} from "../../Component/common_style";
+import noScroll from "../../Component/function/noScroll";
+import { server } from "../url";
 import { useDispatch } from "react-redux";
-import { nicePassFail, nicePassSuccess } from "../../../../state/niceSuccessState";
+import { nicePassFail, nicePassSuccess } from "../../state/niceSuccessState";
 
 
 const PASSBtn = styled.div`
@@ -39,17 +32,6 @@ const nice_pass_model = {
     phone_number: "",
 }
 
-
-// 본인인증 성공
-function validate_success() {
-    console.log("본인인증 성공")
-}
-
-// 본인인증 실패
-function validate_fail() {
-    console.log("본인인증 실패")
-}
-
 // 나이스 본인인증 순서
 // 백엔드에 필요정보 요청 -> form에 들어갈 3가지: token_version_id, enc_data, integrity
 // 받으면 form에 넣어서 nice표준창 호출하기 -> 호출 완료
@@ -58,13 +40,6 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
 
     const dispatch = useDispatch();
 
-    //const [modalOpen, setModalOpen] = useState(false);
-    const [name, setName] = useState("");
-    const [birth, setBirth] = useState("");
-    const [gender, setGender] = useState("");
-    const [nationalinfo, setNationalinfo] = useState("");
-    const [mobileco, setMobileco] = useState("");
-    const [phone_number, setPhone] = useState("");
     noScroll(isOpen);
 
     // 표준창을 띄우기
@@ -75,8 +50,7 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
         //표준창 호출에 필요한 정보를 백엔드에서 가져오기
         const res = await fetch(server + '/validation/callnicepass/', {
             method: 'POST',
-            headers: [["Content-Type", 'application/json'],
-            ],
+            headers: { "Content-Type": "application/json", },
             credentials: "include",
             body: JSON.stringify({
                 returnURL: window.location.origin + "/SignUp" + "/nicepass",
@@ -84,8 +58,6 @@ const NicePassBtn = ({ isOpen, closeModal, setNicepass }) => {
         })
             .then((res) => res.json())
             .then((data) => data)
-
-        console.log(res)
 
         window.open('', 'popupChk', 'width=480, height=812, top=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no');
         document.form_chk.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb";

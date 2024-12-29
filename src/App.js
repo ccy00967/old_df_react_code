@@ -35,7 +35,8 @@ import WorkStatus2 from "./page/Menu/PesticideDealer/WorkStatus";
 import Adjustment2 from "./page/Menu/PesticideDealer/Adjustment";
 import { PaymentSuccessPage } from "./page/tosspayments/PaymentSuccessPage";
 import { PaymentFailPage } from "./page/tosspayments/PaymentFailPage";
-import NicePassPopUp from "./page/Menu/Farmer/Modal/NicePassPopUp";
+import NicePassPopUp from "./page/SignUp/NicePassPopUp";
+
 
 function App() {
   const { isLogin, User_Credential } = useUser();

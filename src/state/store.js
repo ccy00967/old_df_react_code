@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import niceIsSuccessSlice from './niceSuccessState';
 import { persisted_reducer } from './persist';
+import registerSlice from './register';
 
 
 // 이제 slice들을 store로 만들기 -> slice들의 reducer를 store에 모으기
@@ -9,6 +10,7 @@ import { persisted_reducer } from './persist';
 const store = configureStore({
     reducer: {
         niceSuccessState: niceIsSuccessSlice.reducer,
+        registerState: registerSlice.reducer,
         //address: addressSlice.reducer,
         //request: requestSlice.reducer,
         // userInfo: userInfoSlice.reducer, // persistance로 새로고��으로 인한 데이터 ��제 방지
